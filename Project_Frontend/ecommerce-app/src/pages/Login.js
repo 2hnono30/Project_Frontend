@@ -1,10 +1,28 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import BreadCrumb from "../components/BreadCrumb";
 import Meta from "../components/Meta";
 import CustomInput from "../components/CustomInput";
+import { useRef } from "react";
+import { useState } from "react";
+import { LoginService } from "../Services/Login/LoginService";
 
 const Login = () => {
+    const navigate = useNavigate();
+    const [user, setUser] = useState({ username: '', password: '' });
+    const login = async function (event) {
+        event.preventDefault();
+        try {
+            setUser({ ...user });
+            console.log(user);
+            let resUser = await LoginService.postLogin(user);
+            if (resUser.data) {
+                navigate("/", { replace: true });
+            }
+        } catch (error) {
+            console.log("Login error");
+        }
+    }
     return (
         <>
             <Meta title={"Login"} />
@@ -16,9 +34,17 @@ const Login = () => {
                         <div className="col-12">
                             <div className="auth-card">
                                 <h3 className="text-center mb-3">Login</h3>
-                                <form action="" className="d-flex flex-column gap-15">
-                                    <CustomInput type="email" name="email" placeholder="Email" />
+                                <form action="" className="d-flex flex-column gap-15" onSubmit={login}>
                                     <CustomInput
+                                        state={user}
+                                        setState={setUser}
+                                        type="email"
+                                        name="username"
+                                        placeholder="username"
+                                    />
+                                    <CustomInput
+                                        state={user}
+                                        setState={setUser}
                                         type="password"
                                         name="password"
                                         placeholder="Password"
