@@ -1,11 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import Marquee from "react-fast-marquee";
 import BlogCard from "../components/BlogCard";
 import ProductCard from "../components/ProductCard";
+import Categories from "../components/Categories";
 import Special from "../components/Special";
 
 const Home = () => {
+        
     return (
         <>
             <section className="home-wrapper-1 py-5">
@@ -149,64 +151,7 @@ const Home = () => {
                 <div className="container-xxl">
                     <div className="row">
                         <div className="col-12">
-                            <div className="categories d-flex justify-content-between flex-wrap align-items-center">
-                                <div className="d-flex gap align-items-center">
-                                    <div>
-                                        <h6>Music & Gaming</h6>
-                                        <p>10 Items</p>
-                                    </div>
-                                    <img src="images/camera.jpg" alt="camera" />
-                                </div>
-                                <div className="d-flex gap align-items-center">
-                                    <div>
-                                        <h6>Cameras</h6>
-                                        <p>10 Items</p>
-                                    </div>
-                                    <img src="images/camera.jpg" alt="camera" />
-                                </div>
-                                <div className="d-flex gap align-items-center">
-                                    <div>
-                                        <h6>Smart Tv</h6>
-                                        <p>10 Items</p>
-                                    </div>
-                                    <img src="images/tv.jpg" alt="camera" />
-                                </div>
-                                <div className="d-flex gap align-items-center">
-                                    <div>
-                                        <h6>Smart Watches</h6>
-                                        <p>10 Items</p>
-                                    </div>
-                                    <img src="images/headphone.jpg" alt="camera" />
-                                </div>
-                                <div className="d-flex gap align-items-center">
-                                    <div>
-                                        <h6>Music & Gaming</h6>
-                                        <p>10 Items</p>
-                                    </div>
-                                    <img src="images/camera.jpg" alt="camera" />
-                                </div>
-                                <div className="d-flex gap align-items-center">
-                                    <div>
-                                        <h6>Cameras</h6>
-                                        <p>10 Items</p>
-                                    </div>
-                                    <img src="images/camera.jpg" alt="camera" />
-                                </div>
-                                <div className="d-flex gap align-items-center">
-                                    <div>
-                                        <h6>Smart Tv</h6>
-                                        <p>10 Items</p>
-                                    </div>
-                                    <img src="images/tv.jpg" alt="camera" />
-                                </div>
-                                <div className="d-flex gap align-items-center">
-                                    <div>
-                                        <h6>Smart Watches</h6>
-                                        <p>10 Items</p>
-                                    </div>
-                                    <img src="images/headphone.jpg" alt="camera" />
-                                </div>
-                            </div>
+                            <Categories />
                         </div>
                     </div>
                 </div>
@@ -217,12 +162,11 @@ const Home = () => {
                         <div className="row">
                             <div className="col-12 d-flex justify-content-between">
                                 <h3 className="section-heading">Featured Collection</h3>
-                                <Link to="/product" className="text-red">
-                                View all products
+                                <Link to="/product" state={{ sortBy: "Featured" }} className="text-red">
+                                    View all products
                                 </Link>
                             </div>
                         </div>
-                        <ProductCard />
                         <ProductCard />
                     </div>
                 </div>
@@ -234,7 +178,7 @@ const Home = () => {
                             <h3 className="section-heading">Special Products</h3>
                             <Link to="/product" className="text-red">
                                 View all products
-                                </Link>
+                            </Link>
                         </div>
                         <div className="row">
                             <div className="col-6 mb-3">
@@ -260,7 +204,7 @@ const Home = () => {
                             <div className="col-12 d-flex justify-content-between">
                                 <h3 className="section-heading">Our Popular Products</h3>
                                 <Link to="/product" className="text-red">
-                                View all products
+                                    View all products
                                 </Link>
                             </div>
                         </div>
@@ -276,7 +220,7 @@ const Home = () => {
                             <div className="col-12 d-flex justify-content-between">
                                 <h3 className="section-heading">APPLE CENTER</h3>
                                 <Link to="/product" className="text-red">
-                                View all products
+                                    View all products
                                 </Link>
                             </div>
                         </div>
@@ -292,7 +236,7 @@ const Home = () => {
                             <div className="col-12 d-flex justify-content-between">
                                 <h3 className="section-heading">MOUSE KEYS, GAMING GEAR</h3>
                                 <Link to="/product" className="text-red">
-                                View all products
+                                    View all products
                                 </Link>
                             </div>
                         </div>

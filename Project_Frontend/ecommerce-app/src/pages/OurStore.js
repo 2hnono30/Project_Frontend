@@ -1,12 +1,25 @@
-import React, { useState } from "react";
+import React, { useState , useEffect } from "react";
 import BreadCrumb from '../components/BreadCrumb';
 import Meta from '../components/Meta';
 import ReactStars from 'react-rating-stars-component';
 import ProductCard from "../components/ProductCard";
+import { Form, Link, useLocation, useNavigate, useParams } from "react-router-dom";
+import gr from "../images/gr.svg";
+import gr2 from "../images/gr2.svg";
+import gr3 from "../images/gr3.svg";
+import gr4 from "../images/gr4.svg";
+import Categories from "../components/Categories";
+import { ProductService } from "../Services/Product/ProductService";
+import { CategoryService } from "../Services/Categories/CategoryService";
 
 const OurStore = () => {
+  // const { id } = useParams();
+  // console.log(id);
+
   const [grid, setGrid] = useState(4);
 
+  const [sort, setSort] = useState("name,asc");
+  
   return (
     <>
       <Meta title={"Our Store"} />
@@ -17,14 +30,7 @@ const OurStore = () => {
             <div className='col-3'>
               <div className='filter-card mb-3'>
                 <h3 className='filter-title'>Shop By Categories</h3>
-                <div>
-                  <ul className='ps-0'>
-                    <li>Watch</li>
-                    <li>TV</li>
-                    <li>Camera</li>
-                    <li>Laptop</li>
-                  </ul>
-                </div>
+                <Categories />
               </div>
               <div className='filter-card mb-3'>
                 <h3 className='filter-title'>Filter By</h3>
@@ -35,7 +41,7 @@ const OurStore = () => {
                       type="checkbox"
                       value=""
                       id="" />
-                    <label className='form-check-label' for="">
+                    <label className='form-check-label' htmlFor="">
                       In Stock (1)
                     </label>
                   </div>
@@ -44,13 +50,13 @@ const OurStore = () => {
                       type="checkbox"
                       value=""
                       id="" />
-                    <label className='form-check-label' for="">
+                    <label className='form-check-label' htmlFor="">
                       Out of Stock (0)
                     </label>
                   </div>
                   <h5 className='sub-title'> Price</h5>
                   <div className='d-flex align-items-center gap-10'>
-                    <div class="form-floating">
+                    <div className="form-floating">
                       <input
                         type="email"
                         className="form-control"
@@ -58,7 +64,7 @@ const OurStore = () => {
                         placeholder="From" />
                       <label htmlFor="floatingInput">From</label>
                     </div>
-                    <div class="form-floating">
+                    <div className="form-floating">
                       <input type="email"
                         className="form-control"
                         id="floatingInput"
@@ -90,7 +96,7 @@ const OurStore = () => {
                         type="checkbox"
                         value=""
                         id="color-1" />
-                      <label className='form-check-label' for="color-1">
+                      <label className='form-check-label' htmlFor="color-1">
                         S (2)
                       </label>
                     </div>
@@ -99,7 +105,7 @@ const OurStore = () => {
                         type="checkbox"
                         value=""
                         id="color-2" />
-                      <label className='form-check-label' for="color-2">
+                      <label className='form-check-label' htmlFor="color-2">
                         M (2)
                       </label>
                     </div>
@@ -173,21 +179,25 @@ const OurStore = () => {
                       Sort By:
                     </p>
                     <select
+                    value={sort}
+                    onChange={(e) =>{
+                      setSort(e.target.value)
+                    }}
                       name=""
-                      defaultValue={"manula"}
+                      // defaultValue={"manual"}
                       className="form-control form-select"
-                      id=""
+                      id="sortSelect"
                     >
                       <option value="manual">Featured</option>
                       <option value="best-selling">Best selling</option>
-                      <option value="title-ascending">Alphabetically, A-Z</option>
-                      <option value="title-descending">
+                      <option value="name,asc">Alphabetically, A-Z</option>
+                      <option value="name,desc">
                         Alphabetically, Z-A
                       </option>
-                      <option value="price-ascending">Price, low to high</option>
-                      <option value="price-descending">Price, high to low</option>
-                      <option value="created-ascending">Date, old to new</option>
-                      <option value="created-descending">Date, new to old</option>
+                      <option value="price,asc">Price, low to high</option>
+                      <option value="price,desc">Price, high to low</option>
+                      <option value="createdAt,asc">Date, old to new</option>
+                      <option value="createdAt,desc">Date, new to old</option>
                     </select>
                   </div>
                   <div className="d-flex align-items-center gap-10">
@@ -197,7 +207,7 @@ const OurStore = () => {
                         onClick={() => {
                           setGrid(3);
                         }}
-                        src="images/gr4.svg"
+                        src={gr4}
                         className="d-block img-fluid"
                         alt="grid"
                       />
@@ -205,7 +215,7 @@ const OurStore = () => {
                         onClick={() => {
                           setGrid(4);
                         }}
-                        src="images/gr3.svg"
+                        src={gr3}
                         className="d-block img-fluid"
                         alt="grid"
                       />
@@ -213,7 +223,7 @@ const OurStore = () => {
                         onClick={() => {
                           setGrid(6);
                         }}
-                        src="images/gr2.svg"
+                        src={gr2}
                         className="d-block img-fluid"
                         alt="grid"
                       />
@@ -222,7 +232,7 @@ const OurStore = () => {
                         onClick={() => {
                           setGrid(12);
                         }}
-                        src="images/gr.svg"
+                        src={gr}
                         className="d-block img-fluid"
                         alt="grid"
                       />
@@ -232,7 +242,7 @@ const OurStore = () => {
               </div>
               <div className="products-list pb-5">
                 <div className="d-flex gap-10 flex-wrap">
-                    <ProductCard grid={grid}/>
+                  <ProductCard grid={grid} sort={sort}/>
                 </div>
               </div>
             </div>

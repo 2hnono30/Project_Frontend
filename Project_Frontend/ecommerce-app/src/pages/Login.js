@@ -3,9 +3,10 @@ import { Link, useNavigate } from "react-router-dom";
 import BreadCrumb from "../components/BreadCrumb";
 import Meta from "../components/Meta";
 import CustomInput from "../components/CustomInput";
-import { useRef } from "react";
 import { useState } from "react";
 import { LoginService } from "../Services/Login/LoginService";
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Login = () => {
     const navigate = useNavigate();
@@ -14,10 +15,15 @@ const Login = () => {
         event.preventDefault();
         try {
             setUser({ ...user });
-            console.log(user);
             let resUser = await LoginService.postLogin(user);
+            // console.log(resUser);
             if (resUser.data) {
-                navigate("/", { replace: true });
+                //  window.confirm("Login ???");
+                toast.success('Login successfully!');
+                localStorage.setItem('username',resUser.data.username);
+               setTimeout(() => {
+                navigate("/", { replace: true },localStorage);
+               },1000)
             }
         } catch (error) {
             console.log("Login error");
@@ -27,7 +33,7 @@ const Login = () => {
         <>
             <Meta title={"Login"} />
             <BreadCrumb title="Login" />
-
+            <ToastContainer />
             <div class1="login-wrapper py-5 home-wrapper-2">
                 <div className='container-xxl'>
                     <div className="row">

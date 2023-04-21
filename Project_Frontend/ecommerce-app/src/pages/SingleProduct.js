@@ -299,8 +299,9 @@ const SingleProduct = () => {
                                 <h3 className="section-heading">Our Popular Products</h3>
                             </div>
                         </div>
-                        <ProductCard />
-                        <ProductCard />
+                        <div className="d-flex">
+                            <ProductCard />
+                        </div>
                     </div>
                 </div>
             </div>

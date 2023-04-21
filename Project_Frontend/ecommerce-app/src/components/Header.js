@@ -1,15 +1,57 @@
-import React from "react";
-import { NavLink, Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { NavLink, Link, useLocation, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import user from "../images/user.svg";
 import cart from "../images/cart.svg";
+import menu from "../images/menu.svg";
 import { BsSearch } from "react-icons/bs";
 import { faUserPlus } from "@fortawesome/free-solid-svg-icons";
-
+import { toast, ToastContainer } from 'react-toastify';
+import { CategoryService } from "../Services/Categories/CategoryService";
 
 const Header = () => {
+
+    const navigate = useNavigate();
+    const logout = async function (event) {
+        event.preventDefault();
+        try {
+            localStorage.clear();
+            toast.success('Logout successfully!');
+            setTimeout(() => {
+                navigate("/", { replace: true });
+            }, 1000)
+        } catch (error) {
+            console.log("Logout error");
+        }
+    }
+
+    let location = useLocation();
+    const [state, setState] = useState({
+        categories: [],
+        errorMessage: ''
+    });
+
+    useEffect(function () {
+        try {
+            setState({ ...state });
+            async function fetchAllCategories() {
+                let resCategories = await CategoryService.getCategories();
+
+                setState({
+                    ...state,
+                    categories: resCategories.data.content,
+                })
+            }
+            fetchAllCategories();
+        } catch (error) {
+            setState({ ...state, errorMessage: error.message });
+        }
+    }, [])
+
+    const { categories, errorMessage } = state;
     return (
         <>
+            <ToastContainer />
             <header className="header-upper py-3 d-flex">
                 <div className="container-xxl">
                     <div className="row align-items-center">
@@ -29,22 +71,41 @@ const Header = () => {
                 <div className="container-xxl d-flex col-4 gap-10">
                     <div className="header-upper-links d-flex align-items-center justify-content-between gap-10">
                         <div>
-                            <Link to="/signup" className="d-flex align-items-center gap-10 text-white">
-                                <FontAwesomeIcon className="signUpSvg" icon={faUserPlus} />
-                                <p className="mb-0">
-                                    Sign Up
-                                </p>
-                            </Link>
+
+                            {localStorage.username == null ? (
+                                <Link to="/signup" className="d-flex align-items-center gap-10 text-white">
+                                    <FontAwesomeIcon className="signUpSvg" icon={faUserPlus} />
+                                    <p className="mb-0">
+                                        Sign Up
+                                    </p>
+                                </Link>
+                            ) : (
+                                <div className="d-flex text-white d-none">
+                                    <FontAwesomeIcon className="signUpSvg" icon={faUserPlus} />
+                                    <p className="mb-0">
+                                        Sign Up
+                                    </p>
+                                </div>
+                            )
+                            }
                         </div>
                     </div>
                     <div className="header-upper-links d-flex align-items-center justify-content-between gap-10">
                         <div>
-                            <Link to="/login" className="d-flex align-items-center gap-10 text-white">
-                                <img src={user} alt="user" />
-                                <p className="mb-0">
-                                    Sign in
-                                </p>
-                            </Link>
+                            {localStorage.username == null ? (
+                                <Link to="/login" className="d-flex align-items-center gap-10 text-white">
+                                    <img src={user} alt="user" />
+                                    <p className="mb-0">
+                                        Sign in
+                                    </p>
+                                </Link>
+                            ) : (
+                                <div className="d-flex text-white">
+                                    <img src={user} alt="user" />
+                                    <div onClick={logout} className="button align-items-center gap-10 text-white">{localStorage.username} || Logout</div>
+                                </div>
+                            )
+                            }
                         </div>
                     </div>
                     <div className="header-upper-links d-flex align-items-center justify-content-between gap-10">
@@ -76,27 +137,25 @@ const Header = () => {
                                             data-bs-toggle="dropdown"
                                             aria-expanded="false"
                                         >
-                                            <img src="images/menu.svg" alt="" />
+                                            <img src={menu} alt="" />
                                             <span className="me-5 d-inline-block">
                                                 Shop Categories
                                             </span>
                                         </button>
                                         <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                            <li>
-                                                <Link className="dropdown-item text-white" to="">
-                                                    Action
-                                                </Link>
-                                            </li>
-                                            <li>
-                                                <Link className="dropdown-item text-white" to="">
-                                                    Another action
-                                                </Link>
-                                            </li>
-                                            <li>
-                                                <Link className="dropdown-item text-white" to="">
-                                                    Something else here
-                                                </Link>
-                                            </li>
+                                            {(
+                                                categories.map(category => {
+                                                    return (
+                                                        <li key={category.id}>
+                                                            <Link className="dropdown-item text-white" to={"/product/category/" + `${category.id}`} >
+                                                                <div>
+                                                                    <h6>{category.name}</h6>
+                                                                </div>
+                                                            </Link>
+                                                        </li>
+                                                    )
+                                                })
+                                            )}
                                         </ul>
                                     </div>
                                 </div>

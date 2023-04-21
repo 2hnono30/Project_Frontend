@@ -9,16 +9,20 @@ import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
+import { ToastContainer } from 'react-toastify';
 
 function App() {
   return (
     <>
+     
       <BrowserRouter>
         <Routes>
           <Route path='/' element={<Layout />}> 
               <Route index element={<Home />}/>
               <Route path='product' element={<OurStore />}/>
+              <Route path='product/category/:id' element={<OurStore />}/>
               <Route path="product/:id" element={<SingleProduct />} />
+              <Route path="product/category/:id" element={<SingleProduct />} />
               <Route path="cart" element={<Cart />} />
               <Route path="checkout" element={<Checkout />} />
               <Route path="login" element={<Login />} />
