@@ -16,11 +16,9 @@ const Login = () => {
         try {
             setUser({ ...user });
             let resUser = await LoginService.postLogin(user);
-            // console.log(resUser);
             if (resUser.data) {
-                //  window.confirm("Login ???");
                 toast.success('Login successfully!');
-                localStorage.setItem('username',resUser.data.username);
+                localStorage.setItem('fullName',resUser.data.fullName);
                setTimeout(() => {
                 navigate("/", { replace: true },localStorage);
                },1000)

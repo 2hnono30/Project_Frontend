@@ -9,12 +9,8 @@ import gr2 from "../images/gr2.svg";
 import gr3 from "../images/gr3.svg";
 import gr4 from "../images/gr4.svg";
 import Categories from "../components/Categories";
-import { ProductService } from "../Services/Product/ProductService";
-import { CategoryService } from "../Services/Categories/CategoryService";
 
 const OurStore = () => {
-  // const { id } = useParams();
-  // console.log(id);
 
   const [grid, setGrid] = useState(4);
 
@@ -242,7 +238,7 @@ const OurStore = () => {
               </div>
               <div className="products-list pb-5">
                 <div className="d-flex gap-10 flex-wrap">
-                  <ProductCard grid={grid} sort={sort}/>
+                  <ProductCard grid={grid} sort={sort} />
                 </div>
               </div>
             </div>

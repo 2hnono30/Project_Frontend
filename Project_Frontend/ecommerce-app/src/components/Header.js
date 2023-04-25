@@ -8,10 +8,19 @@ import { BsSearch } from "react-icons/bs";
 import { faUserPlus } from "@fortawesome/free-solid-svg-icons";
 import { toast, ToastContainer } from 'react-toastify';
 import { CategoryService } from "../Services/Categories/CategoryService";
+import { ProductService } from "../Services/Product/ProductService";
 
-const Header = () => {
+const Header = ({navigation}) => {
 
     const navigate = useNavigate();
+    
+    const [state, setState] = useState({
+        categories: [],
+        errorMessage: ''
+    });
+
+    const [search, setSearch] = useState();
+
     const logout = async function (event) {
         event.preventDefault();
         try {
@@ -25,18 +34,11 @@ const Header = () => {
         }
     }
 
-    let location = useLocation();
-    const [state, setState] = useState({
-        categories: [],
-        errorMessage: ''
-    });
-
     useEffect(function () {
         try {
             setState({ ...state });
             async function fetchAllCategories() {
                 let resCategories = await CategoryService.getCategories();
-
                 setState({
                     ...state,
                     categories: resCategories.data.content,
@@ -49,6 +51,7 @@ const Header = () => {
     }, [])
 
     const { categories, errorMessage } = state;
+
     return (
         <>
             <ToastContainer />
@@ -61,10 +64,23 @@ const Header = () => {
                             </h4>
                         </div>
                         <div className="col-8">
-                            <div className="input-group">
-                                <input type="text" className="form-control py-2" placeholder="Search Products here..." aria-label="Search Products here..." aria-describedby="basic-addon2" />
+                            <form className="input-group" onSubmit={(e) => {
+                                e.preventDefault();
+                                navigate(`/product`, {state : {search: search}} );
+                            }}>
+                                <input
+                                    onChange={(e) =>{
+                                        setSearch(e.target.value)
+                                      }}
+                                    value={search}
+                                    type="search"
+                                    className="form-control py-2"
+                                    placeholder="Search Products here..."
+                                    aria-label="Search Products here..."
+                                    aria-describedby="basic-addon2"
+                                />
                                 <span className="input-group-text py-3" id="basic-addon2"><BsSearch className="fs-6" /></span>
-                            </div>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -72,7 +88,7 @@ const Header = () => {
                     <div className="header-upper-links d-flex align-items-center justify-content-between gap-10">
                         <div>
 
-                            {localStorage.username == null ? (
+                            {localStorage.fullName == null ? (
                                 <Link to="/signup" className="d-flex align-items-center gap-10 text-white">
                                     <FontAwesomeIcon className="signUpSvg" icon={faUserPlus} />
                                     <p className="mb-0">
@@ -92,7 +108,7 @@ const Header = () => {
                     </div>
                     <div className="header-upper-links d-flex align-items-center justify-content-between gap-10">
                         <div>
-                            {localStorage.username == null ? (
+                            {localStorage.fullName == null ? (
                                 <Link to="/login" className="d-flex align-items-center gap-10 text-white">
                                     <img src={user} alt="user" />
                                     <p className="mb-0">
@@ -102,7 +118,7 @@ const Header = () => {
                             ) : (
                                 <div className="d-flex text-white">
                                     <img src={user} alt="user" />
-                                    <div onClick={logout} className="button align-items-center gap-10 text-white">{localStorage.username} || Logout</div>
+                                    <div onClick={logout} className="button align-items-center gap-10 text-white">{localStorage.fullName} || Logout</div>
                                 </div>
                             )
                             }

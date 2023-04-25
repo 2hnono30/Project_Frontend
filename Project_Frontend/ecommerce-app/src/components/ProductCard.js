@@ -8,68 +8,68 @@ import addcart from "../images/add-cart.svg";
 import view from "../images/view.svg";
 import NoProduct from "../images/NoProduct.jpg";
 import { ProductService } from "../Services/Product/ProductService";
-// import { CategoryService } from "../Services/Categories/CategoryService";
 import { currencyFormat } from "./Utils/Utils";
+
 
 const ProductCard = (props) => {
 
   const { grid, sort } = props;
+
   const { id } = useParams();
+  const PAGE = 4;
 
   let location = useLocation();
 
-  const [state, setState] = useState({
+  const search = location.state?.search;
+
+  const [product, setProduct] = useState({
     products: [],
     errorMessage: ''
   });
-
+  const callApi = (page) => {
+    try {
+      setProduct({ ...product });
+      async function fetchAllProducts() {
+        let resProduct = await ProductService.getProductListBySort(sort, id, page);
+        setProduct({
+          ...product,
+          products: resProduct.data.content,
+        })
+      }
+      fetchAllProducts();
+    } catch (error) {
+      setProduct({ ...product, errorMessage: error.message });
+    }
+  }
+  const callSearchApi = () => {
+    try {
+      setProduct({ ...product });
+      async function fetchSearchProducts(event) {
+        let resProduct = await ProductService.getProductListBySortAndSearch(sort,id, search);
+        setProduct({
+          ...product,
+          products: resProduct.data.content,
+        })
+      }
+      fetchSearchProducts();
+    } catch (error) {
+      setProduct({ ...product, errorMessage: error.message });
+    }
+  }
   useEffect(function ProductList() {
-    if (location.pathname == "/product") {
-      try {
-        setState({ ...state });
-        async function fetchAllProducts() {
-          let resProduct = await ProductService.getProductListBySort(sort,"");
-          setState({
-            ...state,
-            products: resProduct.data.content,
-          })
-        }
-        fetchAllProducts();
-      } catch (error) {
-        setState({ ...state, errorMessage: error.message });
-      }
-    } else if (location.pathname.includes("category")) {
-      try {
-        setState({ ...state });
-        async function fetchProductListByCategoryIdAndSort() {
-          let resSort = await ProductService.getProductListBySort(sort,id);
-          setState({
-            ...state,
-            products: resSort.data.content,
-          })
-        }
-        fetchProductListByCategoryIdAndSort();
-      } catch (error) {
-        setState({ ...state, errorMessage: error.message });
-      }
-    } else {
-      try {
-        setState({ ...state });
-        async function fetchFeature() {
-          let resProduct = await ProductService.getFeatureProducts();
-          setState({
-            ...state,
-            products: resProduct.data.content,
-          })
-        }
-        fetchFeature();
-      } catch (error) {
-        setState({ ...state, errorMessage: error.message });
+    if (search) {
+      callSearchApi(sort,undefined,search);
+    }
+    else {
+      if (location.pathname == "/product" || location.pathname.includes("category")) {
+        callApi();
+      } else {
+        callApi(PAGE);
       }
     }
-  }, [id , sort])
+  }, [id, sort, search])
 
-  const { products, errorMessage } = state;
+  const { products, errorMessage } = product;
   return (
     <>
       {(

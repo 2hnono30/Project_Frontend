@@ -54,6 +54,9 @@ a {
 .gap-30 {
   gap: 30px;
 }
+.gap-100 {
+  gap: 100px;
+}
 
 .button {
   background-color: var(--color-232f3e);
@@ -185,7 +188,7 @@ footer .input-group-text {
   font-weight: 500;
   text-transform: none;
 }
-
+route
 .small-banner-content p {
   font-size: 14px;
   line-height: 22px;

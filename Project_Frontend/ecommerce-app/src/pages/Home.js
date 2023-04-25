@@ -1,13 +1,20 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
 import Marquee from "react-fast-marquee";
 import BlogCard from "../components/BlogCard";
 import ProductCard from "../components/ProductCard";
 import Categories from "../components/Categories";
 import Special from "../components/Special";
+import { ProductService } from "../Services/Product/ProductService";
+import { CategoryService } from "../Services/Categories/CategoryService";
+import addcart from "../images/add-cart.svg";
+import view from "../images/view.svg";
+import NoProduct from "../images/NoProduct.jpg";
+import { currencyFormat } from "../components/Utils/Utils";
+import prodcompare from "../images/prodcompare.svg";
+import ProductByCate from "../components/ProductByCate";
 
 const Home = () => {
-        
     return (
         <>
             <section className="home-wrapper-1 py-5">
@@ -162,7 +169,7 @@ const Home = () => {
                         <div className="row">
                             <div className="col-12 d-flex justify-content-between">
                                 <h3 className="section-heading">Featured Collection</h3>
-                                <Link to="/product" state={{ sortBy: "Featured" }} className="text-red">
+                                <Link to="/product/category/1" state={{ sortBy: "Featured" }} className="text-red">
                                     View all products
                                 </Link>
                             </div>
@@ -199,50 +206,7 @@ const Home = () => {
             </section>
             <section className="popular-wrapper py-5 home-wrapper-2">
                 <div className="container-xxl">
-                    <div className="row">
-                        <div className="row">
-                            <div className="col-12 d-flex justify-content-between">
-                                <h3 className="section-heading">Our Popular Products</h3>
-                                <Link to="/product" className="text-red">
-                                    View all products
-                                </Link>
-                            </div>
-                        </div>
-                        <ProductCard />
-                        <ProductCard />
-                    </div>
-                </div>
-            </section>
-            <section className="featured-wrapper py-5 home-wrapper-2">
-                <div className="container-xxl">
-                    <div className="row">
-                        <div className="row">
-                            <div className="col-12 d-flex justify-content-between">
-                                <h3 className="section-heading">APPLE CENTER</h3>
-                                <Link to="/product" className="text-red">
-                                    View all products
-                                </Link>
-                            </div>
-                        </div>
-                        <ProductCard />
-                        <ProductCard />
-                    </div>
-                </div>
-            </section>
-            <section className="featured-wrapper py-5 home-wrapper-2">
-                <div className="container-xxl">
-                    <div className="row">
-                        <div className="row">
-                            <div className="col-12 d-flex justify-content-between">
-                                <h3 className="section-heading">MOUSE KEYS, GAMING GEAR</h3>
-                                <Link to="/product" className="text-red">
-                                    View all products
-                                </Link>
-                            </div>
-                        </div>
-                        <ProductCard />
-                        <ProductCard />
-                    </div>
+                    <ProductByCate />
                 </div>
             </section>
             <section className="famous-wrapper py-5 home-wrapper-2">
@@ -342,31 +306,6 @@ const Home = () => {
                                         <img src="images/brand-08.png" alt="brand" />
                                     </div>
                                 </Marquee>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-            <section className="blog-wrapper py-5 home-wrapper-2">
-                <div className="container-xxl">
-                    <div className="row">
-                        <div className="row">
-                            <div className="col-12">
-                                <h3 className="section-heading">Our Latest Blogs</h3>
-                            </div>
-                        </div>
-                        <div className="row">
-                            <div className="col-3">
-                                <BlogCard />
-                            </div>
-                            <div className="col-3">
-                                <BlogCard />
-                            </div>
-                            <div className="col-3">
-                                <BlogCard />
-                            </div>
-                            <div className="col-3">
-                                <BlogCard />
                             </div>
                         </div>
                     </div>
