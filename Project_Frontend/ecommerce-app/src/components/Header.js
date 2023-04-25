@@ -66,14 +66,13 @@ const Header = ({navigation}) => {
                         <div className="col-8">
                             <form className="input-group" onSubmit={(e) => {
                                 e.preventDefault();
-                                navigate(`/product`, {state : {search: search}} );
-                            }}>
+                                navigate( search==""|| search==undefined? "/" : "/product" , {state : {search: search}})
+                                }}>
                                 <input
-                                    onChange={(e) =>{
-                                        setSearch(e.target.value)
-                                      }}
-                                    value={search}
+                                    onInput={(e) =>{setSearch(e.target.value)}}
+                                    // value={search}
                                     type="search"
+                                    name="search"
                                     className="form-control py-2"
                                     placeholder="Search Products here..."
                                     aria-label="Search Products here..."

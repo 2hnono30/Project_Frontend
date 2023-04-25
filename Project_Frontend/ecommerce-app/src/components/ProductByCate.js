@@ -16,10 +16,6 @@ import prodcompare from "../images/prodcompare.svg";
 
 const ProductByCate = () => {
 
-    const [product, setProduct] = useState({
-        products: [],
-        errorMessage: ''
-    });
     const [flag, setFlag] = useState(false);
     const [flag1, setFlag1] = useState(false);
     const [category, setCategory] = useState({
@@ -61,7 +57,7 @@ const ProductByCate = () => {
             }
             fetchProductByCate();
         } catch (error) {
-            setProduct({ ...product, errorMessage: error.message });
+            setCategory({ ...category, CateErrorMessage: error.message });
         }
     }
 
@@ -71,13 +67,10 @@ const ProductByCate = () => {
             if (flag) {
                 callProductByCateApi();
             }
-            console.log(categories.products);
         } catch (error) {
-            setProduct({ ...product, errorMessage: error.message });
+            setCategory({ ...category, CateErrorMessage: error.message });
         }
     }, [flag, flag1])
-    const { products, errorMessage } = product;
-    const { categories, CateErrorMessage } = category;
     return (
         <>
             {(
