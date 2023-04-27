@@ -719,4 +719,8 @@ route
   font-size: 16px;
   color: var(--color-777777);
 }
+
+.MuiDataGrid-footerContainer p{
+  margin-bottom: 0;
+}
 /* Shipping page ends here */
