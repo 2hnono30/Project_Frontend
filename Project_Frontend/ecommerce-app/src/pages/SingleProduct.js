@@ -15,7 +15,7 @@ const SingleProduct = () => {
         img: "https://www.bhphotovideo.com/images/images2500x2500/apple_m02x3ll_a_watch_series_6_gps_1595000.jpg?cs=srgb&dl=pexels-fernando-arcos-190819.jpg&fm=jpg",
     };
 
-    const [orderedProduct, setorderedProduct] = useState(true);
+    const [orderedProduct, setOrderedProduct] = useState(true);
     const copyToClipboard = (text) => {
         console.log("text", text);
         var textField = document.createElement("textarea");
@@ -26,6 +26,8 @@ const SingleProduct = () => {
         textField.remove();
     };
     const closeModal = () => { };
+
+
     return (
         <>
             <Meta title={"Product Name"} />
@@ -311,7 +313,7 @@ const SingleProduct = () => {
                 id="staticBackdrop"
                 data-bs-backdrop="static"
                 data-bs-keyboard="false"
-                tabindex="-1"
+                tabIndex={-1}
                 aria-labelledby="staticBackdropLabel"
                 aria-hidden="true"
             >

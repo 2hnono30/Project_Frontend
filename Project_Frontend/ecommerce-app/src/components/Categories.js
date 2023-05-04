@@ -12,6 +12,7 @@ const Categories = () => {
         categories: [],
         errorMessage: ''
     });
+    
     var settings = {
         dots: true,
         infinite: true,

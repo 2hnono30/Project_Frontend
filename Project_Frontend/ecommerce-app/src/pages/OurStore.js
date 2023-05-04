@@ -1,4 +1,4 @@
-import React, { useState , useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import BreadCrumb from '../components/BreadCrumb';
 import Meta from '../components/Meta';
 import ReactStars from 'react-rating-stars-component';
@@ -9,13 +9,93 @@ import gr2 from "../images/gr2.svg";
 import gr3 from "../images/gr3.svg";
 import gr4 from "../images/gr4.svg";
 import Categories from "../components/Categories";
-
+import { ProductService } from "../Services/Product/ProductService";
+import Pagging from './../components/Pagging';
 const OurStore = () => {
+
+  const { id } = useParams();
+  const PAGE = 4;
 
   const [grid, setGrid] = useState(4);
 
   const [sort, setSort] = useState("name,asc");
-  
+
+  const [state, setState] = useState({
+    totalProduct: [],
+  });
+
+  let location = useLocation();
+
+  const search = location.state?.search;
+
+
+  const [product, setProduct] = useState({
+    products: [],
+    errorMessage: ''
+  });
+  const [paginationModel, setPaginationModel] = useState({
+    pageSize: 9,
+    page: 1,
+    sort: '',
+  });
+  const [totalPages, setTotalPages] = useState(0);
+
+  const getProductWithTotalPage = (paginationModel, search) => {
+    try {
+      setProduct({ ...product });
+      async function fetchAllProducts() {
+        let resTotalPage = await ProductService.getAllProductWithTotalPage(paginationModel, id, sort, search);
+        // console.log(resTotalPage);
+
+        setProduct({
+          ...product,
+          products: resTotalPage.data.content,
+        });
+        setTotalPages(resTotalPage.data.totalPages);
+        setState({...state,totalProduct:resTotalPage.data.totalElements})
+      }
+      fetchAllProducts();
+    } catch (error) {
+      setProduct({ ...product, errorMessage: error.message });
+    }
+  }
+
+  const onPageChange = (number) => {
+    setPaginationModel({ ...paginationModel, page: number });
+  }
+
+  const callApi = (page) => {
+    try {
+      setProduct({ ...product });
+      async function fetchAllProducts() {
+        let resProduct = await ProductService.getProductListBySort(sort, id, page);
+        setProduct({
+          ...product,
+          products: resProduct.data.content,
+        });
+      }
+      fetchAllProducts();
+    } catch (error) {
+      setProduct({ ...product, errorMessage: error.message });
+    }
+  }
+
+  useEffect(function ProductList() {
+    if (search) {
+      getProductWithTotalPage(paginationModel, search);
+    }
+    else {
+      if (location.pathname == "/product" || location.pathname.includes("category")) {
+        getProductWithTotalPage(paginationModel);
+      } else {
+        callApi(PAGE);
+      }
+    }
+  }, [id, sort, search, paginationModel])
+
+
+  const { products, errorMessage } = product;
+  const { totalProduct } = state;
   return (
     <>
       <Meta title={"Our Store"} />
@@ -175,10 +255,10 @@ const OurStore = () => {
                       Sort By:
                     </p>
                     <select
-                    value={sort}
-                    onChange={(e) =>{
-                      setSort(e.target.value)
-                    }}
+                      value={sort}
+                      onChange={(e) => {
+                        setSort(e.target.value)
+                      }}
                       name=""
                       // defaultValue={"manual"}
                       className="form-control form-select"
@@ -197,7 +277,7 @@ const OurStore = () => {
                     </select>
                   </div>
                   <div className="d-flex align-items-center gap-10">
-                    <p className="totalproducts mb-0">21 Products</p>
+                    <p className="totalproducts mb-0">{totalProduct} Products</p>
                     <div className="d-flex gap-10 align-items-center grid">
                       <img
                         onClick={() => {
@@ -237,8 +317,11 @@ const OurStore = () => {
                 </div>
               </div>
               <div className="products-list pb-5">
-                <div className="d-flex gap-10 flex-wrap">
-                  <ProductCard grid={grid} sort={sort} />
+                <ProductCard grid={grid} sort={sort} productList={products} />
+                <div className="d-flex justify-content-center">
+                  <Pagging currentPage={paginationModel.page}
+                    totalPages={totalPages}
+                    onPageChange={onPageChange} />
                 </div>
               </div>
             </div>

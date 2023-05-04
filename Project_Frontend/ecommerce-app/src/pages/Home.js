@@ -15,6 +15,32 @@ import prodcompare from "../images/prodcompare.svg";
 import ProductByCate from "../components/ProductByCate";
 
 const Home = () => {
+    const [product, setProduct] = useState({
+        products: [],
+        errorMessage: ''
+      });
+    const PAGE = 4;
+    const callApi = (cate,sort,page) => {
+        try {
+          setProduct({ ...product });
+          async function fetchAllProducts() {
+            let resProduct = await ProductService.getProductListBySort(cate,sort,page);
+            // console.log(resProduct);
+            setProduct({
+              ...product,
+              products: resProduct.data.content,
+            });
+          }
+          fetchAllProducts();
+        } catch (error) {
+          setProduct({ ...product, errorMessage: error.message });
+        }
+      }
+      useEffect(function ProductList() {
+            callApi(undefined,undefined,PAGE);
+      }, [])
+      const { products, errorMessage } = product;
+    //   console.log(products);
     return (
         <>
             <section className="home-wrapper-1 py-5">
@@ -174,7 +200,7 @@ const Home = () => {
                                 </Link>
                             </div>
                         </div>
-                        <ProductCard />
+                        <ProductCard productList={products}/>
                     </div>
                 </div>
             </section>

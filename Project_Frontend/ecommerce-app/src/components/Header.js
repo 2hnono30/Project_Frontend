@@ -69,8 +69,6 @@ const Header = ({ navigation }) => {
                                 navigate(search == "" || search == undefined ? "/" : "/product", { state: { search: search } })
                             }}>
                                 <input
-                                    onInput={(e) => { setSearch(e.target.value) }}
-                                    // value={search}
                                     type="search"
                                     name="search"
                                     className="form-control py-2"
@@ -78,7 +76,12 @@ const Header = ({ navigation }) => {
                                     aria-label="Search Products here..."
                                     aria-describedby="basic-addon2"
                                 />
-                                <span className="input-group-text py-3" id="basic-addon2"><BsSearch className="fs-6" /></span>
+                                <span
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    navigate( search==""|| search==undefined? "/" : "/product" , {state : {search: search}})
+                                    }}
+                                 className="input-group-text py-3" id="basic-addon2"><BsSearch className="fs-6" /></span>
                             </form>
                         </div>
                     </div>

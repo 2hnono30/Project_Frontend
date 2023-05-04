@@ -43,7 +43,7 @@ const ProductByCate = () => {
                 let newCategory = { CateErrorMessage: '', Categories: [] }
                 for (let i = 0; i < category.Categories.length; i++) {
                     let id = category.Categories[i].id;
-                    let resProduct = await ProductService.getProductListByCateHome(undefined, id, PAGE);
+                    let resProduct = await ProductService.getProductListBySort(undefined, id, PAGE);
                     category.Categories[i].products = resProduct.data.content;
                     newCategory.Categories.push({
                         name: category.Categories[i].name,
