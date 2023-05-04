@@ -1,20 +1,18 @@
 import React from "react";
 import BreadCrumb from "../components/BreadCrumb";
 import Meta from "../components/Meta";
-import { Link,useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import CustomInput from "../components/CustomInput";
 import { RegisterService } from "../Services/Register/RegisterService";
 const Signup = () => {
     const navigate = useNavigate();
     const [user, setUser] = useState({
-        staff: {
-            fullName: '',
-            email: '',
-            phoneNumber: '',
-            username: '',
-            password: ''
-        }
+        fullName: '',
+        email: '',
+        phoneNumber: '',
+        username: '',
+        password: ''
     });
     const addUser = async function (event) {
         event.preventDefault();
@@ -22,7 +20,7 @@ const Signup = () => {
             setUser({ ...user });
             console.log(user);
             let resUser = await RegisterService.postRegister(user);
-            console.log(resUser)
+
             if (resUser.status === 201) {
                 navigate("/login", { replace: true });
             }
@@ -46,7 +44,7 @@ const Signup = () => {
                                         setState={setUser}
                                         type="text"
                                         name="fullName"
-                                        placeholder="fullName"
+                                        placeholder="Full Name"
                                     />
                                     <CustomInput
                                         state={user}
@@ -60,14 +58,14 @@ const Signup = () => {
                                         setState={setUser}
                                         type="tel"
                                         name="phoneNumber"
-                                        placeholder="phoneNumber"
+                                        placeholder="Phone Number"
                                     />
                                     <CustomInput
                                         state={user}
                                         setState={setUser}
                                         type="email"
                                         name="username"
-                                        placeholder="username"
+                                        placeholder="Username"
                                     />
                                     <CustomInput
                                         state={user}

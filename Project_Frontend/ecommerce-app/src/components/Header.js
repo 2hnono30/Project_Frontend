@@ -10,10 +10,10 @@ import { toast, ToastContainer } from 'react-toastify';
 import { CategoryService } from "../Services/Categories/CategoryService";
 import { ProductService } from "../Services/Product/ProductService";
 
-const Header = ({navigation}) => {
+const Header = ({ navigation }) => {
 
     const navigate = useNavigate();
-    
+
     const [state, setState] = useState({
         categories: [],
         errorMessage: ''
@@ -60,16 +60,16 @@ const Header = ({navigation}) => {
                     <div className="row align-items-center">
                         <div className="col-4">
                             <h4>
-                                <Link className="text-white">Developers App</Link>
+                                <Link to='/' className="text-white">Developers App</Link>
                             </h4>
                         </div>
                         <div className="col-8">
                             <form className="input-group" onSubmit={(e) => {
                                 e.preventDefault();
-                                navigate( search==""|| search==undefined? "/" : "/product" , {state : {search: search}})
-                                }}>
+                                navigate(search == "" || search == undefined ? "/" : "/product", { state: { search: search } })
+                            }}>
                                 <input
-                                    onInput={(e) =>{setSearch(e.target.value)}}
+                                    onInput={(e) => { setSearch(e.target.value) }}
                                     // value={search}
                                     type="search"
                                     name="search"

@@ -17,11 +17,12 @@ const Login = () => {
             setUser({ ...user });
             let resUser = await LoginService.postLogin(user);
             if (resUser.data) {
+                console.log(resUser.data);
                 toast.success('Login successfully!');
-                localStorage.setItem('fullName',resUser.data.fullName);
-               setTimeout(() => {
-                navigate("/", { replace: true },localStorage);
-               },1000)
+                localStorage.setItem('fullName', resUser.data.fullName);
+                setTimeout(() => {
+                    navigate("/", { replace: true }, localStorage);
+                }, 1000)
             }
         } catch (error) {
             console.log("Login error");

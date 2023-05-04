@@ -1,6 +1,11 @@
 import React from 'react';
 import './App.css';
-import {BrowserRouter, Routes, Route } from "react-router-dom";
+import {
+    BrowserRouter,
+    Route,
+    Routes,
+} from "react-router-dom";
+
 import Layout from './components/Layout';
 import Home from './pages/Home';
 import OurStore from './pages/OurStore';
@@ -9,7 +14,7 @@ import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
-import { ToastContainer } from 'react-toastify';
+import AdminScreen from "./pages/Admin/AdminScreen";
 
 function App() {
   return (
@@ -17,7 +22,7 @@ function App() {
      
       <BrowserRouter>
         <Routes>
-          <Route path='/' element={<Layout />}> 
+          <Route path='/' element={<Layout />}>
               <Route index element={<Home />}/>
               <Route path='product' element={<OurStore />}/>
               <Route path='product/category/:id' element={<OurStore />}/>
@@ -28,6 +33,7 @@ function App() {
               <Route path="login" element={<Login />} />
               <Route path="signup" element={<Signup />} />
           </Route>
+            <Route path="/admin/*" element={<AdminScreen />} />
         </Routes>
       </BrowserRouter>
     </>
