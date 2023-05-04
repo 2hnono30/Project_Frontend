@@ -17,7 +17,6 @@ import prodcompare from "../images/prodcompare.svg";
 const ProductByCate = () => {
 
     const [flag, setFlag] = useState(false);
-    const [flag1, setFlag1] = useState(false);
     const [category, setCategory] = useState({
         Categories: [],
         CateErrorMessage: ''
@@ -52,7 +51,6 @@ const ProductByCate = () => {
                         products: resProduct.data.content
                     })
                 }
-                setFlag1(true);
                 setCategory(newCategory);
             }
             fetchProductByCate();
@@ -70,7 +68,7 @@ const ProductByCate = () => {
         } catch (error) {
             setCategory({ ...category, CateErrorMessage: error.message });
         }
-    }, [flag, flag1])
+    }, [flag])
     return (
         <>
             {(
