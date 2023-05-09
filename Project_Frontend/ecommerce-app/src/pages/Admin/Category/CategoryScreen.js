@@ -1,82 +1,130 @@
-import React, { useEffect, useState } from "react";
-import { getAllCategory } from "./CategoryService";
-import Table from 'react-bootstrap/Table';
-import Pagging from "../../../components/Pagging";
+import React, {useEffect, useState} from "react";
+import {createCategory, deleteCategory, getAllCategory, updateCategory} from "./CategoryService";
 import CategoryCreateUpdate from "./CategoryCreateUpdate";
 import Button from "react-bootstrap/Button";
+import {Container, Paper} from "@mui/material";
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import {DataGrid} from "@mui/x-data-grid";
+import {Stack} from "react-bootstrap";
+import {toast} from "react-toastify";
+import { useConfirm } from "material-ui-confirm";
 
 
-
-const CategoryScreen = ({ closeMenu }) => {
+const CategoryScreen = ({closeMenu}) => {
 
     const [categories, setCategories] = useState([])
     const [paginationModel, setPaginationModel] = useState({
-        pageSize: 5,
+        pageSize: 10,
         page: 1,
         sort: '',
     })
     const [isShow, setIsShow] = useState(false);
-    const [isDesc, setIsDesc] = useState(false);
     const [totalPages, setTotalPages] = useState(0);
-    const [category, setCategory] = useState({});
+    const [category, setCategory] = useState({name: '', id: null});
+    const [loading, setLoading] = useState(false)
+    const confirm = useConfirm();
     const fetchData = () => {
+        setLoading(true);
         getAllCategory(paginationModel).then(data => {
             setCategories(data.data.content);
-            setTotalPages(data.data.totalPages);
+            setTotalPages(data.data.totalElements);
+            setLoading(false)
         })
     }
-    const onPageChange = (number) => {
-        setPaginationModel({ ...paginationModel, page: number });
-    }
-
-    const handleSort = (field) => {
-        let sort;
-        if (!isDesc) {
-            sort = field + ',desc';
-        } else {
-            sort = field + ',asc';
+    const columns = [
+        {
+            field: 'id', headerName: 'ID', width: 70
+        },
+        {
+            field: 'name', headerName: 'Name', width: 500
+        },
+        {
+            field: 'actions', headerName: 'Actions', width: 140, renderCell: (params) => {
+                return (
+                    <Stack>
+                        <Button
+                            onClick={(e) => onEdit(params.row)}
+                            variant="contained"
+                        >
+                            <EditIcon/>
+                        </Button>
+                        <Button
+                            onClick={(e) => onDelete(params.row)}
+                            variant="contained"
+                        >
+                            <DeleteIcon/>
+                        </Button>
+                    </Stack>
+                );
+            }
         }
-        setPaginationModel({
-            ...paginationModel,
-            sort: sort
-        })
-        setIsDesc((prevState) => !prevState);
+    ]
+    const onSubmit = (values) => {
+        if (!values.id) {
+            createCategory(values).then(e => {
+                toast.success('Created');
+                fetchData();
+                setIsShow(false);
+            })
+        } else {
+            updateCategory(values).then(e => {
+                toast.success('Updated');
+                fetchData();
+                setIsShow(false);
+            })
+        }
     }
-    const renderItem = (cate) => {
-        return <tr key={cate.id}>
-            <td>{cate.id}</td>
-            <td>{cate.name}</td>
-        </tr>
+    const onEdit = (values) => {
+        setIsShow(true);
+        setCategory(values)
     }
+    const onDelete = (value) => {
+        confirm({ confirmationButtonProps: { autoFocus: true } })
+            .then(() => {
+                deleteCategory(value.id).then(() => {
+                    fetchData();
+                    toast.success("Deleted");
+                });
 
+            })
+    }
+    const onCreate = () => {
+        setCategory({
+            name: '', id: null
+        })
+        setIsShow(true)
+    }
     useEffect(() => {
         fetchData();
     }, [paginationModel])
 
 
-    return <div className={'container'}  >
+    return <Paper className={'container'} style={{height: '100vh', padding: '2rem 4rem'}}>
         <h3>Category</h3>
-        <CategoryCreateUpdate show={isShow} onHide={() => setIsShow(false)} />
-        <Button onClick={() => setIsShow(true)}>Create Category</Button>
+        <CategoryCreateUpdate show={isShow}
+                              onHide={() => setIsShow(false)}
+                              category={category} categories={categories}
+                              onSubmit={onSubmit}/>
+        <Button style={{marginTop: 25, marginBottom: 25}} onClick={() => onCreate()}>Create Category</Button>
         <div>
-            <Table striped bordered hover>
-                <thead>
-                    <tr>
-                        <th onClick={() => {
-                            handleSort('id')
-                        }}>Id</th>
-                        <th onClick={() => {
-                            handleSort('name')
-                        }}>Name</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {categories.map(e => renderItem(e))}
-                </tbody>
-            </Table>
-            <Pagging currentPage={paginationModel.page} totalPages={totalPages} onPageChange={onPageChange} />
+                <DataGrid
+                    style={{height: '70vh'}}
+                    rows={categories}
+                    rowCount={totalPages}
+                    loading={loading}
+                    pagination
+                    page={paginationModel.page - 1}
+                    pageSize={paginationModel.pageSize}
+                    paginationMode="server"
+                    onPageChange={(newPage) => {
+                        setPaginationModel(old => ({...old, page: newPage + 1}))
+                    }}
+                    onPageSizeChange={(newPageSize) => setPaginationModel(old => ({...old, pageSize: newPageSize}))}
+                    columns={columns}
+                />
         </div>
-    </div>;
+    </Paper>;
 }
 
 export default CategoryScreen;
