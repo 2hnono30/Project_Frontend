@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import Marquee from "react-fast-marquee";
-import BlogCard from "../components/BlogCard";
 import ProductCard from "../components/ProductCard";
 import Categories from "../components/Categories";
 import Special from "../components/Special";
@@ -18,28 +17,28 @@ const Home = () => {
     const [product, setProduct] = useState({
         products: [],
         errorMessage: ''
-      });
+    });
     const PAGE = 4;
-    const callApi = (cate,sort,page) => {
+    const callApi = (cate, sort, page) => {
         try {
-          setProduct({ ...product });
-          async function fetchAllProducts() {
-            let resProduct = await ProductService.getProductListBySort(cate,sort,page);
-            // console.log(resProduct);
-            setProduct({
-              ...product,
-              products: resProduct.data.content,
-            });
-          }
-          fetchAllProducts();
+            setProduct({ ...product });
+            async function fetchAllProducts() {
+                let resProduct = await ProductService.getProductListBySort(cate, sort, page);
+                console.log(resProduct);
+                setProduct({
+                    ...product,
+                    products: resProduct.data.content,
+                });
+            }
+            fetchAllProducts();
         } catch (error) {
-          setProduct({ ...product, errorMessage: error.message });
+            setProduct({ ...product, errorMessage: error.message });
         }
-      }
-      useEffect(function ProductList() {
-            callApi(undefined,undefined,PAGE);
-      }, [])
-      const { products, errorMessage } = product;
+    }
+    useEffect(function ProductList() {
+        callApi(undefined, undefined, PAGE);
+    }, [])
+    const { products, errorMessage } = product;
     //   console.log(products);
     return (
         <>
@@ -200,7 +199,7 @@ const Home = () => {
                                 </Link>
                             </div>
                         </div>
-                        <ProductCard productList={products}/>
+                        <ProductCard productList={products} />
                     </div>
                 </div>
             </section>

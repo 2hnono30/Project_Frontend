@@ -15,38 +15,8 @@ const Sidebar = (props) => {
     const location = useLocation();
     const { closeMenu, setCloseMenu } = props;
     // const [closeMenu, setCloseMenu] = useState(false);
-
-    const handleCloseMenu = () => {
-        setCloseMenu(!closeMenu);
-    };
-
     return (
         <div className={closeMenu === false ? "sidebar" : "sidebar active"}>
-            <div
-                className={
-                    closeMenu === false
-                        ? "logoContainer"
-                        : "logoContainer active"
-                }
-            >
-                <img src="https://th.bing.com/th/id/OIP.fTk_wX8hbQxVZEIDwyuDEAHaHk?pid=ImgDet&rs=1" alt="icon" className="logo" />
-                <h2 className="title">... </h2>
-            </div>
-            <div
-                className={
-                    closeMenu === false
-                        ? "burgerContainer"
-                        : "burgerContainer active"
-                }
-            >
-                <div
-                    className="burgerTrigger"
-                    onClick={() => {
-                        handleCloseMenu();
-                    }}
-                ></div>
-                <div className="burgerMenu"></div>
-            </div>
             <div
                 className={
                     closeMenu === false
