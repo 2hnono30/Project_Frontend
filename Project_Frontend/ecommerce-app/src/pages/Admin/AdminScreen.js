@@ -12,8 +12,9 @@ import { useState } from 'react';
 function AdminScreen() {
     const divStyle = {
         margin: '0px 240px',
-        backGround: 'red'
     }
+
+
 
     const [closeMenu, setCloseMenu] = useState(false);
     return (
@@ -22,11 +23,11 @@ function AdminScreen() {
             <Sidebar closeMenu={closeMenu} setCloseMenu={setCloseMenu} />
 
             <Routes>
-                <Route path={'categories'} element={CategoryScreen()} />
+                <Route path={'categories'} element={<CategoryScreen closeMenu={closeMenu} />} />
                 <Route path={'customers'} element={CustomerScreen()} />
                 <Route path={'products'} element={ProductScreen()} />
                 <Route path={'home'} element={CustomerScreen()} />
-                <Route path={'brands'} element={CustomerScreen()} />
+                <Route path={'brands'} element={<CustomerScreen />} />
                 <Route path={'orders'} element={<OrderScreen />} />
             </Routes>
 
