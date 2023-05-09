@@ -4,7 +4,7 @@ import CategoryScreen from "./Category/CategoryScreen";
 import CustomerScreen from "./Customer/CustomerScreen";
 import Sidebar from './Sidebar';
 import ProductScreen from './Product/ProductScreen';
-import './Sidebar.scss'
+import './Sidebar.scss';
 import OrderScreen from './Order/OrderScreen';
 import { useState } from 'react';
 

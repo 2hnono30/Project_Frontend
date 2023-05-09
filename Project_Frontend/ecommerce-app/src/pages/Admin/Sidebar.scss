@@ -1,16 +1,17 @@
 @import "./_variables";
 
 body {
-    overflow: hidden;
-    height: 100vh;
-    width: 100vw;
+    // overflow: hidden;
+    // height: 100vh;
+    // width: 100vw;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: $veryLightGreen;
+    // background-color: $veryLightGreen;
     text-transform: capitalize;
 }
 
 div .container {
     left: 25%;
+    padding: 5rem;
 }
 
 h1 {
@@ -115,7 +116,7 @@ h1 {
         top: (35px / 2);
         z-index: 0;
         width: calc(6rem + 15rem);
-        background-color: $lightGrey;
+        // background-color: $lightGrey;
         height: 2px;
         transition: 0.5s all;
     }

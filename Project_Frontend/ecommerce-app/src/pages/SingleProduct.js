@@ -1,31 +1,73 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ReactStars from "react-rating-stars-component";
 import BreadCrumb from "../components/BreadCrumb";
 import Meta from "../components/Meta";
 import ProductCard from "../components/ProductCard";
 import ReactImageZoom from "react-image-zoom";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useParams, useNavigate } from "react-router-dom";
 import watch from "../images/watch.jpg";
+import { ProductService } from "../Services/Product/ProductService";
+import { currencyFormat } from "../components/Utils/Utils";
 const SingleProduct = () => {
-    const props = {
-        width: 594,
-        height: 600,
-        zoomWidth: 600,
+    const { id } = useParams();
+    const [state, setState] = useState({
+        product: {},
+        errorMessage: '',
+    });
+    const navigate = useNavigate();
+    const productApiById = (id) => {
+        try {
+            setState({ ...state });
+            async function fetchProductById() {
+                let resProduct = await ProductService.getProductById(id);
+                // console.log(resProduct.data.urlImages);
+                setState({
+                    ...state,
+                    product: resProduct.data,
+                });
+            }
+            fetchProductById();
+        } catch (error) {
+            setState({ ...state, errorMessage: error.message });
+        }
+    }
 
-        img: "https://www.bhphotovideo.com/images/images2500x2500/apple_m02x3ll_a_watch_series_6_gps_1595000.jpg?cs=srgb&dl=pexels-fernando-arcos-190819.jpg&fm=jpg",
-    };
 
-    const [orderedProduct, setOrderedProduct] = useState(true);
-    const copyToClipboard = (text) => {
-        console.log("text", text);
-        var textField = document.createElement("textarea");
-        textField.innerText = text;
-        document.body.appendChild(textField);
-        textField.select();
-        document.execCommand("copy");
-        textField.remove();
-    };
-    const closeModal = () => { };
+    useEffect(function ProductList() {
+        productApiById(id);
+    }, [id])
+    const { product, errorMessage } = state;
+
+    const addOrderProduct = () => {
+        let initOrderValue = JSON.parse(localStorage.getItem('orders'));
+        let check = false;
+        let currentIndex = 0;
+        if (!initOrderValue) {
+            initOrderValue = [];
+            initOrderValue.push({ product: product, quantity: 1 });
+            localStorage.setItem('orders', JSON.stringify(initOrderValue));
+        } else {
+            for (let i = 0; i < initOrderValue.length; i++) {
+                const element = initOrderValue[i];
+                if (element.product.id == id) {
+                    check = true;
+                    currentIndex = i;
+                    break;
+                } else {
+                    check = false;
+                }
+            }
+            if(check){
+                initOrderValue[currentIndex].quantity++;
+                console.log(initOrderValue[currentIndex]);
+                localStorage.setItem('orders', JSON.stringify(initOrderValue));
+            } else {
+                initOrderValue.push({ product: product, quantity: 1 });
+                localStorage.setItem('orders', JSON.stringify(initOrderValue));
+            }
+        }
+        navigate("/cart")
+    }
 
 
     return (
@@ -38,62 +80,31 @@ const SingleProduct = () => {
                         <div className="col-6">
                             <div className="main-product-image">
                                 <div>
-                                    <ReactImageZoom {...props} />
+                                    <img src="https://www.bhphotovideo.com/images/images2500x2500/apple_m02x3ll_a_watch_series_6_gps_1595000.jpg?cs=srgb&dl=pexels-fernando-arcos-190819.jpg&fm=jpg" />
                                 </div>
                             </div>
                             <div className="other-product-images d-flex flex-wrap gap-15">
-                                <div>
-                                    <img
-                                        src="https://www.bhphotovideo.com/images/images2500x2500/apple_m02x3ll_a_watch_series_6_gps_1595000.jpg?cs=srgb&dl=pexels-fernando-arcos-190819.jpg&fm=jpg"
-                                        className="img-fluid"
-                                        alt=""
-                                    />
-                                </div>
-                                <div>
-                                    <img
-                                        src="https://www.bhphotovideo.com/images/images2500x2500/apple_m02x3ll_a_watch_series_6_gps_1595000.jpg?cs=srgb&dl=pexels-fernando-arcos-190819.jpg&fm=jpg"
-                                        className="img-fluid"
-                                        alt=""
-                                    />
-                                </div>
-                                <div>
-                                    <img
-                                        src="https://www.bhphotovideo.com/images/images2500x2500/apple_m02x3ll_a_watch_series_6_gps_1595000.jpg?cs=srgb&dl=pexels-fernando-arcos-190819.jpg&fm=jpg"
-                                        className="img-fluid"
-                                        alt=""
-                                    />
-                                </div>
-                                <div>
-                                    <img
-                                        src="https://www.bhphotovideo.com/images/images2500x2500/apple_m02x3ll_a_watch_series_6_gps_1595000.jpg?cs=srgb&dl=pexels-fernando-arcos-190819.jpg&fm=jpg"
-                                        className="img-fluid"
-                                        alt=""
-                                    />
-                                </div>
+                                {product.urlImages?.map((img, index) => (
+                                    <div key={index}>
+                                        <img key={index} src={img} alt={`Image ${index}`} className="img-fluid" />
+                                    </div>
+                                ))}
                             </div>
                         </div>
                         <div className="col-6">
                             <div className="main-product-details">
                                 <div className="border-bottom">
                                     <h3 className="title">
-                                        Kids Headphones Bulk 10 Pack Multi Colored For Students
+                                        {product.name}
                                     </h3>
                                 </div>
                                 <div className="border-bottom py-3">
-                                    <p className="price">$ 100</p>
-                                    <div className="d-flex align-items-center gap-10">
-                                        <ReactStars
-                                            count={5}
-                                            size={24}
-                                            value={4}
-                                            edit={false}
-                                            activeColor="#ffd700"
-                                        />
-                                        <p className="mb-0 t-review">( 2 Reviews )</p>
-                                    </div>
-                                    <a className="review-btn" href="#review">
-                                        Write a Review
-                                    </a>
+                                    <p className="price">
+
+                                    {product.price ? currencyFormat(product.price) : ""}
+                                    
+                                    
+                                    </p>
                                 </div>
                                 <div className=" py-3">
                                     <div className="d-flex gap-10 align-items-center my-2">
@@ -102,11 +113,11 @@ const SingleProduct = () => {
                                     </div>
                                     <div className="d-flex gap-10 align-items-center my-2">
                                         <h3 className="product-heading">Brand :</h3>
-                                        <p className="product-data">Havells</p>
+                                        <p className="product-data">{product.price}</p>
                                     </div>
                                     <div className="d-flex gap-10 align-items-center my-2">
                                         <h3 className="product-heading">Category :</h3>
-                                        <p className="product-data">Watch</p>
+                                        <p className="product-data">{product.price}</p>
                                     </div>
                                     <div className="d-flex gap-10 align-items-center my-2">
                                         <h3 className="product-heading">Tags :</h3>
@@ -116,51 +127,16 @@ const SingleProduct = () => {
                                         <h3 className="product-heading">Availablity :</h3>
                                         <p className="product-data">In Stock</p>
                                     </div>
-                                    <div className="d-flex gap-10 flex-column mt-2 mb-3">
-                                        <h3 className="product-heading">Size :</h3>
-                                        <div className="d-flex flex-wrap gap-15">
-                                            <span className="badge border border-1 bg-white text-dark border-secondary">
-                                                S
-                                            </span>
-                                            <span className="badge border border-1 bg-white text-dark border-secondary">
-                                                M
-                                            </span>
-                                            <span className="badge border border-1 bg-white text-dark border-secondary">
-                                                XL
-                                            </span>
-                                            <span className="badge border border-1 bg-white text-dark border-secondary">
-                                                XXL
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <div className="d-flex gap-10 flex-column mt-2 mb-3">
-                                        <h3 className="product-heading">Color :</h3>
-                                        <ul className="colors ps-0">
-                                            <li></li>
-                                            <li></li>
-                                            <li></li>
-                                            <li></li>
-                                        </ul>
-                                    </div>
                                     <div className="d-flex align-items-center gap-15 flex-row mt-2 mb-3">
-                                        <h3 className="product-heading">Quantity :</h3>
-                                        <div className="">
-                                            <input
-                                                type="number"
-                                                name=""
-                                                min={1}
-                                                max={10}
-                                                className="form-control"
-                                                style={{ width: "70px" }}
-                                                id=""
-                                            />
-                                        </div>
                                         <div className="d-flex align-items-center gap-30 ms-5">
                                             <button
                                                 className="button border-0"
-                                                data-bs-toggle="modal"
                                                 data-bs-target="#staticBackdrop"
                                                 type="button"
+                                                onClick={(e) => {
+                                                    e.preventDefault();
+                                                    addOrderProduct();
+                                                }}
                                             >
                                                 Add to Cart
                                             </button>
@@ -176,19 +152,6 @@ const SingleProduct = () => {
                                             <b>5-10 business days!</b>
                                         </p>
                                     </div>
-                                    <div className="d-flex gap-10 align-items-center my-3">
-                                        <h3 className="product-heading">Product Link:</h3>
-                                        <a
-                                            href="javascript:void(0);"
-                                            onClick={() => {
-                                                copyToClipboard(
-                                                    "https://images.pexels.com/photos/190819/pexels-photo-190819.jpeg?cs=srgb&dl=pexels-fernando-arcos-190819.jpg&fm=jpg"
-                                                );
-                                            }}
-                                        >
-                                            Copy Product Link
-                                        </a>
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -202,10 +165,7 @@ const SingleProduct = () => {
                             <h4>Description</h4>
                             <div className="bg-white p-3">
                                 <p>
-                                    Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-                                    Tenetur nisi similique illum aut perferendis voluptas, quisquam
-                                    obcaecati qui nobis officia. Voluptatibus in harum deleniti
-                                    labore maxime officia esse eos? Repellat?
+                                    {product.description}
                                 </p>
                             </div>
                         </div>
@@ -232,13 +192,13 @@ const SingleProduct = () => {
                                             <p className="mb-0">Based on 2 Reviews</p>
                                         </div>
                                     </div>
-                                    {orderedProduct && (
+                                    {/* {orderedProduct && (
                                         <div>
                                             <a className="text-dark text-decoration-underline" href="">
                                                 Write a Review
                                             </a>
                                         </div>
-                                    )}
+                                    )} */}
                                 </div>
                                 <div className="review-form py-4">
                                     <h4>Write a Review</h4>
@@ -303,59 +263,6 @@ const SingleProduct = () => {
                         </div>
                         <div className="d-flex">
                             <ProductCard />
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div
-                className="modal fade"
-                id="staticBackdrop"
-                data-bs-backdrop="static"
-                data-bs-keyboard="false"
-                tabIndex={-1}
-                aria-labelledby="staticBackdropLabel"
-                aria-hidden="true"
-            >
-                <div className="modal-dialog modal-dialog-centered ">
-                    <div className="modal-content">
-                        <div className="modal-header py-2 border-0">
-                            <button
-                                type="button"
-                                className="btn-close"
-                                data-bs-dismiss="modal"
-                                aria-label="Close"
-                            ></button>
-                        </div>
-                        <div className="modal-body py-0">
-                            <div className="d-flex align-items-center">
-                                <div className="flex-grow-1 w-50">
-                                    <img src={watch} className="img-fluid" alt="product imgae" />
-                                </div>
-                                <div className="d-flex flex-column flex-grow-1 w-50">
-                                    <h6 className="mb-3">Apple Watch</h6>
-                                    <p className="mb-1">Quantity: asgfd</p>
-                                    <p className="mb-1">Color: asgfd</p>
-                                    <p className="mb-1">Size: asgfd</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="modal-footer border-0 py-0 justify-content-center gap-30">
-                            <button to="/cart" type="button" className="button" data-bs-dismiss="modal">
-                                View My Cart
-                            </button>
-                            <button type="button" className="button signup">
-                                Checkout
-                            </button>
-                        </div>
-                        <div className="d-flex justify-content-center py-3">
-                            <Link
-                                className="text-dark" to="/product" onClick={() => {
-                                    closeModal();
-                                }}
-                            >
-                                Continue To Shopping
-                            </Link>
                         </div>
                     </div>
                 </div>

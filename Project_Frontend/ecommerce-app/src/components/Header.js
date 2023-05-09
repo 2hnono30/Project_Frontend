@@ -19,7 +19,7 @@ const Header = ({ navigation }) => {
         errorMessage: ''
     });
 
-    const [search, setSearch] = useState();
+    const [search, setSearch] = useState('');
 
     const logout = async function (event) {
         event.preventDefault();
@@ -73,15 +73,16 @@ const Header = ({ navigation }) => {
                                     name="search"
                                     className="form-control py-2"
                                     placeholder="Search Products here..."
+                                    value={search}
+                                    onChange={(e) => setSearch(e.target.value)}
                                     aria-label="Search Products here..."
                                     aria-describedby="basic-addon2"
                                 />
+                                <button  style={{background: 'none', border: 'none'}}>
                                 <span
-                                onClick={(e) => {
-                                    e.preventDefault();
-                                    navigate( search==""|| search==undefined? "/" : "/product" , {state : {search: search}})
-                                    }}
                                  className="input-group-text py-3" id="basic-addon2"><BsSearch className="fs-6" /></span>
+                                </button>
+                               
                             </form>
                         </div>
                     </div>
