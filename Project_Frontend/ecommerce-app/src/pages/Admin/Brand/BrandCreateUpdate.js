@@ -1,0 +1,105 @@
+import React, { useEffect, useState } from 'react';
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
+import { FastField, Form, Formik } from 'formik';
+import InputCustom from "../../../components/CustomField/InputCustom";
+import * as Yup from "yup";
+import SelectCustom from "../../../components/CustomField/SelectCustom";
+import { Stack } from "react-bootstrap";
+import NoAvatar from "../../../images/noAvatar.jpg";
+import { createBrandAvatar } from './BrandAvatarService';
+import axios from 'axios';
+function BrandCreateUpdate(props) {
+    const { show, onHide, brand, brands, onSubmit } = props;
+    const validationSchema = Yup.object().shape({
+        name: Yup.string().required('This field is required.'),
+        id: Yup.number()
+            .required('This field is required.')
+            .nullable(),
+        fileUrl: Yup.string().required('This field is required.'),
+    });
+    const [image, setImage] = useState(0);
+    const [url, setUrl] = useState()
+    const changeAvatar = (e) => {
+
+        brand.fileUrl = e.target.files[0];
+        let reader = new FileReader();
+        reader.readAsDataURL(brand.fileUrl);
+        reader.onloadend = function (e) {
+            setUrl(reader.result);
+        }.bind(this);
+        handleUpload(brand.fileUrl);
+
+    }
+    const handleUpload = (image) => {
+        // preview image in js => display image 
+        // add id of file into object values when on submit 
+        // setAvatar({ ...avatar, uploading: true })
+        try {
+            async function uploadAvatar() {
+                let result = await createBrandAvatar(image);
+                setImage(result.data[0]);
+            }
+            uploadAvatar();
+        } catch {
+
+        }
+    }
+    useEffect(() => {
+        setUrl(brand.fileUrl)
+    }, [show])
+    const submit = (values) => {
+        values.image = image;
+        onSubmit(values);
+    }
+
+    return (
+        <Modal show={show} onHide={onHide}>
+            <Formik onSubmit={(values) => submit(values)}
+                validationSchema={validationSchema}
+                initialValues={brand}
+            >
+                {formikProps => {
+                    // do something here ...
+                    const { values, errors, touched } = formikProps;
+                    console.log({ values, errors, touched });
+                    return (
+                        <Form>
+                            <Modal.Header closeButton>
+                                <Modal.Title>Modal title</Modal.Title>
+                            </Modal.Header>
+
+                            <Modal.Body className='d-flex align-items-center'>
+                                <div>
+                                    <FastField
+                                        name="name"
+                                        component={InputCustom}
+                                        fullWidth
+                                        label="Name brand"
+                                        placeholder="Eg: Wow nature ..."
+                                    />
+                                </div>
+                                <div className="col-8 d-flex justify-content-center">
+                                    <div className="w-50">
+                                        <img className="img-thumbnail avatar-lg" src={url || NoAvatar} alt=""
+                                            onClick={() => { document.querySelector("#fileAvatar").click() }} />
+                                        <input id="fileAvatar" accept="image/*" className="form-control d-none" type="file"
+                                            onChange={changeAvatar}
+                                        />
+                                    </div>
+                                </div>
+
+                            </Modal.Body>
+
+                            <Modal.Footer>
+                                <Button variant="secondary" onClick={onHide}>Close</Button>
+                                <Button type="submit" variant="primary">Save changes</Button>
+                            </Modal.Footer>
+                        </Form>);
+                }}
+            </Formik>
+        </Modal>
+    );
+}
+
+export default BrandCreateUpdate;
