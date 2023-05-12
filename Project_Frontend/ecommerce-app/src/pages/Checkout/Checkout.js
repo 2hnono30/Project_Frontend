@@ -44,7 +44,7 @@ const Checkout = () => {
     });
   const onSubmit = (values) => {
     try {
-      console.log(values)
+      console.log('onSubmit',values)
       let totalAmount = subTotal + 10;
       console.log(totalAmount);
       const data = {
@@ -67,7 +67,11 @@ const Checkout = () => {
       console.log("error checkout");
     }
   }
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
+  const button = useRef();
+  const buttonHide = () => {
+    return  (<Button type="submit" ref={button} hidden={true}></Button>)
+  }
   return (
     <>
       <div class1="checkout-wrapper py-5 home-wrapper-2">
@@ -103,6 +107,7 @@ const Checkout = () => {
                   customer={customer}
                   onSubmit={onSubmit}
                   refFrom={refFrom}
+                  buttonHide={buttonHide}
                 />
               </div>
             </div>
@@ -129,9 +134,8 @@ const Checkout = () => {
               </div>
               <div className="d-flex justify-content-end py-4">
                 <Button className='button' onClick={() => {
-                  if (refFrom.current) {
-                    console.log('temp')
-                    refFrom.current.handleSubmit()
+                  if (button.current) {
+                     button.current.click();
                   }
                 }} >
                   Checkout
@@ -172,5 +176,7 @@ export const CartItem = (props) => {
     </div>
   )
 }
+
+
 
 export default Checkout;
