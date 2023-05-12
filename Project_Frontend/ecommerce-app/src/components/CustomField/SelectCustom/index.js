@@ -45,7 +45,7 @@ function SelectCustom(props) {
                 label={label}
                 id={name}
                 {...field}
-                defaultValue = ""
+                defaultValue =""
                 value={value}
                 onChange={handleSelectedOptionChange}
                 placeholder={placeholder}

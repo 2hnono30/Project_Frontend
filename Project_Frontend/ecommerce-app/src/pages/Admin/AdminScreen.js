@@ -20,7 +20,7 @@ function AdminScreen() {
 
     const [closeMenu, setCloseMenu] = useState(false);
     return (
-        <>
+        <> 
             <ConfirmProvider>
                 <ToastContainer />
 

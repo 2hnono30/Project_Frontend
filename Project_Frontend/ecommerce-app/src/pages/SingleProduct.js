@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import ReactStars from "react-rating-stars-component";
 import BreadCrumb from "../components/BreadCrumb";
 import Meta from "../components/Meta";
@@ -8,7 +8,9 @@ import { Link, useLocation, useParams, useNavigate } from "react-router-dom";
 import watch from "../images/watch.jpg";
 import { ProductService } from "../Services/Product/ProductService";
 import { currencyFormat } from "../components/Utils/Utils";
+import AppContext from "../contexts/AppContext";
 const SingleProduct = () => {
+    const [appState, appDispatch] = useContext(AppContext);
     const { id } = useParams();
     const [state, setState] = useState({
         product: {},
@@ -39,13 +41,13 @@ const SingleProduct = () => {
     const { product, errorMessage } = state;
 
     const addOrderProduct = () => {
-        let initOrderValue = JSON.parse(localStorage.getItem('orders'));
+        let initOrderValue = appState.cartItems;
         let check = false;
         let currentIndex = 0;
         if (!initOrderValue) {
             initOrderValue = [];
             initOrderValue.push({ product: product, quantity: 1 });
-            localStorage.setItem('orders', JSON.stringify(initOrderValue));
+            appDispatch({type: "SET_CART_ITEMS", payload: initOrderValue})
         } else {
             for (let i = 0; i < initOrderValue.length; i++) {
                 const element = initOrderValue[i];
@@ -60,7 +62,7 @@ const SingleProduct = () => {
             if(check){
                 initOrderValue[currentIndex].quantity++;
                 console.log(initOrderValue[currentIndex]);
-                localStorage.setItem('orders', JSON.stringify(initOrderValue));
+                appDispatch({type: "SET_CART_ITEMS", payload: initOrderValue})
             } else {
                 initOrderValue.push({ product: product, quantity: 1 });
                 localStorage.setItem('orders', JSON.stringify(initOrderValue));

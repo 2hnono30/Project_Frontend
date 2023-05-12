@@ -12,11 +12,13 @@ import axios from 'axios';
 function BrandCreateUpdate(props) {
     const { show, onHide, brand, brands, onSubmit } = props;
     const validationSchema = Yup.object().shape({
-        name: Yup.string().required('This field is required.'),
+        name: Yup.string()
+        .required('This field is required.')
+        .min(2,'Brand Name with at least 2 characters')
+        .max(8,'Brand Name has at most 8 characters'),
         id: Yup.number()
             .required('This field is required.')
             .nullable(),
-        fileUrl: Yup.string().required('This field is required.'),
     });
     const [image, setImage] = useState(0);
     const [url, setUrl] = useState()
@@ -66,7 +68,7 @@ function BrandCreateUpdate(props) {
                     return (
                         <Form>
                             <Modal.Header closeButton>
-                                <Modal.Title>Modal title</Modal.Title>
+                                <Modal.Title>Modal Brand</Modal.Title>
                             </Modal.Header>
 
                             <Modal.Body className='d-flex align-items-center'>
