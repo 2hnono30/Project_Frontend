@@ -35,11 +35,16 @@ const Checkout = () => {
       id: null,
       fullName: '',
       email: '',
-      phone: '',
-      province: '',
-      district: '',
-      ward: '',
-      address: '',
+      phoneNumber: '',
+      locationRegion:{
+        provinceId: '',
+        provinceName:'',
+        districtId: '',
+        districtName: '',
+        wardId: '',
+        wardName: '',
+        address: '',
+      },
       note: ''
     });
   const onSubmit = (values) => {
@@ -53,16 +58,10 @@ const Checkout = () => {
             productId: e.id,
             quantity: e.quantity
           }
-
         }),
-        customer: values
+       customer: values
       }
       console.log(data);
-      // createCustomerInformation(values, totalAmount, cartItems).then(e => {
-      //   toast.success('CheckOut success');
-      //   // fetchData();
-      //   // setIsShow(false);
-      // })
     } catch {
       console.log("error checkout");
     }

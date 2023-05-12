@@ -27,9 +27,9 @@ function InputCustom(props) {
         field, form,
         type, label, placeholder, disabled, fullWidth
     } = props;
-    const { name } = field;
+    const { name, touched } = field;
     const {errors} = form;
-
+    console.log(form)
     return (
             <TextField
                 id={name}

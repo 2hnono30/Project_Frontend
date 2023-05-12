@@ -13,6 +13,7 @@ SelectCustom.propTypes = {
     placeholder: PropTypes.string,
     disabled: PropTypes.bool,
     options: PropTypes.array,
+    handleChangeCustom: PropTypes.func
 };
 
 SelectCustom.defaultProps = {
@@ -23,11 +24,15 @@ SelectCustom.defaultProps = {
 }
 
 function SelectCustom(props) {
-    const { field, options, label, placeholder, fullWidth } = props;
+    const { field, options, label, placeholder, fullWidth, handleChangeCustom } = props;
     const { name, value } = field;
 
     const handleSelectedOptionChange = (selectedOption) => {
-        console.log(selectedOption.target.value)
+        console.log(selectedOption.target.value);
+        if(selectedOption.target.value){
+            handleChangeCustom && handleChangeCustom(selectedOption.target.value);
+        }
+        
         const changeEvent = {
 
             target: {
@@ -37,6 +42,7 @@ function SelectCustom(props) {
         };
         field.onChange(changeEvent);
     }
+    
 
     return (
         <FormControl fullWidth={fullWidth}>
