@@ -6,15 +6,16 @@ import { useFormikContext } from 'formik';
 import InputCustom from "../../components/CustomField/InputCustom";
 import * as Yup from "yup";
 import SelectCustom from "../../components/CustomField/SelectCustom";
-import { Stack } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { BiArrowBack } from "react-icons/bi";
 import { districtCallAPI, provinceCallAPI, wardCallAPI } from "../../Services/Address/AddressService";
 import { toast } from "react-toastify";
 
 
-function CustomerInformation(props) {
-    const { customer, onSubmit, refFrom } = props;
+
+function  CustomerInformation(props) {
+    const { customer, onSubmit, refFrom, buttonHide } = props;
+
     const validationSchema = Yup.object().shape({
         fullName: Yup.string().required('This field is required.'),
         email: Yup.string().email().required('This field is required.'),
@@ -22,13 +23,10 @@ function CustomerInformation(props) {
             .required('This field is required.')
             .nullable(),
         province: Yup.string()
-            .required('This field is required.')
             .nullable(),
         district: Yup.string()
-            .required('This field is required.')
             .nullable(),
         ward: Yup.string()
-            .required('This field is required.')
             .nullable(),
         address: Yup.string()
             .required('This field is required.')
@@ -164,6 +162,7 @@ function CustomerInformation(props) {
                                         <Link to="/product" className="button">
                                             Continue to Shopping
                                         </Link>
+                                        {buttonHide()}
                                     </div>
                                 </div>
                             </Form>
