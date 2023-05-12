@@ -13,7 +13,7 @@ import { createCustomerInformation } from "../../Services/Checkout/CheckoutServi
 
 const Checkout = () => {
   const [appState, appDispatch] = useContext(AppContext);
-  
+
   const confirm = useConfirm();
   const refFrom = useRef();
   let initOrderValue = appState.cartItems;
@@ -67,6 +67,7 @@ const Checkout = () => {
       console.log("error checkout");
     }
   }
+  
   const [loading, setLoading] = useState(false)
   return (
     <>

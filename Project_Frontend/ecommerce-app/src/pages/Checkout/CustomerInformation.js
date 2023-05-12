@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { FastField, Form, Formik } from 'formik';
@@ -9,9 +9,11 @@ import SelectCustom from "../../components/CustomField/SelectCustom";
 import { Stack } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { BiArrowBack } from "react-icons/bi";
+import { districtCallAPI, provinceCallAPI, wardCallAPI } from "../../Services/Address/AddressService";
+import { toast } from "react-toastify";
 
 
-function  CustomerInformation(props) {
+function CustomerInformation(props) {
     const { customer, onSubmit, refFrom } = props;
     const validationSchema = Yup.object().shape({
         fullName: Yup.string().required('This field is required.'),
@@ -32,6 +34,32 @@ function  CustomerInformation(props) {
             .required('This field is required.')
             .nullable(),
     });
+
+    // const provinceAPI = () => {
+    //     try {
+    //       async function fetchAllProvince() {
+    //         let resProvince = await provinceCallAPI();
+    //         console.log(resProvince.data.results);
+    //       }
+    //       fetchAllProvince();
+    //     } catch {
+    //       console.log("error Province Call API");
+    //     }
+    //   }
+    //   provinceAPI();
+
+    const [provinces, setProvinces] = useState([]);
+    const fetchData = () => {
+        provinceCallAPI().then(e => {
+            setProvinces(e);
+            console.log(provinces);
+            // toast.success('province Call API Success');
+        })
+    }
+
+    useEffect(() => {
+        fetchData();
+    },[]);
 
     return (
         <>
@@ -83,7 +111,8 @@ function  CustomerInformation(props) {
                                             component={SelectCustom}
                                             fullWidth
                                             label="Province"
-                                            options={[]}
+
+                                            options={[provinces]}
                                             placeholder="Eg: Province ..."
                                         />
                                     </div>
