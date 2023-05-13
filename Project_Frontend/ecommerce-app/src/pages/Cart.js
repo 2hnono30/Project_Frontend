@@ -48,7 +48,7 @@ const Cart = () => {
         console.log(initOrderValue);
         appDispatch({type: "SET_CART_ITEMS", payload: initOrderValue})
         setState({ orderLists: initOrderValue });
-        toast.success("Deleted");
+        toast.success("Product removed from cart successfully ");
       }).catch(() => {
       })
   }

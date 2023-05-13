@@ -47,21 +47,21 @@ const Checkout = () => {
       },
       note: ''
     });
+
   const onSubmit = (values) => {
     try {
-      console.log('onSubmit',values)
-      let totalAmount = subTotal + 10;
-      console.log(totalAmount);
+      console.log('onSubmit',values);
       const data = {
         orderItems: orderLists.map(e => {
           return {
-            productId: e.id,
+            productId: e.product.id,
             quantity: e.quantity
           }
         }),
        customer: values
       }
-      console.log(data);
+      createCustomerInformation(data);
+      toast.success("Checkout Success");
     } catch {
       console.log("error checkout");
     }
