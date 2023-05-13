@@ -36,20 +36,18 @@ const Checkout = () => {
       fullName: '',
       email: '',
       phoneNumber: '',
-      locationRegion:{
-        provinceId: '',
-        provinceName:'',
-        districtId: '',
-        districtName: '',
-        wardId: '',
-        wardName: '',
-        address: '',
-      },
+      province: '',
+      provinceName: '',
+      district: '',
+      districtName: '',
+      ward: '',
+      wardName: '',
+      address: '',
       note: ''
     });
   const onSubmit = (values) => {
     try {
-      console.log('onSubmit',values)
+      console.log('onSubmit', values)
       let totalAmount = subTotal + 10;
       console.log(totalAmount);
       const data = {
@@ -59,7 +57,7 @@ const Checkout = () => {
             quantity: e.quantity
           }
         }),
-       customer: values
+        customer: values
       }
       console.log(data);
     } catch {
@@ -69,13 +67,13 @@ const Checkout = () => {
   const [loading, setLoading] = useState(false);
   const button = useRef();
   const buttonHide = () => {
-    return  (<Button type="submit" ref={button} hidden={true}></Button>)
+    return (<Button type="submit" ref={button} hidden={true}></Button>)
   }
 
   return (
     <>
       <div class1="checkout-wrapper py-5 home-wrapper-2">
-        <div className="container-xxl">
+        <div className="container-xxl" style={{ padding: '2rem' }}>
           <div className="row">
             <div className="col-7">
               <div className="checkout-left-data">
@@ -135,7 +133,7 @@ const Checkout = () => {
               <div className="d-flex justify-content-end py-4">
                 <Button className='button' onClick={() => {
                   if (button.current) {
-                     button.current.click();
+                    button.current.click();
                   }
                 }} >
                   Checkout
