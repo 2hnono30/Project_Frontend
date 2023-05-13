@@ -58,7 +58,7 @@ const Checkout = () => {
             quantity: e.quantity
           }
         }),
-       customer: values
+        customer: values
       }
       createCustomerInformation(data);
       toast.success("Checkout Success");
@@ -69,13 +69,13 @@ const Checkout = () => {
   const [loading, setLoading] = useState(false);
   const button = useRef();
   const buttonHide = () => {
-    return  (<Button type="submit" ref={button} hidden={true}></Button>)
+    return (<Button type="submit" ref={button} hidden={true}></Button>)
   }
 
   return (
     <>
       <div class1="checkout-wrapper py-5 home-wrapper-2">
-        <div className="container-xxl">
+        <div className="container-xxl" style={{ padding: '2rem' }}>
           <div className="row">
             <div className="col-7">
               <div className="checkout-left-data">
@@ -135,7 +135,7 @@ const Checkout = () => {
               <div className="d-flex justify-content-end py-4">
                 <Button className='button' onClick={() => {
                   if (button.current) {
-                     button.current.click();
+                    button.current.click();
                   }
                 }} >
                   Checkout

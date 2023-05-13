@@ -19,17 +19,15 @@ function CustomerInformation(props) {
         fullName: Yup.string().required('This field is required.'),
         email: Yup.string().email().required('This field is required.'),
         phoneNumber: Yup.number()
-            .required('This field is required.')
-            .nullable(),
-        province: Yup.string()
-            .nullable(),
-        district: Yup.string()
-            .nullable(),
-        ward: Yup.string()
-            .nullable(),
+            .required('This field is required.'),
+        province: Yup.object()
+            .required('This field is required.'),
+        district: Yup.object()
+            .required('This field is required.'),
+        ward: Yup.object()
+            .required('This field is required.'),
         address: Yup.string()
             .required('This field is required.')
-            .nullable(),
     });
 
     const [provinces, setProvinces] = useState([]);
@@ -39,20 +37,18 @@ function CustomerInformation(props) {
     const [wards, setWards] = useState([]);
 
     const fetchProvinceData = () => {
-        provinceCallAPI().then(e => { 
+        provinceCallAPI().then(e => {
             setProvinces(e.data.results.map(e => {
                 return {
                     id: e.province_id,
                     name: e.province_name
                 }
             }));
-
         })
     }
 
     const fetchDistrictData = () => {
         districtCallAPI().then(e => {
-            console.log("provinceId:",provinceId);
             if (provinceId) {
                 districtCallAPI(provinceId).then(e => {
                     setDistricts(e.data.results.map(e => {
@@ -67,7 +63,6 @@ function CustomerInformation(props) {
     }
     const fetchWardData = () => {
         wardCallAPI().then(e => {
-            console.log("districtId:", districtId);
             if (districtId) {
                 wardCallAPI(districtId).then(e => {
                     setWards(e.data.results.map(e => {
@@ -80,13 +75,6 @@ function CustomerInformation(props) {
             }
         })
     }
-   
-    useEffect(() => {
-        console.log(provinces);
-        console.log(districts);
-        console.log(wards);
-    }, [provinces, districts,wards])
-
     useEffect(() => {
         fetchWardData();
     }, [districtId]);
@@ -94,23 +82,22 @@ function CustomerInformation(props) {
     useEffect(() => {
         fetchProvinceData();
         fetchDistrictData();
-        // fetchWardData();
     }, [provinceId]);
 
-    const  onSubmitForm = (values) =>{
-        const customer =  {
+    const onSubmitForm = (values) => {
+        const customer = {
             ...values,
-            locationRegion:{
-              provinceId: values.province,
-              provinceName: provinces.find(e => e.id === values.province)?.name,
-              districtId: values.district,
-              districtName: districts.find(e => e.id === values.district)?.name,
-              wardId: values.ward,
-              wardName: wards.find(e => e.id === values.ward)?.name,
-              address: values.address,
+            locationRegion: {
+                provinceId: values.province,
+                provinceName: provinces.find(e => e.id === values.province)?.name,
+                districtId: values.district,
+                districtName: districts.find(e => e.id === values.district)?.name,
+                wardId: values.ward,
+                wardName: wards.find(e => e.id === values.ward)?.name,
+                address: values.address,
             }
-          }
-          onSubmit(customer);
+        }
+        onSubmit(customer);
     }
 
     return (
@@ -157,7 +144,7 @@ function CustomerInformation(props) {
                             </div>
                             <div className='d-flex gap-10'>
                                 <div className="flex-grow-1 bg-white" style={{ marginTop: 10 }}>
-                                    <Field
+                                    <FastField
                                         name="province"
                                         component={SelectCustom}
                                         fullWidth
