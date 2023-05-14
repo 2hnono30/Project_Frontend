@@ -45,7 +45,7 @@ function SelectCustom(props) {
         field.onChange(changeEvent);
     }
     const hasError = touched[name] && !!errors[name];
-    console.log(touched[name], errors[name], name);
+    // console.log(touched[name], errors[name], name);
 
     return (
         <FormControl fullWidth={fullWidth} error={hasError}>

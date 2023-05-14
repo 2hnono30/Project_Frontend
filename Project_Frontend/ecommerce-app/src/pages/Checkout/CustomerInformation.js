@@ -114,7 +114,7 @@ function CustomerInformation(props) {
                 // do something here ...
                 const { values, errors, touched } = formikProps;
 
-                console.log({ values, errors, touched });
+                // console.log({ values, errors, touched });
                 return (
                     <>
                         <h4 className="mb-3">Customer Contact Information</h4>
