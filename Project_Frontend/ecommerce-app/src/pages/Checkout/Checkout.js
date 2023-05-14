@@ -36,21 +36,24 @@ const Checkout = () => {
       fullName: '',
       email: '',
       phoneNumber: '',
-      locationRegion:{
+      locationRegion: {
         provinceId: '',
-        provinceName:'',
+        provinceName: '',
         districtId: '',
         districtName: '',
         wardId: '',
         wardName: '',
         address: '',
       },
-      note: ''
+      note: '',
+      province: '',
+      ward: '',
+      district: ''
     });
 
   const onSubmit = (values) => {
     try {
-      console.log('onSubmit',values);
+      console.log('onSubmit', values);
       const data = {
         orderItems: orderLists.map(e => {
           return {
