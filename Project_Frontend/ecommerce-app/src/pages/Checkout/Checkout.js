@@ -45,12 +45,15 @@ const Checkout = () => {
         wardName: '',
         address: '',
       },
-      note: ''
+      note: '',
+      province: '',
+      ward: '',
+      district: ''
     });
 
   const onSubmit = (values) => {
     try {
-      // console.log('onSubmit',values);
+      // console.log('onSubmit', values);
       const data = {
         orderItems: orderLists.map(e => {
           return {
@@ -68,7 +71,7 @@ const Checkout = () => {
               initOrderValue = [];
             }
             console.log(initOrderValue);
-            appDispatch({ type: "REMOVE_CART_ITEMS", payload: initOrderValue})
+            appDispatch({ type: "REMOVE_CART_ITEMS", payload: initOrderValue })
             setState({ orderLists: initOrderValue });
             toast.success("Checkout successfully ");
           });
@@ -79,9 +82,9 @@ const Checkout = () => {
       console.log("error checkout");
     }
   }
-  useEffect(()=>{
+  useEffect(() => {
     console.log('sjfgkushk');
-  },[orderLists]);
+  }, [orderLists]);
 
   const [loading, setLoading] = useState(false);
   const button = useRef();

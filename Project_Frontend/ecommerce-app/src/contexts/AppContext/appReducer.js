@@ -10,7 +10,6 @@ export function reducer(state, action) {
             localStorage.setItem("orders", JSON.stringify(action.payload));
             return { ...state, cartItems: action.payload };
         case "REMOVE_CART_ITEMS":
-            // localStorage.removeItem('orders');
             return { ...state, cartItems: action.payload };
         default:
             return state;
