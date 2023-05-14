@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { NavLink, Link, useLocation, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import user from "../images/user.svg";
@@ -9,17 +9,31 @@ import { faUserPlus } from "@fortawesome/free-solid-svg-icons";
 import { toast, ToastContainer } from 'react-toastify';
 import { CategoryService } from "../Services/Categories/CategoryService";
 import { ProductService } from "../Services/Product/ProductService";
+import { currencyFormat } from "./Utils/Utils";
+import AppContext from "../contexts/AppContext";
 
 const Header = ({ navigation }) => {
+    const [appState, appDispatch] = useContext(AppContext);
 
+    let initOrderValue = appState.cartItems;
+    if (!initOrderValue) {
+        initOrderValue = [];
+    }
+    let total = 0;
+    initOrderValue.forEach(element => {
+        total += (element.product.price * element.quantity);
+    })
+
+
+   
     const navigate = useNavigate();
 
     const [state, setState] = useState({
         categories: [],
-        errorMessage: ''
+        errorMessage: '',
     });
 
-    const [search, setSearch] = useState();
+    const [search, setSearch] = useState('');
 
     const logout = async function (event) {
         event.preventDefault();
@@ -73,15 +87,16 @@ const Header = ({ navigation }) => {
                                     name="search"
                                     className="form-control py-2"
                                     placeholder="Search Products here..."
+                                    value={search}
+                                    onChange={(e) => setSearch(e.target.value)}
                                     aria-label="Search Products here..."
                                     aria-describedby="basic-addon2"
                                 />
-                                <span
-                                onClick={(e) => {
-                                    e.preventDefault();
-                                    navigate( search==""|| search==undefined? "/" : "/product" , {state : {search: search}})
-                                    }}
-                                 className="input-group-text py-3" id="basic-addon2"><BsSearch className="fs-6" /></span>
+                                <button style={{ background: 'none', border: 'none' }}>
+                                    <span
+                                        className="input-group-text py-3" id="basic-addon2"><BsSearch className="fs-6" /></span>
+                                </button>
+
                             </form>
                         </div>
                     </div>
@@ -131,9 +146,9 @@ const Header = ({ navigation }) => {
                             <Link to="/cart" className="d-flex align-items-center gap-10 text-white">
                                 <img src={cart} alt="cart" />
                                 <div className="d-flex flex-column gap-10">
-                                    <span className="badge bg-white text-dark">0</span>
+                                    <span className="badge bg-white text-dark">{initOrderValue.length}</span>
                                     <p className="mb-0">
-                                        $ 500
+                                        {currencyFormat(total)}
                                     </p>
                                 </div>
                             </Link>

@@ -21,19 +21,9 @@ export class ProductService {
         return axios.get(url);
     }
 
-    // static getProductListByCateHome(sort,cate,page){
-    //     let url = CommonService.PRODUCTS_API+ "?";
-    //     if(sort){
-    //         url+='sort=' + sort + '&';
-    //     }
-    //     if(cate){
-    //         url+='categoryId=' + cate + '&';
-    //     }
-    //     if(page){
-    //         url+= 'size=' + page;
-    //     }
-    //     return axios.get(url);
-    // }
+    static getProductById(productId){
+        return axios.get(`${CommonService.PRODUCTS_API}/`+productId);
+    }
 
     // static getProductListBySortAndSearch(sort,cate,search){
     //     let url = CommonService.PRODUCTS_API+ "?"
