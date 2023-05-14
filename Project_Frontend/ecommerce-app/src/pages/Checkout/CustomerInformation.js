@@ -44,7 +44,6 @@ function CustomerInformation(props) {
                     name: e.province_name
                 }
             }));
-
         })
     }
 
