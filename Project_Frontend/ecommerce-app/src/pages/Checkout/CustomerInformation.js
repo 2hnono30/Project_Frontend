@@ -20,11 +20,11 @@ function CustomerInformation(props) {
         email: Yup.string().email().required('This field is required.'),
         phoneNumber: Yup.number()
             .required('This field is required.'),
-        province: Yup.object()
+        province: Yup.string()
             .required('This field is required.'),
-        district: Yup.object()
+        district: Yup.string()
             .required('This field is required.'),
-        ward: Yup.object()
+        ward: Yup.string()
             .required('This field is required.'),
         address: Yup.string()
             .required('This field is required.')
@@ -78,13 +78,15 @@ function CustomerInformation(props) {
     }
 
 
-
     useEffect(() => {
-        fetchWardData();
+        fetchProvinceData();
+    }, [])
+    useEffect(() => {
+        districtId && fetchWardData();
     }, [districtId]);
 
     useEffect(() => {
-        fetchDistrictData();
+        provinceId && fetchDistrictData();
     }, [provinceId]);
 
     const onSubmitForm = (values) => {
@@ -147,7 +149,7 @@ function CustomerInformation(props) {
                             </div>
                             <div className='d-flex gap-10'>
                                 <div className="flex-grow-1 bg-white" style={{ marginTop: 10 }}>
-                                    <FastField
+                                    <Field
                                         name="province"
                                         component={SelectCustom}
                                         fullWidth
