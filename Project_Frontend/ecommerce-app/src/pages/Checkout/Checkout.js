@@ -1,4 +1,4 @@
-import React, { useState, useContext, useRef } from "react";
+import React, { useState, useContext, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { BiArrowBack } from "react-icons/bi";
 import watch from "../../images/watch.jpg";
@@ -13,7 +13,7 @@ import { createCustomerInformation } from "../../Services/Checkout/CheckoutServi
 
 const Checkout = () => {
   const [appState, appDispatch] = useContext(AppContext);
-  
+
   const confirm = useConfirm();
   const refFrom = useRef();
   let initOrderValue = appState.cartItems;
@@ -35,47 +35,66 @@ const Checkout = () => {
       id: null,
       fullName: '',
       email: '',
-      phone: '',
+      phoneNumber: '',
+      locationRegion: {
+        provinceId: '',
+        provinceName: '',
+        districtId: '',
+        districtName: '',
+        wardId: '',
+        wardName: '',
+        address: '',
+      },
+      note: '',
       province: '',
-      district: '',
       ward: '',
-      address: '',
-      note: ''
+      district: ''
     });
+
   const onSubmit = (values) => {
     try {
-      console.log('onSubmit',values)
-      let totalAmount = subTotal + 10;
-      console.log(totalAmount);
+      // console.log('onSubmit', values);
       const data = {
         orderItems: orderLists.map(e => {
           return {
-            productId: e.id,
+            productId: e.product.id,
             quantity: e.quantity
           }
-
         }),
         customer: values
       }
-      console.log(data);
-      // createCustomerInformation(values, totalAmount, cartItems).then(e => {
-      //   toast.success('CheckOut success');
-      //   // fetchData();
-      //   // setIsShow(false);
-      // })
+      confirm({ confirmationButtonProps: { autoFocus: true } })
+        .then(() => {
+          createCustomerInformation(data).then(e => {
+            initOrderValue = appState.removeCartItems;
+            if (!initOrderValue) {
+              initOrderValue = [];
+            }
+            console.log(initOrderValue);
+            appDispatch({ type: "REMOVE_CART_ITEMS", payload: initOrderValue })
+            setState({ orderLists: initOrderValue });
+            toast.success("Checkout successfully ");
+          });
+        }).catch(() => {
+          toast.error("Checkout error");
+        })
     } catch {
       console.log("error checkout");
     }
   }
+  useEffect(() => {
+    console.log('sjfgkushk');
+  }, [orderLists]);
+
   const [loading, setLoading] = useState(false);
   const button = useRef();
   const buttonHide = () => {
-    return  (<Button type="submit" ref={button} hidden={true}></Button>)
+    return (<Button type="submit" ref={button} hidden={true}></Button>)
   }
   return (
     <>
       <div class1="checkout-wrapper py-5 home-wrapper-2">
-        <div className="container-xxl">
+        <div className="container-xxl" style={{ padding: '2rem' }}>
           <div className="row">
             <div className="col-7">
               <div className="checkout-left-data">
@@ -112,35 +131,42 @@ const Checkout = () => {
               </div>
             </div>
             <div className="col-5">
-              {(
-                orderLists.map((order, index) => <CartItem key={`${id}-${index}`}
-                  order={order}
-                  index={index}
-                  total={subTotal} />)
-              )}
-              <div className="border-bottom py-4">
-                <div className="d-flex justify-content-between align-items-center">
-                  <p className="total">Subtotal</p>
-                  <p className="total-price">{currencyFormat(subTotal)}</p>
-                </div>
-                <div className="d-flex justify-content-between align-items-center">
-                  <p className="mb-0 total">Shipping</p>
-                  <p className="mb-0 total-price">$ 10</p>
-                </div>
-              </div>
-              <div className="d-flex justify-content-between align-items-center border-bootom py-4">
-                <h4 className="total">Total</h4>
-                <h5 className="total-price">{currencyFormat(subTotal + 10)}</h5>
-              </div>
-              <div className="d-flex justify-content-end py-4">
-                <Button className='button' onClick={() => {
-                  if (button.current) {
-                     button.current.click();
-                  }
-                }} >
-                  Checkout
-                </Button>
-              </div>
+              {orderLists?.length == 0 ?
+                <div className="d-flex justify-content-center fw-lighter">
+                  <p>Không Có Sản Phẩm Nào Trong Giỏ Hàng Của Bạn</p>
+                </div> :
+                <>
+                  {(
+                    orderLists.map((order, index) => <CartItem key={`${id}-${index}`}
+                      order={order}
+                      index={index}
+                      total={subTotal} />)
+                  )}
+                  <div className="border-bottom py-4">
+                    <div className="d-flex justify-content-between align-items-center">
+                      <p className="total">Subtotal</p>
+                      <p className="total-price">{currencyFormat(subTotal)}</p>
+                    </div>
+                    <div className="d-flex justify-content-between align-items-center">
+                      <p className="mb-0 total">Shipping</p>
+                      <p className="mb-0 total-price">$ 10</p>
+                    </div>
+                  </div>
+                  <div className="d-flex justify-content-between align-items-center border-bootom py-4">
+                    <h4 className="total">Total</h4>
+                    <h5 className="total-price">{currencyFormat(subTotal + 10)}</h5>
+                  </div>
+                  <div className="d-flex justify-content-end py-4">
+                    <Button className='button' onClick={() => {
+                      if (button.current) {
+                        button.current.click();
+                      }
+                    }} >
+                      Checkout
+                    </Button>
+                  </div>
+                </>
+              }
             </div>
           </div>
         </div>

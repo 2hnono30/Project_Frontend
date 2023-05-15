@@ -45,11 +45,10 @@ const Cart = () => {
     confirm({ confirmationButtonProps: { autoFocus: true } })
       .then(() => {
         initOrderValue = initOrderValue.filter((item, index) => index != value);
-        console.log(initOrderValue);
+        // console.log(initOrderValue);
         appDispatch({type: "SET_CART_ITEMS", payload: initOrderValue})
         setState({ orderLists: initOrderValue });
-        toast.success("Deleted");
-      }).catch(() => {
+        toast.success("Product removed from cart successfully ");
       })
   }
   
