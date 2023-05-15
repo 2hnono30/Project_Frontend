@@ -13,9 +13,9 @@ function BrandCreateUpdate(props) {
     const { show, onHide, brand, brands, onSubmit } = props;
     const validationSchema = Yup.object().shape({
         name: Yup.string()
-        .required('This field is required.')
-        .min(2,'Brand Name with at least 2 characters')
-        .max(8,'Brand Name has at most 8 characters'),
+            .required('This field is required.')
+            .min(2, 'Brand Name with at least 2 characters')
+            .max(8, 'Brand Name has at most 8 characters'),
         id: Yup.number()
             .required('This field is required.')
             .nullable(),
@@ -51,6 +51,7 @@ function BrandCreateUpdate(props) {
         setUrl(brand.fileUrl)
     }, [show])
     const submit = (values) => {
+        console.log(values);
         values.image = image;
         onSubmit(values);
     }
@@ -63,8 +64,7 @@ function BrandCreateUpdate(props) {
             >
                 {formikProps => {
                     // do something here ...
-                    const { values, errors, touched } = formikProps;
-                    console.log({ values, errors, touched });
+
                     return (
                         <Form>
                             <Modal.Header closeButton>

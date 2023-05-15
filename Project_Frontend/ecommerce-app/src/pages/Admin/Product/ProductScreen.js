@@ -9,6 +9,8 @@ import { Stack } from "react-bootstrap";
 import { toast } from "react-toastify";
 import { useConfirm } from "material-ui-confirm";
 import { createProduct, deleteProduct, getAllProduct, updateProduct } from "./ProductService";
+import { findCategory } from "../Category/CategoryService";
+import { findBrand } from "../Brand/BrandService";
 const ProductScreen = () => {
   const [products, setProducts] = useState([])
   const [paginationModel, setPaginationModel] = useState({
@@ -18,12 +20,16 @@ const ProductScreen = () => {
   })
   const [isShow, setIsShow] = useState(false);
   const [totalPages, setTotalPages] = useState(0);
-  const [product, setProduct] = useState({ name: '', id: null });
+  const [product, setProduct] = useState({ name: '', id: null, price: '', avatar: '', categoryId: '', brandId: '', images: [], avatarId: '' });
+  const [categories, setCategories] = useState();
+  const [brands, setBrands] = useState();
   const [loading, setLoading] = useState(false)
   const confirm = useConfirm();
 
   const fetchData = () => {
     setLoading(true);
+    findCategory().then(data => setCategories(data.data.content))
+    findBrand().then(data => setBrands(data.data.content))
     getAllProduct(paginationModel).then(data => {
       setProducts(data.data.content);
       setTotalPages(data.data.totalElements);
@@ -34,6 +40,11 @@ const ProductScreen = () => {
   const columns = [
     {
       field: 'id', headerName: 'ID', width: 70
+    },
+    {
+      field: 'fileUrl', headerName: 'Avatar', width: 250, height: 150, renderCell: (params) => {
+        return (<img src={params.row.avatar} className="image-table" style={{ height: '20vh' }} alt="avatar" />)
+      }
     },
     {
       field: 'name', headerName: 'Name', width: 200
@@ -76,6 +87,7 @@ const ProductScreen = () => {
     }
   ]
   const onSubmit = (values) => {
+
     if (!values.id) {
       createProduct(values).then(e => {
         toast.success('Created');
@@ -84,6 +96,7 @@ const ProductScreen = () => {
       })
     } else {
       updateProduct(values).then(e => {
+        console.log(values);
         toast.success('Updated');
         fetchData();
         setIsShow(false);
@@ -91,6 +104,7 @@ const ProductScreen = () => {
     }
   }
   const onEdit = (values) => {
+    console.log(values);
     setIsShow(true);
     setProduct(values)
   }
@@ -106,12 +120,13 @@ const ProductScreen = () => {
   }
   const onCreate = () => {
     setProduct({
-      name: '', id: null
+      name: '', id: null, images: []
     })
     setIsShow(true)
   }
   useEffect(() => {
     fetchData();
+
   }, [paginationModel])
 
 
@@ -120,7 +135,7 @@ const ProductScreen = () => {
     <h3>Product</h3>
     <ProductCreateUpdate show={isShow}
       onHide={() => setIsShow(false)}
-      product={product} products={products}
+      product={product} products={products} categories={categories} brands={brands}
       onSubmit={onSubmit} />
     <Button style={{ marginTop: 25, marginBottom: 25 }} onClick={() => onCreate()}>Create Product</Button>
     <div>
