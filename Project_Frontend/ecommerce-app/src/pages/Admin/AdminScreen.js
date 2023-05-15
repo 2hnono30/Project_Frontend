@@ -16,8 +16,6 @@ function AdminScreen() {
         margin: '0px 240px',
     }
 
-
-
     const [closeMenu, setCloseMenu] = useState(false);
     return (
         <>
@@ -37,9 +35,6 @@ function AdminScreen() {
                     <Outlet />
                 </div>
             </ConfirmProvider>
-
-
-
         </>
 
     );

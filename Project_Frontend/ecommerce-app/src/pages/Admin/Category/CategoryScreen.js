@@ -11,7 +11,7 @@ import {toast} from "react-toastify";
 import { useConfirm } from "material-ui-confirm";
 
 
-const CategoryScreen = ({closeMenu}) => {
+const CategoryScreen = () => {
 
     const [categories, setCategories] = useState([])
     const [paginationModel, setPaginationModel] = useState({

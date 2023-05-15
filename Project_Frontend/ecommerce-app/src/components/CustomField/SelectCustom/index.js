@@ -23,8 +23,32 @@ SelectCustom.defaultProps = {
 }
 
 function SelectCustom(props) {
-    const { field, options, label, placeholder, fullWidth } = props;
+    const { field, options, label, placeholder, fullWidth, locationType } = props;
     const { name, value } = field;
+
+    let optionKey = ''
+    let optionName = ''
+
+    switch(locationType) {
+        case 'province': 
+            optionKey = 'province_id';
+            optionName = 'province_name';
+        break;
+
+        case 'district': 
+            optionKey = 'district_id';
+            optionName = 'district_name';
+        break;
+
+        case 'ward': 
+            optionKey = 'ward_id';
+            optionName = 'ward_name';
+        break;
+
+        default: 
+            optionKey = 'id';
+            optionName = 'name';
+    }
 
     const handleSelectedOptionChange = (selectedOption) => {
         console.log(selectedOption.target.value)
@@ -50,7 +74,8 @@ function SelectCustom(props) {
                 onChange={handleSelectedOptionChange}
                 placeholder={placeholder}
             >
-                {options.map(option => <MenuItem key={option.id} value={option.id}>{option.name}</MenuItem>)}
+                {options.map(option => <MenuItem key={option.id} value={option[optionKey]}>{option[optionName]}</MenuItem>)}
+                
             </Select>
         </FormControl>
     );

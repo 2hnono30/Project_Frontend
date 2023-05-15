@@ -5,7 +5,6 @@ import {FastField, Form, Formik} from 'formik';
 import InputCustom from "../../../components/CustomField/InputCustom";
 import * as Yup from "yup";
 import SelectCustom from "../../../components/CustomField/SelectCustom";
-import {Stack} from "react-bootstrap";
 
 function CategoryCreateUpdate(props) {
     const {show, onHide, category, categories, onSubmit} = props;
@@ -28,7 +27,7 @@ function CategoryCreateUpdate(props) {
                     return (
                         <Form>
                             <Modal.Header closeButton>
-                                <Modal.Title>Modal title</Modal.Title>
+                                <Modal.Title>Create Category</Modal.Title>
                             </Modal.Header>
 
                             <Modal.Body>
@@ -41,6 +40,7 @@ function CategoryCreateUpdate(props) {
                                         placeholder="Eg: Wow nature ..."
                                     />
                                 </div>
+                                
                                 <div style={{marginTop: 20}}>
                                     <FastField
                                         name="id"
