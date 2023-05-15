@@ -22,7 +22,7 @@ const SingleProduct = () => {
             setState({ ...state });
             async function fetchProductById() {
                 let resProduct = await ProductService.getProductById(id);
-                // console.log(resProduct.data.urlImages);
+                console.log(resProduct.data);
                 setState({
                     ...state,
                     product: resProduct.data,
@@ -47,7 +47,7 @@ const SingleProduct = () => {
         if (!initOrderValue) {
             initOrderValue = [];
             initOrderValue.push({ product: product, quantity: 1 });
-            appDispatch({type: "SET_CART_ITEMS", payload: initOrderValue})
+            appDispatch({ type: "SET_CART_ITEMS", payload: initOrderValue })
         } else {
             for (let i = 0; i < initOrderValue.length; i++) {
                 const element = initOrderValue[i];
@@ -59,10 +59,10 @@ const SingleProduct = () => {
                     check = false;
                 }
             }
-            if(check){
+            if (check) {
                 initOrderValue[currentIndex].quantity++;
                 console.log(initOrderValue[currentIndex]);
-                appDispatch({type: "SET_CART_ITEMS", payload: initOrderValue})
+                appDispatch({ type: "SET_CART_ITEMS", payload: initOrderValue })
             } else {
                 initOrderValue.push({ product: product, quantity: 1 });
                 localStorage.setItem('orders', JSON.stringify(initOrderValue));
@@ -82,11 +82,11 @@ const SingleProduct = () => {
                         <div className="col-6">
                             <div className="main-product-image">
                                 <div>
-                                    <img src="https://www.bhphotovideo.com/images/images2500x2500/apple_m02x3ll_a_watch_series_6_gps_1595000.jpg?cs=srgb&dl=pexels-fernando-arcos-190819.jpg&fm=jpg" />
+                                    <img src={product.avatar} />
                                 </div>
                             </div>
                             <div className="other-product-images d-flex flex-wrap gap-15">
-                                {product.urlImages?.map((img, index) => (
+                                {product.images?.map((img, index) => (
                                     <div key={index}>
                                         <img key={index} src={img} alt={`Image ${index}`} className="img-fluid" />
                                     </div>
@@ -103,9 +103,9 @@ const SingleProduct = () => {
                                 <div className="border-bottom py-3">
                                     <p className="price">
 
-                                    {product.price ? currencyFormat(product.price) : ""}
-                                    
-                                    
+                                        {product.price ? currencyFormat(product.price) : ""}
+
+
                                     </p>
                                 </div>
                                 <div className=" py-3">

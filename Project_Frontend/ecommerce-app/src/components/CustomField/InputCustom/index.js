@@ -28,17 +28,14 @@ function InputCustom(props) {
         type, label, placeholder, disabled, fullWidth
     } = props;
     const { name } = field;
-<<<<<<< HEAD
     const { errors } = form;
+    // const { errors, touched } = form;
+
+
 
 
     // const { errors, touched } = form;
 
-=======
-
-
-    const { errors, touched } = form;
->>>>>>> 92fd71e28814bce888a99b281dd1630e9ed34b05
     return (
         <TextField
             id={name}
@@ -48,7 +45,7 @@ function InputCustom(props) {
             type={type}
             disabled={disabled}
             placeholder={placeholder}
-<<<<<<< HEAD
+
 
 
             fullWidth={fullWidth}
@@ -59,11 +56,11 @@ function InputCustom(props) {
         // error={touched[name] && !!errors[name]}
         // helperText={touched[name] && errors[name]}
 
-=======
-            fullWidth={fullWidth}
-            error={touched[name] && !!errors[name]}
-            helperText={touched[name] && errors[name]}
->>>>>>> 92fd71e28814bce888a99b281dd1630e9ed34b05
+
+        // fullWidth={fullWidth}
+        // error={touched[name] && !!errors[name]}
+        // helperText={touched[name] && errors[name]}
+
         />
     );
 }
