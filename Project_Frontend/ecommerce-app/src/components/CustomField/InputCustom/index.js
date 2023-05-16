@@ -42,7 +42,14 @@ function InputCustom(props) {
         field.onChange(changeEvent);
     }
     const { name } = field;
-    const { errors, touched } = form;
+    const { errors } = form;
+    // const { errors, touched } = form;
+
+
+
+
+    // const { errors, touched } = form;
+
     return (
         <TextField
             id={name}
@@ -52,9 +59,22 @@ function InputCustom(props) {
             type={type}
             disabled={disabled}
             placeholder={placeholder}
+
+
+
             fullWidth={fullWidth}
-            error={touched[name] && !!errors[name]}
-            helperText={touched[name] && errors[name]}
+            error={!!errors[name]}
+            helperText={errors[name]}
+
+        // fullWidth={fullWidth}
+        // error={touched[name] && !!errors[name]}
+        // helperText={touched[name] && errors[name]}
+
+
+        // fullWidth={fullWidth}
+        // error={touched[name] && !!errors[name]}
+        // helperText={touched[name] && errors[name]}
+
         />
     );
 }

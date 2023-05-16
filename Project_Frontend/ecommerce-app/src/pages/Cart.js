@@ -32,7 +32,7 @@ const Cart = () => {
     order.quantity = Number(event.target.value);
     setState({ ...state })
     initOrderValue[event.target.id].quantity = Number(event.target.value);
-    appDispatch({type: "SET_CART_ITEMS", payload: initOrderValue})
+    appDispatch({ type: "SET_CART_ITEMS", payload: initOrderValue })
   }
   let total = 0;
   initOrderValue.forEach(element => {
@@ -46,12 +46,12 @@ const Cart = () => {
       .then(() => {
         initOrderValue = initOrderValue.filter((item, index) => index != value);
         // console.log(initOrderValue);
-        appDispatch({type: "SET_CART_ITEMS", payload: initOrderValue})
+        appDispatch({ type: "SET_CART_ITEMS", payload: initOrderValue })
         setState({ orderLists: initOrderValue });
         toast.success("Product removed from cart successfully ");
       })
   }
-  
+
   const { orderLists } = state;
   const id = useId();
   return (
@@ -107,7 +107,7 @@ export const CartItem = (props) => {
     <div className="cart-data py-3 mb-2 d-flex justify-content-between align-items-center" >
       <div className="cart-col-1 gap-15 d-flex align-items-center">
         <div className="w-25">
-          <img src={watch} className="img-fluid" alt="product image" />
+          <img src={order.product.avatar} className="img-fluid" alt="product image" />
         </div>
         <div className="w-75">
           <p>{order.product.name}</p>

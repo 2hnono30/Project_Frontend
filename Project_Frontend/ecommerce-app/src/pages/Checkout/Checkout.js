@@ -187,7 +187,7 @@ export const CartItem = (props) => {
             >
               {order.quantity}
             </span>
-            <img className="img-fluid" src={watch} alt="product" />
+            <img className="img-fluid" src={order.product.avatar} alt="product" />
           </div>
           <div>
             <h5 className="total-price">{currencyFormat(order.product.price)}</h5>
