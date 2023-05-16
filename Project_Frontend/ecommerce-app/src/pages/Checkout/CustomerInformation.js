@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { FastField, Form, Formik, Field, useFormikContext } from 'formik';
+import { InputMask } from 'react-input-mask';
 import InputCustom from "../../components/CustomField/InputCustom";
 import * as Yup from "yup";
 import SelectCustom from "../../components/CustomField/SelectCustom";
@@ -9,16 +10,34 @@ import { Link } from "react-router-dom";
 import { BiArrowBack } from "react-icons/bi";
 import { districtCallAPI, provinceCallAPI, wardCallAPI } from "../../Services/Address/AddressService";
 import { toast } from "react-toastify";
+import TextMaskCustom from '../../components/CustomField/InputMask';
 
 
 
 function CustomerInformation(props) {
     const { customer, onSubmit, refFrom, buttonHide } = props;
 
+    const phoneRegExp = /^(0?)(3[2-9]|5[6|8|9]|7[0|6-9]|8[0-6|8|9]|9[0-4|6-9])[0-9]{7}$/;
+    const emailRegexp = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
+
+    function formatPhoneNumber(value) {
+        if (!value) return value;
+        const phoneNumber = value.replace(/[^\d]/g, '');
+        const phoneNumberLength = phoneNumber.length;
+        if (phoneNumberLength < 4) return phoneNumber;
+        if (phoneNumberLength < 7) {
+            return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(3)}`;
+        }
+        return `(${phoneNumber.slice(0, 3)})${phoneNumber.slice(3, 6)}-${phoneNumber.slice(6, 10)}`;
+    }
+
     const validationSchema = Yup.object().shape({
         fullName: Yup.string().required('This field is required.'),
-        email: Yup.string().email().required('This field is required.'),
-        phoneNumber: Yup.number()
+        email: Yup.string().email().matches(emailRegexp, 'Email invalidate').required('This field is required.'),
+        phoneNumber: Yup.string()
+            .min(10, 'Phone Number must have 10 characters')
+            .max(10, 'Phone Number up to 10 characters')
+            .matches(phoneRegExp, 'phone number must start with 03 / 09 or 07')
             .required('This field is required.'),
         province: Yup.string()
             .required('This field is required.'),
@@ -114,7 +133,7 @@ function CustomerInformation(props) {
                 // do something here ...
                 const { values, errors, touched } = formikProps;
 
-                // console.log({ values, errors, touched });
+                console.log({ values, errors, touched });
                 return (
                     <>
                         <h4 className="mb-3">Customer Contact Information</h4>
@@ -138,13 +157,16 @@ function CustomerInformation(props) {
                                 />
                             </div>
                             <div className='bg-white' style={{ marginTop: 10 }}>
-                                <FastField
-                                    name="phoneNumber"
-                                    component={InputCustom}
-                                    fullWidth
-                                    label="Phone Number"
-                                    placeholder="Eg: Wow nature ..."
-                                />
+                                <div className="flex-grow-1 bg-white" style={{ marginTop: 10 }}>
+                                    <FastField
+                                        name="phoneNumber"
+                                        component={TextMaskCustom}
+                                        fullWidth
+                                        label="Phone Number"
+                                        placeholder="Eg: Wow nature ..."
+                                        handleInputCustomChange={values.phoneNumber}
+                                    />
+                                </div>
                             </div>
                             <div className='d-flex gap-10'>
                                 <div className="flex-grow-1 bg-white" style={{ marginTop: 10 }}>
