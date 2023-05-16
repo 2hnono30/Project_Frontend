@@ -48,7 +48,8 @@ const Checkout = () => {
       note: '',
       province: '',
       ward: '',
-      district: ''
+      district: '',
+      address: '',
     });
 
   const onSubmit = (values) => {
