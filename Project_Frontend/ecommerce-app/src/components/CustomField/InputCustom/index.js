@@ -28,22 +28,24 @@ function InputCustom(props) {
         type, label, placeholder, disabled, fullWidth ,handleChangeCustom
     } = props;
     const handleInputCustomChange = (InputCustom) => {
-        if (InputCustom.target.value) {
-            handleChangeCustom && handleChangeCustom(InputCustom.target.value);
-            console.log(handleChangeCustom);
+        let value;
+        console.log(handleChangeCustom);
+        if (InputCustom.target.value && handleChangeCustom) {
+
+            value = handleChangeCustom(InputCustom.target.value);
+            console.log(value, 'input')
         }
         const changeEvent = {
 
             target: {
                 name: name,
-                value: InputCustom.target.value
+                value: value !== undefined ? value :  InputCustom.target.value
             }
         };
         field.onChange(changeEvent);
     }
     const { name } = field;
-    const { errors } = form;
-    // const { errors, touched } = form;
+    const { errors, touched } = form;
 
 
 
@@ -62,13 +64,13 @@ function InputCustom(props) {
 
 
 
-            fullWidth={fullWidth}
-            error={!!errors[name]}
-            helperText={errors[name]}
+            // fullWidth={fullWidth}
+            // error={!!errors[name]}
+            // helperText={errors[name]}
 
-        // fullWidth={fullWidth}
-        // error={touched[name] && !!errors[name]}
-        // helperText={touched[name] && errors[name]}
+        fullWidth={fullWidth}
+        error={touched[name] && !!errors[name]}
+        helperText={touched[name] && errors[name]}
 
 
         // fullWidth={fullWidth}

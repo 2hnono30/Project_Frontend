@@ -25,7 +25,6 @@ function TextMaskCustom(props) {
         };
         field.onChange(changeEvent);
     }
-    console.log(field);
     const { name } = field;
     const { errors, touched } = form;
     return (

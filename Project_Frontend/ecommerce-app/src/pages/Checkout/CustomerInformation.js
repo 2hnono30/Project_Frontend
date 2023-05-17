@@ -26,18 +26,18 @@ function CustomerInformation(props) {
         const phoneNumberLength = phoneNumber.length;
         if (phoneNumberLength < 4) return phoneNumber;
         if (phoneNumberLength < 7) {
-            return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(3)}`;
+            return `${phoneNumber.slice(0, 3)} ${phoneNumber.slice(3)}`;
         }
-        return `(${phoneNumber.slice(0, 3)})${phoneNumber.slice(3, 6)}-${phoneNumber.slice(6, 10)}`;
+        return `${phoneNumber.slice(0, 3)}${phoneNumber.slice(3, 6)}-${phoneNumber.slice(6, 10)}`;
     }
 
     const validationSchema = Yup.object().shape({
         fullName: Yup.string().required('This field is required.'),
         email: Yup.string().email().matches(emailRegexp, 'Email invalidate').required('This field is required.'),
         phoneNumber: Yup.string()
-            .min(10, 'Phone Number must have 10 characters')
-            .max(10, 'Phone Number up to 10 characters')
-            .matches(phoneRegExp, 'phone number must start with 03 / 09 or 07')
+            .min(12, 'Phone Number must have 10 characters')
+            .max(12, 'Phone Number up to 10 characters')
+            //.matches(phoneRegExp, 'phone number must start with 03 / 09 or 07')
             .required('This field is required.'),
         province: Yup.string()
             .required('This field is required.'),
@@ -118,11 +118,18 @@ function CustomerInformation(props) {
                 wardId: values.ward,
                 wardName: wards.find(e => e.id === values.ward)?.name,
                 address: values.address,
-            }
+            },
+            phoneNumber: values.phoneNumber.replaceAll(' ', '')
         }
         onSubmit(customer);
     }
-
+    const phoneNumberFormat = (value) => {
+        if(!value) return value;
+        const phoneNumber = value.replace(/\D/g, '')
+        if(phoneNumber.length < 4) return phoneNumber;
+        if(phoneNumber.length < 7) return `${phoneNumber.slice(0,3)}-${phoneNumber.slice(3)}`;
+        return `${phoneNumber.slice(0,3)}-${phoneNumber.slice(3,6)}-${phoneNumber.slice(6, 10)}`
+    };
     return (
         <Formik onSubmit={(values) => onSubmitForm(values)}
             validationSchema={validationSchema}
@@ -134,6 +141,7 @@ function CustomerInformation(props) {
                 const { values, errors, touched } = formikProps;
 
                 console.log({ values, errors, touched });
+
                 return (
                     <>
                         <h4 className="mb-3">Customer Contact Information</h4>
@@ -160,11 +168,11 @@ function CustomerInformation(props) {
                                 <div className="flex-grow-1 bg-white" style={{ marginTop: 10 }}>
                                     <FastField
                                         name="phoneNumber"
-                                        component={TextMaskCustom}
+                                        component={InputCustom}
                                         fullWidth
                                         label="Phone Number"
                                         placeholder="Eg: Wow nature ..."
-                                        handleInputCustomChange={values.phoneNumber}
+                                        handleChangeCustom={phoneNumberFormat}
                                     />
                                 </div>
                             </div>
