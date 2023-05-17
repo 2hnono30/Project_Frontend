@@ -4,6 +4,7 @@ export class CommonService{
     static REGISTER_API = "http://localhost:8080/api/auth/register";
     static PRODUCTS_API = "http://localhost:8080/api/products";
     static CATEGORIES_API = "http://localhost:8080/api/categories";
+    static BRANDS_API = "http://localhost:8080/api/brands";
     static CATEGORYBYID_API = "http://localhost:8080/api/category";
     static CHECKOUT_API = "http://localhost:8080/api/user/orders";
     static PROVINCE_API = "https://vapi.vnappmob.com/api/province/";

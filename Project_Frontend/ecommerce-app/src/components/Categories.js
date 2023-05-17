@@ -13,7 +13,7 @@ const Categories = () => {
         errorMessage: ''
     });
     const [loading, setLoading] = useState(false);
-    
+
     var settings = {
         dots: true,
         infinite: true,
@@ -22,7 +22,7 @@ const Categories = () => {
         slidesToScroll: 1
     };
 
-    
+
     useEffect(function () {
         try {
             setLoading(true);
@@ -68,22 +68,22 @@ const Categories = () => {
         return (
             <>
                 {/* <Slider {...settings}> */}
-                    <Marquee className="d-flex">
-                        {(
-                            categories.map(category => {
-                                return (
-                                    <div key={category.id} >
-                                        <Link to={`/product/category/${category.id}`} className="d-flex gap align-items-center test gap-100">
-                                            <div>
+                <Marquee className="d-flex">
+                    {(
+                        categories.map(category => {
+                            return (
+                                <div key={category.id} className="mx-4 ww-25">
+                                    <Link to={`/product/category/${category.id}`} className="d-flex gap align-items-center mx-4 ww-25">
+                                        {/* <div>
                                                 <h6>{category.name}</h6>
-                                            </div>
-                                            <img src="images/camera.jpg" alt="camera" />
-                                        </Link>
-                                    </div>
-                                )
-                            })
-                        )}
-                    </Marquee>
+                                            </div> */}
+                                        <img src="images/camera.jpg" alt="camera" />
+                                    </Link>
+                                </div>
+                            )
+                        })
+                    )}
+                </Marquee>
                 {/* </Slider> */}
             </>
         );
