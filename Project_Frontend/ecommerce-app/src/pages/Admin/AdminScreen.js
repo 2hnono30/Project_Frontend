@@ -15,10 +15,6 @@ function AdminScreen() {
     const divStyle = {
         margin: '0px 240px',
     }
-<<<<<<< HEAD
-
-=======
->>>>>>> 0db3bc7a2e77f210262447fecdfa03b70037b36f
     const [closeMenu, setCloseMenu] = useState(false);
     return (
         <>

@@ -6,14 +6,9 @@ import InputCustom from "../../../components/CustomField/InputCustom";
 import * as Yup from "yup";
 import NoAvatar from "../../../images/noAvatar.jpg";
 import { createBrandAvatar } from './BrandAvatarService';
-<<<<<<< HEAD
 
 function BrandCreateUpdate(props) {
-=======
-import axios from 'axios';
 
-function UserCreate(props) {
->>>>>>> 0db3bc7a2e77f210262447fecdfa03b70037b36f
     const { show, onHide, brand, brands, onSubmit } = props;
     const validationSchema = Yup.object().shape({
         name: Yup.string()
@@ -64,12 +59,10 @@ function UserCreate(props) {
                 initialValues={brand}
             >
                 {formikProps => {
-<<<<<<< HEAD
                     const { values, errors, touched } = formikProps;
-=======
+                    console.log( values, errors, touched);
                     // do something here ...
 
->>>>>>> 0db3bc7a2e77f210262447fecdfa03b70037b36f
                     return (
                         <Form>
                             <Modal.Header closeButton>
@@ -109,4 +102,4 @@ function UserCreate(props) {
     );
 }
 
-export default UserCreate;
+export default BrandCreateUpdate;
