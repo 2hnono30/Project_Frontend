@@ -12,6 +12,7 @@ const Categories = () => {
         categories: [],
         errorMessage: ''
     });
+    const [loading, setLoading] = useState(false);
     
     var settings = {
         dots: true,
@@ -24,7 +25,7 @@ const Categories = () => {
     
     useEffect(function () {
         try {
-            setState({ ...state });
+            setLoading(true);
             async function fetchAllCategories() {
                 let resCategories = await CategoryService.getCategories();
 
@@ -32,6 +33,7 @@ const Categories = () => {
                     ...state,
                     categories: resCategories.data.content,
                 })
+                setLoading(false);
             }
             fetchAllCategories();
         } catch (error) {

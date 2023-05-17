@@ -9,6 +9,7 @@ import { ProductService } from "../Services/Product/ProductService";
 import { currencyFormat } from "./Utils/Utils";
 import { CategoryService } from "./../Services/Categories/CategoryService";
 import Pagging from './../components/Pagging';
+import '../pages/SliderCss.css';
 
 const ProductCard = (props) => {
 
@@ -41,6 +42,7 @@ const ProductCard = (props) => {
                       <img
                         src={product.avatar || NoProduct}
                         //  src={watch}
+                        style={{height : '100%'}}
                         className="img-fluid"
                         alt="product image" />
                       <img
@@ -118,6 +120,7 @@ const ProductCard = (props) => {
                         <img
                           src={product.avatar || NoProduct}
                           //  src={watch}
+                          style={{height : '100%'}}
                           className="img-fluid"
                           alt="product image" />
                         <img

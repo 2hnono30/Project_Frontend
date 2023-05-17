@@ -1,6 +1,7 @@
 import React from 'react'
 import { useState, useRef, useEffect } from 'react';
-import Slider from 'react-slick'
+import Slider from 'react-slick';
+import Button from 'react-bootstrap/Button';
 
 const SimpleSlide = ({ initialSlide = 0, urls, deleteHandler }) => {
     const [hasSetPosition, setHasSetPosition] = useState(false);
@@ -14,7 +15,7 @@ const SimpleSlide = ({ initialSlide = 0, urls, deleteHandler }) => {
 
     const settings = {
         dots: true,
-        infinite: false,
+        infinite: true,
         speed: 500,
         slidesToShow: 1,
         slidesToScroll: 1,
@@ -22,14 +23,17 @@ const SimpleSlide = ({ initialSlide = 0, urls, deleteHandler }) => {
     };
 
     return (
-        <Slider ref={slider} {...settings}>
-            {urls.map((img, index) => (
-                <>
-                    <button onClick={() => deleteHandler(img, index)}>x</button>
-                    <img src={img} height={500} />
-                </>
-            ))}
-        </Slider>
+        <Slider {...settings} style={{ height: 200, width: 200,marginLeft: 70}}>
+            {
+                urls.map((img, index) => (
+                    <div className='d-flex flex-row-reverse bd-highlight'  key={index}>
+                        <Button className='btn btn-close' onClick={() => deleteHandler(img, index)}></Button>
+                        <img src={img} height={150} width={150} />
+                    </div>
+                ))
+            }
+
+        </Slider >
     )
 }
 

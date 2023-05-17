@@ -162,7 +162,7 @@ const BrandScreen = ({ closeMenu }) => {
                 style={{ height: '70vh' }}
                 rows={brands}
                 rowCount={totalPages}
-                rowHeight={200}
+                // rowHeight={200}
                 loading={loading}
                 pagination
                 page={paginationModel.page - 1}

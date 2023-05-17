@@ -12,6 +12,7 @@ import AppContext from "../contexts/AppContext";
 import Slider from "react-slick";
 import { useRef } from "react";
 import '../pages/SliderCss.css';
+import { Button } from "@mui/material";
 const SingleProduct = ({ initialSlide = 0 }) => {
     const [appState, appDispatch] = useContext(AppContext);
     const [hasSetPosition, setHasSetPosition] = useState(false);
@@ -27,8 +28,9 @@ const SingleProduct = ({ initialSlide = 0 }) => {
             setState({ ...state });
             async function fetchProductById() {
                 let resProduct = await ProductService.getProductById(id);
-                resProduct.data.images.unshift(resProduct.data.avatar)
-                console.log(resProduct.data);
+                // console.log(resProduct);
+                resProduct.data.images.unshift(resProduct.data.avatar);
+                
                 setState({
                     ...state,
                     product: resProduct.data,
@@ -90,9 +92,8 @@ const SingleProduct = ({ initialSlide = 0 }) => {
         slidesToScroll: 1,
         initialSlide
     };
- const imageUrl = 'https://example.com/my-image.jpg';
 
-    const [image,setImage]= useState(imageUrl);
+    const [image,setImage]= useState('null');
     const imageChange = (img) =>{
         setImage(img)
     }
@@ -107,7 +108,6 @@ const SingleProduct = ({ initialSlide = 0 }) => {
                         <div className="col-6">
                             <div className="main-product-image">
                                 <div>
-                                    {/* {(<img src={image.img?image.img:product.avatar}/>)} */}
                                     <ReactImageZoom 
                                     img={image}
                                     width= {594}
@@ -119,9 +119,9 @@ const SingleProduct = ({ initialSlide = 0 }) => {
                             <div className="other-product-images d-flex flex-wrap gap-30">
                                 <Slider {...settings}>
                                     {product.images?.map((img, index) => (
-                                        <button key={index} type="button" onClick={()=>{imageChange(img)}}>
+                                        <Button key={index} type="button" onClick={()=>{imageChange(img)}}>
                                             <img src={img} alt={`Image ${index}`} className="img-fluids" />
-                                        </button>
+                                        </Button>
                                     ))}
                                 </Slider>
                             </div>
@@ -142,10 +142,6 @@ const SingleProduct = ({ initialSlide = 0 }) => {
                                     </p>
                                 </div>
                                 <div className=" py-3">
-                                    {/* <div className="d-flex gap-10 align-items-center my-2">
-                                        <h3 className="product-heading">Type :</h3>
-                                        <p className="product-data">Watch</p>
-                                    </div> */}
                                     <div className="d-flex gap-10 align-items-center my-2">
                                         <h3 className="product-heading">Brand :</h3>
                                         <p className="product-data">{product.nameBrand}</p>
@@ -154,10 +150,6 @@ const SingleProduct = ({ initialSlide = 0 }) => {
                                         <h3 className="product-heading">Category :</h3>
                                         <p className="product-data">{product.nameCategory}</p>
                                     </div>
-                                    {/* <div className="d-flex gap-10 align-items-center my-2">
-                                        <h3 className="product-heading">Tags :</h3>
-                                        <p className="product-data">Watch</p>
-                                    </div> */}
                                     <div className="d-flex gap-10 align-items-center my-2">
                                         <h3 className="product-heading">Availablity :</h3>
                                         <p className="product-data">In Stock</p>
@@ -227,13 +219,6 @@ const SingleProduct = ({ initialSlide = 0 }) => {
                                             <p className="mb-0">Based on 2 Reviews</p>
                                         </div>
                                     </div>
-                                    {/* {orderedProduct && (
-                                        <div>
-                                            <a className="text-dark text-decoration-underline" href="">
-                                                Write a Review
-                                            </a>
-                                        </div>
-                                    )} */}
                                 </div>
                                 <div className="review-form py-4">
                                     <h4>Write a Review</h4>

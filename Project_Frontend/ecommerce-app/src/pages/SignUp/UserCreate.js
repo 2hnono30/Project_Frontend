@@ -54,7 +54,7 @@ function UserCreate(props) {
                 // do something here ...
                 const { values, errors, touched } = formikProps;
 
-                console.log({ values, errors, touched });
+                // console.log({ values, errors, touched });
                 return (
                     <>
                         <Meta title={"Sign Up"} />

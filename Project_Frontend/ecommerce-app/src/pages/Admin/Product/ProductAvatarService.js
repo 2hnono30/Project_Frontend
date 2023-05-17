@@ -12,10 +12,6 @@ export const createProductAvatar = (image) => {
         });
     }
     return axios.post(`${BASE_URL}/images`, formData)
-
-
-
-
 }
 
 export const deleteBProductAvatar = (id) => {

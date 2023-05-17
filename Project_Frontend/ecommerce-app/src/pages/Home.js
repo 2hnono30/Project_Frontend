@@ -18,10 +18,11 @@ const Home = () => {
         products: [],
         errorMessage: ''
     });
+    const [loading, setLoading] = useState(false);
     const PAGE = 4;
     const callApi = (cate, sort, page) => {
         try {
-            setProduct({ ...product });
+            setLoading(true);
             async function fetchAllProducts() {
                 let resProduct = await ProductService.getProductListBySort(cate, sort, page);
                 // console.log(resProduct);
@@ -29,6 +30,7 @@ const Home = () => {
                     ...product,
                     products: resProduct.data.content,
                 });
+                setLoading(false);
             }
             fetchAllProducts();
         } catch (error) {

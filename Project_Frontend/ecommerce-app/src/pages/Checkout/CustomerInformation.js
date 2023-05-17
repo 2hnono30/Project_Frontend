@@ -129,7 +129,7 @@ function CustomerInformation(props) {
             {formikProps => {
                 const { values, errors, touched } = formikProps;
 
-                console.log({ values, errors, touched });
+                // console.log({ values, errors, touched });
 
                 return (
                     <>

@@ -83,7 +83,7 @@ const OurStore = () => {
   useEffect(function ProductList() {
     if (search) {
       getProductWithTotalPage(paginationModel,search);
-      console.log(search);
+      // console.log(search);
     }
     else {
       if (location.pathname == "/product" || location.pathname.includes("category")) {

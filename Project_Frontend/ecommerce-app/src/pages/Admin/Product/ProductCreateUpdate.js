@@ -135,121 +135,91 @@ function ProductCreateUpdate(props) {
                             </Modal.Header>
 
                             <Modal.Body>
-                                <div>
-                                    <FastField
-                                        name="name"
-                                        component={InputCustom}
-                                        fullWidth
-                                        label="Name Product"
-                                        placeholder="Eg: Wow nature ..."
-                                    />
-                                </div>
-                                <div style={{ marginTop: 20 }}>
-                                    <FastField
-                                        name="price"
-                                        component={InputCustom}
-                                        fullWidth
-                                        label="Price Product"
-                                        placeholder="Eg: 500.000 ..."
-                                    />
-                                </div>
-                                <div style={{ marginTop: 20 }}>
-                                    <FastField
-                                        name="categoryId"
-                                        component={SelectCustom}
-                                        fullWidth
-                                        label="Category"
-                                        options={categories}
-                                        placeholder="Eg: Category ..."
-                                    />
-                                </div>
-                                <div style={{ marginTop: 20 }}>
-                                    <FastField
-                                        name="brandId"
-                                        component={SelectCustom}
-                                        fullWidth
-                                        label="Brand"
-                                        options={brands}
-                                        placeholder="Eg: Brand ..."
-                                    />
-                                </div>
-                                <div style={{ marginTop: 20 }}>
-                                    <RichTextEditor setDescription={setDescription} />
-                                </div>
-                                <div className='row' style={{ marginTop: 20 }}>
-                                    <div className='col-3'>Avatar</div>
-                                    <div className=" d-flex justify-content-end col-9"  >
-
-                                        <div className="w-50 ">
-                                            <img className="img-thumbnail avatar-lg" src={url || NoAvatar} alt=""
-                                                onClick={() => { document.querySelector("#fileAvatar").click() }} />
-                                            <input name='avatar' id="fileAvatar" accept="image/*" className="form-control d-none" type="file"
-                                                onChange={changeAvatar}
+                                <div className='d-flex'>
+                                    <div className='col-7'>
+                                        <div>
+                                            <FastField
+                                                name="name"
+                                                component={InputCustom}
+                                                fullWidth
+                                                label="Name Product"
+                                                placeholder="Eg: Wow nature ..."
                                             />
+                                        </div>
+                                        <div style={{ marginTop: 20 }}>
+                                            <FastField
+                                                name="price"
+                                                component={InputCustom}
+                                                fullWidth
+                                                label="Price Product"
+                                                placeholder="Eg: 500.000 ..."
+                                            />
+                                        </div>
+                                        <div style={{ marginTop: 20 }}>
+                                            <FastField
+                                                name="categoryId"
+                                                component={SelectCustom}
+                                                fullWidth
+                                                label="Category"
+                                                options={categories}
+                                                placeholder="Eg: Category ..."
+                                            />
+                                        </div>
+                                        <div style={{ marginTop: 20 }}>
+                                            <FastField
+                                                name="brandId"
+                                                component={SelectCustom}
+                                                fullWidth
+                                                label="Brand"
+                                                options={brands}
+                                                placeholder="Eg: Brand ..."
+                                            />
+                                        </div>
+                                        <div style={{ marginTop: 20 }}>
+                                            <RichTextEditor setDescription={setDescription} />
+                                        </div>
+                                    </div>
+                                    <div className='col-5'>
+                                        <div>
+                                            <div className='d-flex justify-content-center'>Avatar :</div>
+                                            <div className='row' style={{ marginTop: 20 }}>
+                                                <div className=" d-flex justify-content-end col-9"  >
+
+                                                    <div className="w-50 ">
+                                                        <img className="img-thumbnail avatar-lg" src={url || NoAvatar} alt=""
+                                                            onClick={() => { document.querySelector("#fileAvatar").click() }} />
+                                                        <input name='avatar' id="fileAvatar" accept="image/*" className="form-control d-none" type="file"
+                                                            onChange={changeAvatar}
+                                                        />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div style={{ marginTop: 20 }}>
+                                            <div className='d-flex justify-content-center'>Images Product :</div>
+                                            <div style={{ marginTop: 20 }} >
+                                                <section className='justify-content-center'>
+                                                    <input
+                                                        type='file'
+                                                        name='images'
+                                                        onChange={onSelectFile}
+                                                        multiple
+                                                        accept="image/*">
+                                                    </input>
+                                                    <SimpleSlide className='d-flex flex-row-reverse bd-highlight' urls={urls} deleteHandler={deleteHandler} />
+                                                </section>
+
+
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div style={{ marginTop: 20 }} >
-                                    <section>
-                                        <label> + Add Images</label>
-                                        <br />
-                                        <span>up to 10 images</span>
-                                        <input
-                                            type='file'
-                                            name='images'
-                                            onChange={onSelectFile}
-                                            multiple
-                                            accept="image/*">
-
-                                        </input>
-
-                                        {urls.length > 0} &&
-                                        <SimpleSlide urls={urls} deleteHandler={deleteHandler} />
-                                        {/* {urls.length > 0 &&
-                                            (urls.length > 10 ? (
-                                                <p className="error">
-                                                    You can't upload more than 10 images! <br />
-                                                    <span>
-                                                        please delete <b> {urls.length - 10} </b> of them{" "}
-                                                    </span>
-                                                </p>    
-                                            ) : (
-                                                <button
-                                                    className="upload-btn"
-                                                    onClick={() => {
-                                                        console.log(urls);
-                                                    }}
-                                                >
-                                                    UPLOAD {urls.length} IMAGE
-                                                    {urls.length === 1 ? "" : "S"}
-                                                </button>
-                                            ))} */}
-
-                                        {/* <div className="images">
-                                            {urls &&
-                                                urls.map((image, index) => {
-                                                    return (
-                                                        <div key={image} className="image">
-                                                            <img src={image} height="200" alt="upload" />
-                                                            <button onClick={() => deleteHandler(image, index)}>
-                                                                delete image
-                                                            </button>
-                                                            <p>{index + 1}</p>
-                                                        </div>
-                                                    );
-                                                })}
-                                        </div> */}
-                                    </section>
-
-
-                                </div>
-
 
                             </Modal.Body>
 
                             <Modal.Footer>
                                 <Button variant="secondary" onClick={onHide}>Close</Button>
-                                <Button type="submit" variant="primary">Save changes</Button>
+                                <Button type="button" variant="primary">Save changes</Button>
                             </Modal.Footer>
                         </Form>);
                 }}
