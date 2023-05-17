@@ -13,7 +13,7 @@ import SingleProduct from "./pages/SingleProduct";
 import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout/Checkout";
 import Login from "./pages/Login";
-import Signup from "./pages/Signup";
+import Signup from "./pages/SignUp/Signup";
 import AdminScreen from "./pages/Admin/AdminScreen";
 import { ConfirmProvider } from "material-ui-confirm";
 import AppProvider from './contexts/AppContext/AppProvider';

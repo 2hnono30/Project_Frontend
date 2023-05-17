@@ -15,6 +15,7 @@ import './Avatar.css';
 const CustomerScreen = () => {
 
     const [customers, setCustomers] = useState([])
+    const [search,setSearch] = useState('')
     const [paginationModel, setPaginationModel] = useState({
         pageSize: 10,
         page: 1,
@@ -131,15 +132,13 @@ const CustomerScreen = () => {
         fetchData();
     }, [paginationModel])
 
-    
 
 
     return <Paper className={'container'} style={{ height: '100vh', padding: '2rem 4rem' }}>
         <h3>Customer</h3>
         <div className="w-25">
             <form className="d-flex">
-                <input type="search" className="form-control"
-                     />
+                <input type="search" className="form-control"/>
                 <button className="btn btn-primary">Search</button>
             </form>
         </div>

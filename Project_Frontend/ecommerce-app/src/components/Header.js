@@ -11,6 +11,8 @@ import { CategoryService } from "../Services/Categories/CategoryService";
 import { ProductService } from "../Services/Product/ProductService";
 import { currencyFormat } from "./Utils/Utils";
 import AppContext from "../contexts/AppContext";
+// import Logo from "../images/pngtree-online-shopping-logo-desing-png-image_8918925.png";
+import Logo from "../images/LogoCHY.png";
 
 const Header = ({ navigation }) => {
     const [appState, appDispatch] = useContext(AppContext);
@@ -25,7 +27,7 @@ const Header = ({ navigation }) => {
     })
 
 
-   
+
     const navigate = useNavigate();
 
     const [state, setState] = useState({
@@ -72,10 +74,15 @@ const Header = ({ navigation }) => {
             <header className="header-upper py-3 d-flex">
                 <div className="container-xxl">
                     <div className="row align-items-center">
-                        <div className="col-4">
-                            <h4>
-                                <Link to='/' className="text-white">Developers App</Link>
-                            </h4>
+                        <div className="col-2">
+                            <Link to={'/'}>
+                                <h2>
+                                    <img src={Logo} alt="" style={{
+                                        height: '60px',
+                                        width: '150px',
+                                    }} />
+                                </h2>
+                            </Link>
                         </div>
                         <div className="col-8">
                             <form className="input-group" onSubmit={(e) => {
@@ -99,59 +106,42 @@ const Header = ({ navigation }) => {
 
                             </form>
                         </div>
-                    </div>
-                </div>
-                <div className="container-xxl d-flex col-4 gap-10">
-                    <div className="header-upper-links d-flex align-items-center justify-content-between gap-10">
-                        <div>
+                        <div className="col-2">
+                            <div className="container-xxl d-flex flex-row-reverse gap-10">
+                                <div className="header-upper-links d-flex align-items-center justify-content-between gap-10">
+                                    <div>
+                                        {localStorage.fullName == null ? (
+                                            <Link to="/login" className="d-flex align-items-center gap-10 text-white">
+                                                <img src={user} alt="user" />
+                                                <p className="mb-0">
+                                                    Login
+                                                </p>
+                                            </Link>
 
-                            {localStorage.fullName == null ? (
-                                <Link to="/signup" className="d-flex align-items-center gap-10 text-white">
-                                    <FontAwesomeIcon className="signUpSvg" icon={faUserPlus} />
-                                    <p className="mb-0">
-                                        Sign Up
-                                    </p>
-                                </Link>
-                            ) : (
-                                <div className="d-flex text-white d-none">
-                                    <FontAwesomeIcon className="signUpSvg" icon={faUserPlus} />
-                                    <p className="mb-0">
-                                        Sign Up
-                                    </p>
+                                        ) : (
+                                            <div className="btn-group">
+                                                <div className="btn login-avatar" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    <img style={{ height: '40px', width: '40px', borderRadius: '50%', backgroundColor: 'lightgrey' }} src={user} alt="user" />
+                                                </div>
+                                                <ul className="dropdown-menu">
+                                                    <li><Link className="dropdown-item" href="#">{localStorage.fullName}</Link></li>
+                                                    <li><Link className="dropdown-item" href="#">Another action</Link></li>
+                                                    <li><Link className="dropdown-item" href="#">Something else here</Link></li>
+                                                    <li><hr className="dropdown-divider" /></li>
+                                                    <li><button onClick={logout} className="dropdown-item">Logout</button></li>
+                                                </ul>
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
-                            )
-                            }
-                        </div>
-                    </div>
-                    <div className="header-upper-links d-flex align-items-center justify-content-between gap-10">
-                        <div>
-                            {localStorage.fullName == null ? (
-                                <Link to="/login" className="d-flex align-items-center gap-10 text-white">
-                                    <img src={user} alt="user" />
-                                    <p className="mb-0">
-                                        Sign in
-                                    </p>
-                                </Link>
-                            ) : (
-                                <div className="d-flex text-white">
-                                    <img src={user} alt="user" />
-                                    <div onClick={logout} className="button align-items-center gap-10 text-white">{localStorage.fullName} || Logout</div>
+                                <div className="header-upper-links d-flex align-items-center justify-content-between gap-10">
+                                    <div>
+                                        <Link to="/cart" className="d-flex align-items-center gap-10 text-white">
+                                            <img style={{width:'40px',height:'40px'}} src={cart} alt="cart" />
+                                        </Link>
+                                    </div>
                                 </div>
-                            )
-                            }
-                        </div>
-                    </div>
-                    <div className="header-upper-links d-flex align-items-center justify-content-between gap-10">
-                        <div>
-                            <Link to="/cart" className="d-flex align-items-center gap-10 text-white">
-                                <img src={cart} alt="cart" />
-                                <div className="d-flex flex-column gap-10">
-                                    <span className="badge bg-white text-dark">{initOrderValue.length}</span>
-                                    <p className="mb-0">
-                                        {currencyFormat(total)}
-                                    </p>
-                                </div>
-                            </Link>
+                            </div>
                         </div>
                     </div>
                 </div>

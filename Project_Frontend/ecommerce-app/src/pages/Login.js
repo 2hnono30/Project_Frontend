@@ -25,7 +25,7 @@ const Login = () => {
                 }, 1000)
             }
         } catch (error) {
-            console.log("Login error");
+            toast.error("Incorrect account or password");
         }
     }
     return (

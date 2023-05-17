@@ -20,6 +20,8 @@ const Categories = () => {
         slidesToShow: 5,
         slidesToScroll: 1
     };
+
+    
     useEffect(function () {
         try {
             setState({ ...state });

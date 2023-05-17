@@ -1,5 +1,6 @@
 import React from "react";
 
+
 const CustomInput = (props) => {
   const { type, name, placeholder, classname , state , setState} = props;
   return (

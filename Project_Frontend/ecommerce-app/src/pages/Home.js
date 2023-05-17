@@ -24,7 +24,7 @@ const Home = () => {
             setProduct({ ...product });
             async function fetchAllProducts() {
                 let resProduct = await ProductService.getProductListBySort(cate, sort, page);
-                console.log(resProduct);
+                // console.log(resProduct);
                 setProduct({
                     ...product,
                     products: resProduct.data.content,

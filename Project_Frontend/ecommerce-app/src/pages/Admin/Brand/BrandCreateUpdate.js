@@ -6,14 +6,20 @@ import InputCustom from "../../../components/CustomField/InputCustom";
 import * as Yup from "yup";
 import NoAvatar from "../../../images/noAvatar.jpg";
 import { createBrandAvatar } from './BrandAvatarService';
+<<<<<<< HEAD
 
 function BrandCreateUpdate(props) {
+=======
+import axios from 'axios';
+
+function UserCreate(props) {
+>>>>>>> 0db3bc7a2e77f210262447fecdfa03b70037b36f
     const { show, onHide, brand, brands, onSubmit } = props;
     const validationSchema = Yup.object().shape({
         name: Yup.string()
-        .required('This field is required.')
-        .min(2,'Brand Name with at least 2 characters')
-        .max(8,'Brand Name has at most 8 characters'),
+            .required('This field is required.')
+            .min(2, 'Brand Name with at least 2 characters')
+            .max(8, 'Brand Name has at most 8 characters'),
         id: Yup.number()
             .required('This field is required.')
             .nullable(),
@@ -46,6 +52,7 @@ function BrandCreateUpdate(props) {
         setUrl(brand.fileUrl)
     }, [show])
     const submit = (values) => {
+        console.log(values);
         values.image = image;
         onSubmit(values);
     }
@@ -57,7 +64,12 @@ function BrandCreateUpdate(props) {
                 initialValues={brand}
             >
                 {formikProps => {
+<<<<<<< HEAD
                     const { values, errors, touched } = formikProps;
+=======
+                    // do something here ...
+
+>>>>>>> 0db3bc7a2e77f210262447fecdfa03b70037b36f
                     return (
                         <Form>
                             <Modal.Header closeButton>
@@ -97,4 +109,4 @@ function BrandCreateUpdate(props) {
     );
 }
 
-export default BrandCreateUpdate;
+export default UserCreate;
