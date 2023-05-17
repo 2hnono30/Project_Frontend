@@ -11,7 +11,6 @@ import Logout from './Images/logout.svg';
 import { useLocation, Link } from "react-router-dom";
 
 const Sidebar = (props) => {
-    console.log(props);
     const location = useLocation();
     const { closeMenu, setCloseMenu } = props;
     // const [closeMenu, setCloseMenu] = useState(false);

@@ -37,7 +37,7 @@ const CategoryScreen = () => {
             field: 'id', headerName: 'ID', width: 70
         },
         {
-            field: 'name', headerName: 'Name', width: 500
+            field: 'name', headerName: 'Name', width: 300
         },
         {
             field: 'actions', headerName: 'Actions', width: 140, renderCell: (params) => {

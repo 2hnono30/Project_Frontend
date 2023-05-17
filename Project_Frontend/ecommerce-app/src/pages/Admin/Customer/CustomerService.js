@@ -2,7 +2,7 @@ import axios from 'axios';
 import { BASE_URL } from '../../../constant/AppConstant';
 
 export const getAllCustomers = (page) => {
-    return axios.get(`${BASE_URL}/customers/page=${page.page - 1}&size=${page.pageSize}$sort=${page.pageSort}`)
+    return axios.get(`${BASE_URL}/customers?page=${page.page - 1}&size=${page.pageSize}&sort=${page.sort}`)
 }
 export const createCustomer = (customer) => {
     return axios.post(`${BASE_URL}/customers`, customer)

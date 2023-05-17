@@ -1,7 +1,7 @@
 import React from 'react';
 
 import PropTypes from 'prop-types';
-import {TextField} from "@mui/material";
+import { TextField } from "@mui/material";
 
 InputCustom.propTypes = {
     field: PropTypes.object.isRequired,
@@ -28,21 +28,26 @@ function InputCustom(props) {
         type, label, placeholder, disabled, fullWidth
     } = props;
     const { name } = field;
-    const {errors} = form;
+
+  
+
+
+    const { errors, touched } = form;
 
     return (
-            <TextField
-                id={name}
-                label={label}
-                {...field}
+        <TextField
+            id={name}
+            label={label}
+            {...field}
 
-                type={type}
-                disabled={disabled}
-                placeholder={placeholder}
-                fullWidth={fullWidth}
-                error={!!errors[name]}
-                helperText={errors[name]}
-            />
+            type={type}
+            disabled={disabled}
+            placeholder={placeholder}
+            fullWidth={fullWidth}
+            error={touched[name] && !!errors[name]}
+            helperText={touched[name] && errors[name]}
+
+        />
     );
 }
 

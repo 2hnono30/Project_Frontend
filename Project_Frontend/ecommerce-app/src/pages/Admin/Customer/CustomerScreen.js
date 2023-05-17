@@ -1,17 +1,16 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 
 import CustomerCreateUpdate from './CustomerCreateUpdate';
 import { createCustomer, deleteCustomer, getAllCustomers, updateCustomer } from "./CustomerService";
 import Button from "react-bootstrap/Button";
-import { Container, Paper } from "@mui/material";
+import { Paper } from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { DataGrid } from "@mui/x-data-grid";
 import { Stack } from "react-bootstrap";
 import { toast } from "react-toastify";
 import { useConfirm } from "material-ui-confirm";
-
-import {getAllProvinces} from './LocationRegionService'
+import './Avatar.css';
 
 const CustomerScreen = () => {
 
@@ -23,7 +22,7 @@ const CustomerScreen = () => {
     })
     const [isShow, setIsShow] = useState(false);
     const [totalPages, setTotalPages] = useState(0);
-    const [customer, setCustomer] = useState({ name: '', id: null, phone: '', email: '', image: '', locationRegion: {} });
+    const [customer, setCustomer] = useState({ fullName: '', id: null, phone: '', email: '', image: '', locationRegion: {} });
     const [loading, setLoading] = useState(false)
     const confirm = useConfirm();
     const fetchData = () => {
@@ -34,37 +33,38 @@ const CustomerScreen = () => {
             setLoading(false)
         })
     }
-
-    
-
-    
-
-    
+   
 
     const columns = [
+
         {
-            field: 'id', headerName: 'ID', width: 70
+            field: 'id', headerName: 'ID', width: 50
         },
         {
-            field: 'name', headerName: 'Full Name', width: 200
+            field: 'fileUrl', headerName: 'Avatar', width: 80, height: 100, renderCell: (params) => {
+                return (<img src={params.row.fileUrl} className="image-table" style={{ height: '50vh' }} alt="avatar" />)
+            }
+        },
+        {
+            field: 'fullName', headerName: 'Full Name', width: 170
         },
         {
             field: 'email', headerName: 'Email', width: 200
         },
         {
-            field: 'phone', headerName: 'Phone', width: 100
+            field: 'phoneNumber', headerName: 'Phone', width: 150
         },
         {
-            field: 'avatar', headerName: 'avatar', width: 200
+            field: 'provinceName', headerName: 'Province', width: 150
         },
         {
-            field: 'province', headerName: 'Province', width: 200
+            field: 'districtName', headerName: 'District', width: 150
         },
         {
-            field: 'district', headerName: 'District', width: 200
+            field: 'wardName', headerName: 'Ward', width: 100
         },
         {
-            field: 'ward', headerName: 'Ward', width: 200
+            field: 'address', headerName: 'Address', width: 200
         },
         {
             field: 'actions', headerName: 'Actions', width: 140, renderCell: (params) => {
@@ -120,10 +120,9 @@ const CustomerScreen = () => {
     const onCreate = () => {
         setCustomer({
             id: null,
-            name: '',
+            fullName: '',
             email: '',
             phone: '',
-            avatar: '',
             locationRegion: {}
         })
         setIsShow(true)
@@ -132,15 +131,24 @@ const CustomerScreen = () => {
         fetchData();
     }, [paginationModel])
 
+    
+
 
     return <Paper className={'container'} style={{ height: '100vh', padding: '2rem 4rem' }}>
         <h3>Customer</h3>
-        <CustomerCreateUpdate 
+        <div className="w-25">
+            <form className="d-flex">
+                <input type="search" className="form-control"
+                     />
+                <button className="btn btn-primary">Search</button>
+            </form>
+        </div>
+        <CustomerCreateUpdate
             show={isShow}
             onHide={() => setIsShow(false)}
-            customer={customer} 
+            customer={customer}
             customers={customers}
-            onSubmit={onSubmit} 
+            onSubmit={onSubmit}
         />
         <Button style={{ marginTop: 25, marginBottom: 25 }} onClick={() => onCreate()}>Create Customer</Button>
         <div>
@@ -152,7 +160,7 @@ const CustomerScreen = () => {
                 pagination
                 page={paginationModel.page - 1}
                 pageSize={paginationModel.pageSize}
-                paginatio nMode="server"
+                paginationMode="server"
                 onPageChange={(newPage) => {
                     setPaginationModel(old => ({ ...old, page: newPage + 1 }))
                 }}

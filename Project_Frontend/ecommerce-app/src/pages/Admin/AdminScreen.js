@@ -9,7 +9,7 @@ import OrderScreen from './Order/OrderScreen';
 import { useState } from 'react';
 import {ToastContainer} from "react-toastify";
 import {ConfirmProvider} from "material-ui-confirm";
-
+import BrandScreen from './Brand/BrandScreen';
 
 function AdminScreen() {
     const divStyle = {
@@ -18,7 +18,7 @@ function AdminScreen() {
 
     const [closeMenu, setCloseMenu] = useState(false);
     return (
-        <>
+        <> 
             <ConfirmProvider>
                 <ToastContainer />
 
@@ -29,7 +29,7 @@ function AdminScreen() {
                         <Route path={'customers'} element={CustomerScreen()} />
                         <Route path={'products'} element={ProductScreen()} />
                         <Route path={'home'} element={CustomerScreen()} />
-                        <Route path={'brands'} element={<CustomerScreen />} />
+                        <Route path={'brands'} element={<BrandScreen closeMenu={closeMenu}/>} />
                         <Route path={'orders'} element={<OrderScreen />} />
                     </Routes>
                     <Outlet />
