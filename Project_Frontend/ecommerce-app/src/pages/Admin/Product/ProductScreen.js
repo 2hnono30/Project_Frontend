@@ -11,13 +11,20 @@ import { useConfirm } from "material-ui-confirm";
 import { createProduct, deleteProduct, getAllProduct, updateProduct } from "./ProductService";
 import { findCategory } from "../Category/CategoryService";
 import { findBrand } from "../Brand/BrandService";
+import { InputGroup } from "react-bootstrap";
+import { Form } from "react-bootstrap";
+
+
+
 const ProductScreen = () => {
   const [products, setProducts] = useState([])
   const [paginationModel, setPaginationModel] = useState({
     pageSize: 10,
     page: 1,
     sort: '',
+    search: ''
   })
+  const [search, setSearch] = useState('');
   const [isShow, setIsShow] = useState(false);
   const [totalPages, setTotalPages] = useState(0);
   const [product, setProduct] = useState({ name: '', id: null, price: '', avatar: '', categoryId: '', brandId: '', images: [], avatarId: '' });
@@ -129,6 +136,10 @@ const ProductScreen = () => {
 
   }, [paginationModel])
 
+  const onSearch = () => {
+    setPaginationModel({ ...paginationModel, search })
+  }
+
 
 
   return <Paper className={'container'} style={{ height: '100vh', padding: '2rem 4rem' }}>
@@ -137,9 +148,25 @@ const ProductScreen = () => {
       onHide={() => setIsShow(false)}
       product={product} products={products} categories={categories} brands={brands}
       onSubmit={onSubmit} />
-    <Button style={{ marginTop: 25, marginBottom: 25 }} onClick={() => onCreate()}>Create Product</Button>
+    <div>
+      <Button className="col-2" style={{ marginTop: 25, marginBottom: 25 }} onClick={() => onCreate()}>Create Product</Button>
+
+      <InputGroup className="mb-3">
+        <Form.Control
+          placeholder="Recipient's username"
+          aria-label="Recipient's username"
+          aria-describedby="basic-addon2"
+          onChange={(e) => setSearch(e.target.value)}
+        />
+        <Button variant="outline-secondary" id="button-addon2" onClick={() => onSearch()}>
+          Button
+        </Button>
+      </InputGroup>
+    </div>
+
     <div>
       <DataGrid
+        rowHeight={150}
         style={{ height: '70vh' }}
         rows={products}
         rowCount={totalPages}
