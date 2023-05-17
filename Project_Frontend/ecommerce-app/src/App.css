@@ -638,7 +638,7 @@ route
 }
 .other-product-images > div {
   padding: 20px;
-  width: 48%;
+  width:100%;
   border: 1px solid rgba(0, 0, 0, 0.25);
 }
 .main-product-image .js-image-zoom__zoomed-image {

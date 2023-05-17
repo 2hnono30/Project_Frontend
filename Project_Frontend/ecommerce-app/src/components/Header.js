@@ -114,7 +114,7 @@ const Header = ({ navigation }) => {
                                             <Link to="/login" className="d-flex align-items-center gap-10 text-white">
                                                 <img src={user} alt="user" />
                                                 <p className="mb-0">
-                                                    Sign in
+                                                    Login
                                                 </p>
                                             </Link>
 

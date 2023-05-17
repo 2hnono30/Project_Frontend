@@ -70,7 +70,7 @@ const Checkout = () => {
             if (!initOrderValue) {
               initOrderValue = [];
               appDispatch({ type: "SET_CART_ITEMS", payload: initOrderValue });
-              
+
             }
             console.log(initOrderValue);
             appDispatch({ type: "REMOVE_CART_ITEMS", payload: initOrderValue });
