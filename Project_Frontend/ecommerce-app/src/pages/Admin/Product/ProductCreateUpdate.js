@@ -8,6 +8,8 @@ import SelectCustom from "../../../components/CustomField/SelectCustom";
 import { createProductAvatar } from './ProductAvatarService';
 import NoAvatar from "../../../images/noAvatar.jpg";
 import { toast } from "react-toastify";
+import RichTextEditor from '../../../components/RichTextEditor/RichTextEditor';
+import SimpleSlide from '../../../components/SimpleSlide/SimpleSlide';
 
 function ProductCreateUpdate(props) {
 
@@ -16,6 +18,7 @@ function ProductCreateUpdate(props) {
     const [url, setUrl] = useState();
     const [images, setImages] = useState([]);
     const [urls, setUrls] = useState([]);
+    const [description, setDescription] = useState('');
     const validationSchema = Yup.object().shape({
         name: Yup.string().required('This field is required.'),
         price: Yup.string().required('This field is required.'),
@@ -109,6 +112,8 @@ function ProductCreateUpdate(props) {
             console.log(images);
             values.images = images;
         }
+        values.description = description;
+        console.log(values);
 
         onSubmit(values);
 
@@ -168,6 +173,9 @@ function ProductCreateUpdate(props) {
                                         placeholder="Eg: Brand ..."
                                     />
                                 </div>
+                                <div style={{ marginTop: 20 }}>
+                                    <RichTextEditor setDescription={setDescription} />
+                                </div>
                                 <div className='row' style={{ marginTop: 20 }}>
                                     <div className='col-3'>Avatar</div>
                                     <div className=" d-flex justify-content-end col-9"  >
@@ -194,14 +202,17 @@ function ProductCreateUpdate(props) {
                                             accept="image/*">
 
                                         </input>
-                                        {urls.length > 0 &&
+
+                                        {urls.length > 0} &&
+                                        <SimpleSlide urls={urls} deleteHandler={deleteHandler} />
+                                        {/* {urls.length > 0 &&
                                             (urls.length > 10 ? (
                                                 <p className="error">
                                                     You can't upload more than 10 images! <br />
                                                     <span>
                                                         please delete <b> {urls.length - 10} </b> of them{" "}
                                                     </span>
-                                                </p>
+                                                </p>    
                                             ) : (
                                                 <button
                                                     className="upload-btn"
@@ -212,9 +223,9 @@ function ProductCreateUpdate(props) {
                                                     UPLOAD {urls.length} IMAGE
                                                     {urls.length === 1 ? "" : "S"}
                                                 </button>
-                                            ))}
+                                            ))} */}
 
-                                        <div className="images">
+                                        {/* <div className="images">
                                             {urls &&
                                                 urls.map((image, index) => {
                                                     return (
@@ -227,7 +238,7 @@ function ProductCreateUpdate(props) {
                                                         </div>
                                                     );
                                                 })}
-                                        </div>
+                                        </div> */}
                                     </section>
 
 
