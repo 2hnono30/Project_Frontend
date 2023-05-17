@@ -17,19 +17,8 @@ import TextMaskCustom from '../../components/CustomField/InputMask';
 function CustomerInformation(props) {
     const { customer, onSubmit, refFrom, buttonHide } = props;
 
-    const phoneRegExp = /^(0?)(3[2-9]|5[6|8|9]|7[0|6-9]|8[0-6|8|9]|9[0-4|6-9])[0-9]{7}$/;
+    // const phoneRegExp = /^(0?)(3[2-9]|5[6|8|9]|7[0|6-9]|8[0-6|8|9]|9[0-4|6-9])[0-9]{7}$/;
     const emailRegexp = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
-
-    function formatPhoneNumber(value) {
-        if (!value) return value;
-        const phoneNumber = value.replace(/[^\d]/g, '');
-        const phoneNumberLength = phoneNumber.length;
-        if (phoneNumberLength < 4) return phoneNumber;
-        if (phoneNumberLength < 7) {
-            return `${phoneNumber.slice(0, 3)} ${phoneNumber.slice(3)}`;
-        }
-        return `${phoneNumber.slice(0, 3)}${phoneNumber.slice(3, 6)}-${phoneNumber.slice(6, 10)}`;
-    }
 
     const validationSchema = Yup.object().shape({
         fullName: Yup.string().required('This field is required.'),
@@ -37,7 +26,8 @@ function CustomerInformation(props) {
         phoneNumber: Yup.string()
             .min(12, 'Phone Number must have 10 characters')
             .max(12, 'Phone Number up to 10 characters')
-            //.matches(phoneRegExp, 'phone number must start with 03 / 09 or 07')
+            .test('len', 'phone number must start with 03 / 09 or 07', val => ['03', '07', '09'].includes(val?.slice(0,2)))
+            // .matches(phoneRegExp, 'phone number must start with 03 / 09 or 07')
             .required('This field is required.'),
         province: Yup.string()
             .required('This field is required.'),
