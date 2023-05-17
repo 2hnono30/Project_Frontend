@@ -9,7 +9,8 @@ import { Stack } from "react-bootstrap";
 import NoAvatar from "../../../images/noAvatar.jpg";
 import { createBrandAvatar } from './BrandAvatarService';
 import axios from 'axios';
-function BrandCreateUpdate(props) {
+
+function UserCreate(props) {
     const { show, onHide, brand, brands, onSubmit } = props;
     const validationSchema = Yup.object().shape({
         name: Yup.string()
@@ -104,4 +105,4 @@ function BrandCreateUpdate(props) {
     );
 }
 
-export default BrandCreateUpdate;
+export default UserCreate;

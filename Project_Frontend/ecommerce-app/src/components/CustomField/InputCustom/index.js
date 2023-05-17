@@ -25,11 +25,27 @@ InputCustom.defaultProps = {
 function InputCustom(props) {
     const {
         field, form,
-        type, label, placeholder, disabled, fullWidth
+        type, label, placeholder, disabled, fullWidth ,handleChangeCustom
     } = props;
+    const handleInputCustomChange = (InputCustom) => {
+        let value;
+        console.log(handleChangeCustom);
+        if (InputCustom.target.value && handleChangeCustom) {
+
+            value = handleChangeCustom(InputCustom.target.value);
+            console.log(value, 'input')
+        }
+        const changeEvent = {
+
+            target: {
+                name: name,
+                value: value !== undefined ? value :  InputCustom.target.value
+            }
+        };
+        field.onChange(changeEvent);
+    }
     const { name } = field;
-    const { errors } = form;
-    // const { errors, touched } = form;
+    const { errors, touched } = form;
 
 
 
@@ -41,20 +57,20 @@ function InputCustom(props) {
             id={name}
             label={label}
             {...field}
-
+            onChange={handleInputCustomChange}
             type={type}
             disabled={disabled}
             placeholder={placeholder}
 
 
 
-            fullWidth={fullWidth}
-            error={!!errors[name]}
-            helperText={errors[name]}
+            // fullWidth={fullWidth}
+            // error={!!errors[name]}
+            // helperText={errors[name]}
 
-        // fullWidth={fullWidth}
-        // error={touched[name] && !!errors[name]}
-        // helperText={touched[name] && errors[name]}
+        fullWidth={fullWidth}
+        error={touched[name] && !!errors[name]}
+        helperText={touched[name] && errors[name]}
 
 
         // fullWidth={fullWidth}

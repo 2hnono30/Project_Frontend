@@ -64,7 +64,7 @@ const Cart = () => {
             <div className="col-12">
               {orderLists?.length == 0 ?
                 <div className="d-flex justify-content-center fw-lighter">
-                  <p>Không Có Sản Phẩm Nào Trong Giỏ Hàng Của Bạn</p>
+                  <p>There are no products in the cart</p>
                 </div> :
                 <>
                   <div className="cart-header py-3 d-flex justify-content-between align-items-center">

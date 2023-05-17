@@ -9,8 +9,13 @@ import watch from "../images/watch.jpg";
 import { ProductService } from "../Services/Product/ProductService";
 import { currencyFormat } from "../components/Utils/Utils";
 import AppContext from "../contexts/AppContext";
-const SingleProduct = () => {
+import Slider from "react-slick";
+import { useRef } from "react";
+import '../pages/SliderCss.css';
+const SingleProduct = ({ initialSlide = 0 }) => {
     const [appState, appDispatch] = useContext(AppContext);
+    const [hasSetPosition, setHasSetPosition] = useState(false);
+    const slider = useRef();
     const { id } = useParams();
     const [state, setState] = useState({
         product: {},
@@ -22,18 +27,25 @@ const SingleProduct = () => {
             setState({ ...state });
             async function fetchProductById() {
                 let resProduct = await ProductService.getProductById(id);
+                resProduct.data.images.unshift(resProduct.data.avatar)
                 console.log(resProduct.data);
                 setState({
                     ...state,
                     product: resProduct.data,
                 });
+                setImage(resProduct.data.avatar)
             }
             fetchProductById();
         } catch (error) {
             setState({ ...state, errorMessage: error.message });
         }
     }
-
+    useEffect(() => {
+        if (slider.current && !hasSetPosition) {
+            slider.current.slickGoTo(initialSlide);
+            setHasSetPosition(true);
+        }
+    })
 
     useEffect(function ProductList() {
         productApiById(id);
@@ -51,7 +63,7 @@ const SingleProduct = () => {
         } else {
             for (let i = 0; i < initOrderValue.length; i++) {
                 const element = initOrderValue[i];
-                if (element.product.id == id) {
+                if (element.product.id === id) {
                     check = true;
                     currentIndex = i;
                     break;
@@ -70,7 +82,20 @@ const SingleProduct = () => {
         }
         navigate("/cart")
     }
+    var settings = {
+        dots: true,
+        infinite: true,
+        speed: 200,
+        slidesToShow: 3,
+        slidesToScroll: 1,
+        initialSlide
+    };
+ const imageUrl = 'https://example.com/my-image.jpg';
 
+    const [image,setImage]= useState(imageUrl);
+    const imageChange = (img) =>{
+        setImage(img)
+    }
 
     return (
         <>
@@ -82,15 +107,23 @@ const SingleProduct = () => {
                         <div className="col-6">
                             <div className="main-product-image">
                                 <div>
-                                    <img src={product.avatar} />
+                                    {/* {(<img src={image.img?image.img:product.avatar}/>)} */}
+                                    <ReactImageZoom 
+                                    img={image}
+                                    width= {594}
+                                    height= {600}
+                                    zoomWidth= {600}
+                                    />
                                 </div>
                             </div>
-                            <div className="other-product-images d-flex flex-wrap gap-15">
-                                {product.images?.map((img, index) => (
-                                    <div key={index}>
-                                        <img key={index} src={img} alt={`Image ${index}`} className="img-fluid" />
-                                    </div>
-                                ))}
+                            <div className="other-product-images d-flex flex-wrap gap-30">
+                                <Slider {...settings}>
+                                    {product.images?.map((img, index) => (
+                                        <button key={index} type="button" onClick={()=>{imageChange(img)}}>
+                                            <img src={img} alt={`Image ${index}`} className="img-fluids" />
+                                        </button>
+                                    ))}
+                                </Slider>
                             </div>
                         </div>
                         <div className="col-6">
@@ -109,22 +142,22 @@ const SingleProduct = () => {
                                     </p>
                                 </div>
                                 <div className=" py-3">
-                                    <div className="d-flex gap-10 align-items-center my-2">
+                                    {/* <div className="d-flex gap-10 align-items-center my-2">
                                         <h3 className="product-heading">Type :</h3>
                                         <p className="product-data">Watch</p>
-                                    </div>
+                                    </div> */}
                                     <div className="d-flex gap-10 align-items-center my-2">
                                         <h3 className="product-heading">Brand :</h3>
-                                        <p className="product-data">{product.price}</p>
+                                        <p className="product-data">{product.nameBrand}</p>
                                     </div>
                                     <div className="d-flex gap-10 align-items-center my-2">
                                         <h3 className="product-heading">Category :</h3>
-                                        <p className="product-data">{product.price}</p>
+                                        <p className="product-data">{product.nameCategory}</p>
                                     </div>
-                                    <div className="d-flex gap-10 align-items-center my-2">
+                                    {/* <div className="d-flex gap-10 align-items-center my-2">
                                         <h3 className="product-heading">Tags :</h3>
                                         <p className="product-data">Watch</p>
-                                    </div>
+                                    </div> */}
                                     <div className="d-flex gap-10 align-items-center my-2">
                                         <h3 className="product-heading">Availablity :</h3>
                                         <p className="product-data">In Stock</p>

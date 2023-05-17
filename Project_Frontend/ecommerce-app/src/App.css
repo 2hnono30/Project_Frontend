@@ -92,6 +92,17 @@ a {
 .header-upper .header-upper-links > p {
   width: 200px;
 }
+.login-avatar::after {
+    display: inline-block;
+    margin-left: -0.745em;
+    /* vertical-align: -0.745em; */
+    content: "";
+    border-top: 0.3em solid;
+    border-right: 0.3em solid transparent;
+    border-bottom: 0;
+    border-left: 0.3em solid transparent;
+    color: #f7f7f5;
+}
 .header-bottom .menu-links a,
 .header-bottom .dropdown button {
   color: white;
@@ -627,7 +638,7 @@ route
 }
 .other-product-images > div {
   padding: 20px;
-  width: 48%;
+  width:100%;
   border: 1px solid rgba(0, 0, 0, 0.25);
 }
 .main-product-image .js-image-zoom__zoomed-image {
