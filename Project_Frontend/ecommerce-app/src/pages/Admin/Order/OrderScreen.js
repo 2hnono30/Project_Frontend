@@ -11,6 +11,7 @@ import { InputGroup } from "react-bootstrap";
 import { Form } from "react-bootstrap";
 import CustomToolbar from "../../../components/CustomToolbar";
 import Button from "react-bootstrap/Button";
+import OrderActions from './OrderActions';
 
 const OrderScreen = () => {
   const slots = useMemo(
@@ -61,7 +62,7 @@ const OrderScreen = () => {
 
   const columns = [
     {
-      field: 'id', headerName: 'ID', width: 200
+      field: 'id', headerName: 'ID', width: 50
     },
     {
       field: 'customerName', headerName: 'Name', width: 200
@@ -85,16 +86,16 @@ const OrderScreen = () => {
       field: 'address', headerName: 'Address', width: 100
     },
     {
-      field: 'status', headerName: 'Status', width: 150
+      field: 'status', headerName: 'Status', width: 150, type: 'singleSelect',
+      valueOptions: ['PENDING', 'COMPLETED', 'SHIPPED', 'CANCELLED'],
+      editable: true
     },
-
-
-
-
-
+    {
+      field: 'actions', headerName: 'actions', type:'actions',renderCell : params => {
+        <OrderActions />
+      }
+    },
   ]
-
-
 
 
   useEffect(() => {
@@ -106,14 +107,9 @@ const OrderScreen = () => {
     setPaginationModel({ ...paginationModel, search })
   }
 
-
-
   return <Paper className={'container'} style={{ height: '100vh', padding: '2rem 4rem' }}>
     <h3>Order</h3>
-
     <div>
-
-
       <InputGroup className="mb-3">
         <Form.Control
           placeholder="Recipient's username"
@@ -121,7 +117,7 @@ const OrderScreen = () => {
           aria-describedby="basic-addon2"
           onChange={(e) => setSearch(e.target.value)}
         />
-        <Button variant="outline-secondary" id="button-addon2" onClick={() => onSearch()}>
+        <Button id="button-addon2" onClick={() => onSearch()}>
           Button
         </Button>
       </InputGroup>
@@ -131,7 +127,6 @@ const OrderScreen = () => {
       <DataGrid
         apiRef={apiRef}
         slots={slots}
-        rowHeight={150}
         style={{ height: '70vh' }}
         rows={orders}
         rowCount={totalPages}

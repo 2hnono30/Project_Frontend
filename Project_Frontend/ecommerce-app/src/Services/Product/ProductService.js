@@ -10,6 +10,9 @@ export class ProductService {
     static getProductListBySort(sort, cate, page) {
         let url = CommonService.PRODUCTS_API + '?minPrice=' + 0 + '&maxPrice=' + 10000000 + '&';
 
+        if (cate) {
+            url += 'categoryId=' + cate + '&';
+        }
         if (page) {
             url += 'size=' + page;
         }
