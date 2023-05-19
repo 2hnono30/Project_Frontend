@@ -17,17 +17,17 @@ const SimpleSlide = ({ initialSlide = 0, urls, deleteHandler }) => {
         dots: true,
         infinite: true,
         speed: 500,
-        slidesToShow: 1,
+        slidesToShow: 3,
         slidesToScroll: 1,
         initialSlide,
     };
 
     return (
-        <Slider {...settings} style={{ height: 200, width: 200,marginLeft: 70}}>
+        <Slider {...settings} style={{ width: 500}}>
             {
                 urls.map((img, index) => (
                     <div className='d-flex flex-row-reverse bd-highlight'  key={index}>
-                        <Button className='btn btn-close' onClick={() => deleteHandler(img, index)}></Button>
+                        <Button style={{marginLeft: -20}} className='btn btn-close' onClick={() => deleteHandler(img, index)}></Button>
                         <img src={img} height={150} width={150} />
                     </div>
                 ))

@@ -10,6 +10,7 @@ import NoAvatar from "../../../images/noAvatar.jpg";
 import { toast } from "react-toastify";
 import RichTextEditor from '../../../components/RichTextEditor/RichTextEditor';
 import SimpleSlide from '../../../components/SimpleSlide/SimpleSlide';
+import { height } from '@mui/system';
 
 function ProductCreateUpdate(props) {
 
@@ -35,7 +36,6 @@ function ProductCreateUpdate(props) {
     function deleteHandler(image, index) {
         setUrls(urls.filter((e) => e !== image));
         setImages(images.filter((e, index1) => index1 !== index))
-
     }
     const changeAvatar = (e) => {
 
@@ -85,18 +85,11 @@ function ProductCreateUpdate(props) {
                 let result = await createProductAvatar(selectedFilesArray);
                 toast.success('Upload Image Success')
                 setImages(result.data)
-
-
-
             }
             uploadAvatar();
         } catch {
 
         }
-
-
-
-
     }
 
     const submit = (values) => {
@@ -118,8 +111,9 @@ function ProductCreateUpdate(props) {
         onSubmit(values);
 
     }
+    console.log(urls.length);
     return (
-        <Modal show={show} onHide={onHide} size='lg'>
+        <Modal show={show} onHide={onHide} size='xl'>
             <Formik onSubmit={(values) => submit(values)}
                 validationSchema={validationSchema}
                 initialValues={product}
@@ -135,83 +129,101 @@ function ProductCreateUpdate(props) {
                             </Modal.Header>
 
                             <Modal.Body>
-                                <div className='d-flex'>
-                                    <div className='col-7'>
-                                        <div>
-                                            <FastField
-                                                name="name"
-                                                component={InputCustom}
-                                                fullWidth
-                                                label="Name Product"
-                                                placeholder="Eg: Wow nature ..."
-                                            />
-                                        </div>
-                                        <div style={{ marginTop: 20 }}>
-                                            <FastField
-                                                name="price"
-                                                component={InputCustom}
-                                                fullWidth
-                                                label="Price Product"
-                                                placeholder="Eg: 500.000 ..."
-                                            />
-                                        </div>
-                                        <div style={{ marginTop: 20 }}>
-                                            <FastField
-                                                name="categoryId"
-                                                component={SelectCustom}
-                                                fullWidth
-                                                label="Category"
-                                                options={categories}
-                                                placeholder="Eg: Category ..."
-                                            />
-                                        </div>
-                                        <div style={{ marginTop: 20 }}>
-                                            <FastField
-                                                name="brandId"
-                                                component={SelectCustom}
-                                                fullWidth
-                                                label="Brand"
-                                                options={brands}
-                                                placeholder="Eg: Brand ..."
-                                            />
-                                        </div>
-                                        <div style={{ marginTop: 20 }}>
-                                            <RichTextEditor setDescription={setDescription} />
+                                <div>
+                                    <div>
+                                        <div className='d-flex justify-content-between'>
+                                            <div className='col-3'>
+                                                <FastField
+                                                    name="name"
+                                                    component={InputCustom}
+                                                    fullWidth
+                                                    label="Name Product"
+                                                    placeholder="Eg: Wow nature ..."
+                                                />
+                                            </div>
+                                            <div style={{ marginLeft: 10 }} className='col-2'>
+                                                <FastField
+                                                    name="price"
+                                                    component={InputCustom}
+                                                    fullWidth
+                                                    label="Price Product"
+                                                    placeholder="Eg: 500.000 ..."
+                                                />
+                                            </div>
+                                            <div style={{ marginLeft: 10 }} className='col-3'>
+                                                <FastField
+                                                    name="categoryId"
+                                                    component={SelectCustom}
+                                                    fullWidth
+                                                    label="Category"
+                                                    options={categories}
+                                                    placeholder="Eg: Category ..."
+                                                />
+                                            </div>
+                                            <div style={{ marginLeft: 10 }} className='col-3'>
+                                                <FastField
+                                                    name="brandId"
+                                                    component={SelectCustom}
+                                                    fullWidth
+                                                    label="Brand"
+                                                    options={brands}
+                                                    placeholder="Eg: Brand ..."
+                                                />
+                                            </div>
                                         </div>
                                     </div>
-                                    <div className='col-5'>
-                                        <div>
-                                            <div className='d-flex justify-content-center'>Avatar :</div>
-                                            <div className='row' style={{ marginTop: 20 }}>
-                                                <div className=" d-flex justify-content-end col-9"  >
-
-                                                    <div className="w-50 ">
-                                                        <img className="img-thumbnail avatar-lg" src={url || NoAvatar} alt=""
-                                                            onClick={() => { document.querySelector("#fileAvatar").click() }} />
-                                                        <input name='avatar' id="fileAvatar" accept="image/*" className="form-control d-none" type="file"
-                                                            onChange={changeAvatar}
-                                                        />
+                                    <div>
+                                        <div className='d-flex' style={{ height: '100%' }}>
+                                            <div className='col-4'>
+                                                <div className='d-flex justify-content-center'>Avatar :</div>
+                                                <div className='row' style={{ marginTop: 20 }}>
+                                                    <div className=" d-flex justify-content-center"  >
+                                                        <div>
+                                                            <img style={{ height: '200px' }} className="img-thumbnail avatar-lg" src={url || NoAvatar} alt=""
+                                                                onClick={() => { document.querySelector("#fileAvatar").click() }} />
+                                                            <input name='avatar' id="fileAvatar" accept="image/*" className="form-control d-none" type="file"
+                                                                onChange={changeAvatar}
+                                                            />
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div style={{ marginTop: 20 }}>
-                                            <div className='d-flex justify-content-center'>Images Product :</div>
-                                            <div style={{ marginTop: 20 }} >
-                                                <section className='justify-content-center'>
+                                            <div className='col-8'>
+                                                <div className='d-flex justify-content-center'>Images Product :</div>
+                                                <div style={{ marginTop: 20 }} >
+                                                    {urls.length == 0 ? (
+                                                        <div className='d-flex justify-content-center'>
+                                                            <img
+                                                            style={{ height: '200px' }}
+                                                            alt=""
+                                                            src={NoAvatar}
+                                                            className="img-thumbnail avatar-lg"
+                                                            onClick={() => { document.querySelector("#fileImage").click() }} />
+                                                        </div>
+                                                    ) : (
+                                                        <>
+                                                            <Button onClick={() => { document.querySelector("#fileImage").click() }} className='d-flex justify-content-center' style={{width:500,marginLeft: 125}}>Change Image </Button>
+                                                            <section className='d-flex justify-content-center'>
+                                                                <SimpleSlide className='d-flex flex-row-reverse bd-highlight' urls={urls} deleteHandler={deleteHandler} />
+                                                            </section>
+                                                        </>
+                                                    )
+                                                    }
                                                     <input
-                                                        type='file'
                                                         name='images'
-                                                        onChange={onSelectFile}
+                                                        id="fileImage"
                                                         multiple
-                                                        accept="image/*">
+                                                        accept="image/*"
+                                                        className="form-control d-none"
+                                                        type='file'
+                                                        onChange={onSelectFile}>
                                                     </input>
-                                                    <SimpleSlide className='d-flex flex-row-reverse bd-highlight' urls={urls} deleteHandler={deleteHandler} />
-                                                </section>
-
-
+                                                </div>
                                             </div>
                                         </div>
+                                    </div>
+                                    <div style={{ marginTop: 20 }}>
+                                        <RichTextEditor setDescription={setDescription} />
                                     </div>
                                 </div>
 

@@ -78,8 +78,10 @@ const Header = ({ navigation }) => {
                             <Link to={'/'}>
                                 <h2>
                                     <img src={Logo} alt="" style={{
-                                        height: '60px',
-                                        width: '150px',
+                                        height: 90,
+                                        width: 150,
+                                        objectFit: 'cover',
+                                        marginLeft: -20
                                     }} />
                                 </h2>
                             </Link>

@@ -30,11 +30,11 @@ function InputCustom(props) {
 
     const handleInputCustomChange = (InputCustom) => {
         let value;
-        console.log(handleChangeCustom);
+        // console.log(handleChangeCustom);
         if (InputCustom.target.value && handleChangeCustom) {
 
             value = handleChangeCustom(InputCustom.target.value);
-            console.log(value, 'input')
+            // console.log(value, 'input')
         }
         const changeEvent = {
 

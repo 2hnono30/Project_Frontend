@@ -73,7 +73,7 @@ const Checkout = () => {
               appDispatch({ type: "SET_CART_ITEMS", payload: initOrderValue });
 
             }
-            console.log(initOrderValue);
+            // console.log(initOrderValue);
             appDispatch({ type: "REMOVE_CART_ITEMS", payload: initOrderValue });
             setState({ orderLists: initOrderValue });
             toast.success("Checkout successfully ");
