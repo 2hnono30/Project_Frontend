@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import ProductCreateUpdate from './ProductCreateUpdate';
 import Button from "react-bootstrap/Button";
-import { Container, Paper } from "@mui/material";
+import { Paper } from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid, useGridApiRef } from "@mui/x-data-grid";
 import { Stack } from "react-bootstrap";
 import { toast } from "react-toastify";
 import { useConfirm } from "material-ui-confirm";
@@ -13,10 +13,33 @@ import { findCategory } from "../Category/CategoryService";
 import { findBrand } from "../Brand/BrandService";
 import { InputGroup } from "react-bootstrap";
 import { Form } from "react-bootstrap";
+import CustomToolbar from "../../../components/CustomToolbar";
 
 
 
 const ProductScreen = () => {
+
+  const slots = useMemo(
+    () => ({
+      toolbar: () => (
+        <CustomToolbar
+        />
+      ),
+      noRowsOverlay: () => (
+        <Stack
+          fontSize={18}
+          height="100%"
+          alignItems="center"
+          justifyContent="center"
+        >
+          Không tìm thấy kết quả
+        </Stack>
+      ),
+    }),
+    []
+  );
+
+  const apiRef = useGridApiRef();
   const [products, setProducts] = useState([])
   const [paginationModel, setPaginationModel] = useState({
     pageSize: 10,
@@ -166,6 +189,8 @@ const ProductScreen = () => {
 
     <div>
       <DataGrid
+        apiRef={apiRef}
+        slots={slots}
         rowHeight={150}
         style={{ height: '70vh' }}
         rows={products}
