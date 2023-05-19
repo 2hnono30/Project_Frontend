@@ -11,6 +11,7 @@ import { toast } from "react-toastify";
 import RichTextEditor from '../../../components/RichTextEditor/RichTextEditor';
 import SimpleSlide from '../../../components/SimpleSlide/SimpleSlide';
 import { height } from '@mui/system';
+import NoProduct from '../../../images/NoProduct.jpg';
 
 function ProductCreateUpdate(props) {
 
@@ -35,8 +36,11 @@ function ProductCreateUpdate(props) {
 
     function deleteHandler(image, index) {
         setUrls(urls.filter((e) => e !== image));
-        setImages(images.filter((e, index1) => index1 !== index))
+        setImages(images?.filter((e, index1) => index1 !== index))
     }
+    useEffect(() => {
+        // console.log(urls)
+    }, [urls])
     const changeAvatar = (e) => {
 
 
@@ -111,7 +115,7 @@ function ProductCreateUpdate(props) {
         onSubmit(values);
 
     }
-    console.log(urls.length);
+    // console.log(urls.length);
     return (
         <Modal show={show} onHide={onHide} size='xl'>
             <Formik onSubmit={(values) => submit(values)}
@@ -179,7 +183,7 @@ function ProductCreateUpdate(props) {
                                                 <div className='row' style={{ marginTop: 20 }}>
                                                     <div className=" d-flex justify-content-center"  >
                                                         <div>
-                                                            <img style={{ height: '200px' }} className="img-thumbnail avatar-lg" src={url || NoAvatar} alt=""
+                                                            <img style={{ height: '200px' }} className="img-thumbnail avatar-lg" src={url || NoProduct} alt=""
                                                                 onClick={() => { document.querySelector("#fileAvatar").click() }} />
                                                             <input name='avatar' id="fileAvatar" accept="image/*" className="form-control d-none" type="file"
                                                                 onChange={changeAvatar}
@@ -196,7 +200,7 @@ function ProductCreateUpdate(props) {
                                                             <img
                                                             style={{ height: '200px' }}
                                                             alt=""
-                                                            src={NoAvatar}
+                                                            src={NoProduct}
                                                             className="img-thumbnail avatar-lg"
                                                             onClick={() => { document.querySelector("#fileImage").click() }} />
                                                         </div>
@@ -204,7 +208,7 @@ function ProductCreateUpdate(props) {
                                                         <>
                                                             <Button onClick={() => { document.querySelector("#fileImage").click() }} className='d-flex justify-content-center' style={{width:500,marginLeft: 125}}>Change Image </Button>
                                                             <section className='d-flex justify-content-center'>
-                                                                <SimpleSlide className='d-flex flex-row-reverse bd-highlight' urls={urls} deleteHandler={deleteHandler} />
+                                                                {urls && <SimpleSlide className='d-flex flex-row-reverse bd-highlight' urls={urls} deleteHandler={deleteHandler} />}
                                                             </section>
                                                         </>
                                                     )
@@ -231,7 +235,7 @@ function ProductCreateUpdate(props) {
 
                             <Modal.Footer>
                                 <Button variant="secondary" onClick={onHide}>Close</Button>
-                                <Button type="button" variant="primary">Save changes</Button>
+                                <Button type="submit" variant="primary">Save changes</Button>
                             </Modal.Footer>
                         </Form>);
                 }}

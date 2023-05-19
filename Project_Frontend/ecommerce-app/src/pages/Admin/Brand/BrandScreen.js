@@ -36,11 +36,18 @@ const BrandScreen = ({ closeMenu }) => {
             setLoading(false)
         })
     }
-
+    const findIndex = (id) => {
+        for(let i = 0; i < brands.length; i++){
+            if(id === brands[i].id){
+                return i;
+            }
+        }
+        return -1;
+    }
     const columns = [
         {
-            field: 'id', headerName: 'ID', width: 70, height: 70, renderCell: (params, index) => {
-                <span>{index}</span>
+            field: 'id', headerName: 'ID', width: 70, height: 70, renderCell: (index) => {
+                return (<span>{findIndex(index.row.id) + 1}</span>) 
             }
         },
         {

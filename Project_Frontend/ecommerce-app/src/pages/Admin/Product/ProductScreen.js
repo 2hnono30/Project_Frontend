@@ -158,7 +158,7 @@ const ProductScreen = () => {
           aria-describedby="basic-addon2"
           onChange={(e) => setSearch(e.target.value)}
         />
-        <Button variant="outline-secondary" id="button-addon2" onClick={() => onSearch()}>
+        <Button id="button-addon2" onClick={() => onSearch()}>
           Button
         </Button>
       </InputGroup>

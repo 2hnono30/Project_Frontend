@@ -2,6 +2,7 @@ import React from 'react'
 import { useState, useRef, useEffect } from 'react';
 import Slider from 'react-slick';
 import Button from 'react-bootstrap/Button';
+import "../../pages/SliderCss.css";
 
 const SimpleSlide = ({ initialSlide = 0, urls, deleteHandler }) => {
     const [hasSetPosition, setHasSetPosition] = useState(false);
@@ -15,9 +16,10 @@ const SimpleSlide = ({ initialSlide = 0, urls, deleteHandler }) => {
 
     const settings = {
         dots: true,
+        autoplay: true,
         infinite: true,
         speed: 500,
-        slidesToShow: 3,
+        slidesToShow: urls.length > 3 ? 3 : urls.length,
         slidesToScroll: 1,
         initialSlide,
     };
