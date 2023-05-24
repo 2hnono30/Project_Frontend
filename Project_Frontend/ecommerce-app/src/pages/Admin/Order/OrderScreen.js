@@ -1,11 +1,11 @@
 import React, { useEffect, useState, useMemo } from 'react'
 import { getAllOrder } from './OrderService';
-import { Paper } from "@mui/material";
+import { Paper, Fab } from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import { DataGrid, useGridApiRef,gridClasses  } from "@mui/x-data-grid";
+import { DataGrid, useGridApiRef, gridClasses } from "@mui/x-data-grid";
 import { Stack } from "react-bootstrap";
-import { grey } from '@mui/material/colors';
+import { grey, green } from '@mui/material/colors';
 
 
 import { InputGroup } from "react-bootstrap";
@@ -45,7 +45,7 @@ const OrderScreen = () => {
   })
   const [search, setSearch] = useState('');
   const [totalPages, setTotalPages] = useState(0);
-  const[rowId,setRowId] = useState(null);
+  const [rowId, setRowId] = useState(null);
   const [loading, setLoading] = useState(false)
 
   const fetchData = () => {
@@ -83,14 +83,69 @@ const OrderScreen = () => {
       field: 'address', headerName: 'Address', width: 100
     },
     {
-      field: 'status', headerName: 'Status', width: 150, 
+      field: 'status', headerName: 'Status', width: 150,
       type: 'singleSelect',
       valueOptions: ['PENDING', 'PAID', 'SHIPPED', 'CANCELLED'],
-      editable: true
+      editable: true,
+      renderCell: params => {
+        if (params.value == "PENDING") {
+          return <div
+            className='d-flex justify-content-center'
+            style={{
+              width: 100,
+              height: 20,
+              color: '#ffea00',
+              borderRadius: 20,
+              border: "1px solid",
+            }}
+          >
+            {params.value}
+          </div >
+        } else if (params.value == "PAID") {
+          return <div
+            className='d-flex justify-content-center'
+            style={{
+              width: 100,
+              height: 20,
+              color: '#00e676',
+              borderRadius: 20,
+              border: "1px solid",
+            }}
+          >
+            {params.value}
+          </div >
+        } else if (params.value == "SHIPPED") {
+          return <div
+            className='d-flex justify-content-center'
+            style={{
+              width: 100,
+              height: 20,
+              color: '#448aff',
+              borderRadius: 20,
+              border: "1px solid",
+            }}
+          >
+            {params.value}
+          </div >
+        } else if (params.value == "CANCELLED") {
+          return <div
+            className='d-flex justify-content-center'
+            style={{
+              width: 100,
+              height: 20,
+              color: '#ff8a80',
+              borderRadius: 20,
+              border: "1px solid",
+            }}
+          >
+            {params.value}
+          </div >
+        }
+      }
     },
     {
-      field: 'actions', headerName: 'actions', type:'actions',renderCell : params => {
-        return <OrderActions params={params} rowId={rowId} setRowId={setRowId}/>
+      field: 'actions', headerName: 'actions', type: 'actions', renderCell: params => {
+        return <OrderActions params={params} rowId={rowId} setRowId={setRowId} />
       }
     },
   ]
