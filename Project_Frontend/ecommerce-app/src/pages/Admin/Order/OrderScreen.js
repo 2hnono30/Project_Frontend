@@ -127,7 +127,7 @@ const OrderScreen = () => {
           >
             {params.value}
           </div >
-        } else if (params.value == "CANCELLED") {
+        } else{
           return <div
             className='d-flex justify-content-center'
             style={{
