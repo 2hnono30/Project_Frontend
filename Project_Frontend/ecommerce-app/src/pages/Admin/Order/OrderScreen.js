@@ -3,8 +3,9 @@ import { getAllOrder } from './OrderService';
 import { Paper } from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import { DataGrid, useGridApiRef } from "@mui/x-data-grid";
+import { DataGrid, useGridApiRef,gridClasses  } from "@mui/x-data-grid";
 import { Stack } from "react-bootstrap";
+import { grey } from '@mui/material/colors';
 
 
 import { InputGroup } from "react-bootstrap";
@@ -27,7 +28,7 @@ const OrderScreen = () => {
           alignItems="center"
           justifyContent="center"
         >
-          Không tìm thấy kết quả
+          No results were found
         </Stack>
       ),
     }),
@@ -44,15 +45,11 @@ const OrderScreen = () => {
   })
   const [search, setSearch] = useState('');
   const [totalPages, setTotalPages] = useState(0);
-
-  // const [categories, setCategories] = useState();
-  // const [brands, setBrands] = useState();
+  const[rowId,setRowId] = useState(null);
   const [loading, setLoading] = useState(false)
 
   const fetchData = () => {
     setLoading(true);
-    // findCategory().then(data => setCategories(data.data.content))
-    // findBrand().then(data => setBrands(data.data.content))
     getAllOrder(paginationModel).then(data => {
       setOrders(data.data.content);
       setTotalPages(data.data.totalElements);
@@ -86,13 +83,14 @@ const OrderScreen = () => {
       field: 'address', headerName: 'Address', width: 100
     },
     {
-      field: 'status', headerName: 'Status', width: 150, type: 'singleSelect',
-      valueOptions: ['PENDING', 'COMPLETED', 'SHIPPED', 'CANCELLED'],
+      field: 'status', headerName: 'Status', width: 150, 
+      type: 'singleSelect',
+      valueOptions: ['PENDING', 'PAID', 'SHIPPED', 'CANCELLED'],
       editable: true
     },
     {
       field: 'actions', headerName: 'actions', type:'actions',renderCell : params => {
-        <OrderActions />
+        return <OrderActions params={params} rowId={rowId} setRowId={setRowId}/>
       }
     },
   ]
@@ -140,6 +138,7 @@ const OrderScreen = () => {
         }}
         onPageSizeChange={(newPageSize) => setPaginationModel(old => ({ ...old, pageSize: newPageSize }))}
         columns={columns}
+        onCellEditCommit={(params) => setRowId(params.id)}
       />
     </div>
   </Paper>;

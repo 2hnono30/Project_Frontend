@@ -17,6 +17,7 @@ import Logo from "../images/LogoCHY.png";
 const Header = ({ navigation }) => {
     const [appState, appDispatch] = useContext(AppContext);
 
+    
     let initOrderValue = appState.cartItems;
     if (!initOrderValue) {
         initOrderValue = [];

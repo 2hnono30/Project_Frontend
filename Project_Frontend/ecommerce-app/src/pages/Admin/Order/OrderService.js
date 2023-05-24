@@ -7,8 +7,8 @@ export const getAllOrder = (page) => {
 
 
 
-export const updateOrderStatus = (order) => {
-    return axios.patch(`${BASE_URL}/orders/${order.id}`, order)
+export const updateOrderStatus = (status,id) => {
+    return axios.patch(`${BASE_URL}/user/orders/updateStatus/${id}?status=${status}`)
 }
 
 export const deleteOrder = (id) => {
