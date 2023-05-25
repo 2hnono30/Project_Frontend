@@ -48,7 +48,8 @@ const Checkout = () => {
       note: '',
       province: '',
       ward: '',
-      district: ''
+      district: '',
+      address: '',
     });
 
   const onSubmit = (values) => {
@@ -69,9 +70,11 @@ const Checkout = () => {
             initOrderValue = appState.removeCartItems;
             if (!initOrderValue) {
               initOrderValue = [];
+              appDispatch({ type: "SET_CART_ITEMS", payload: initOrderValue });
+
             }
-            console.log(initOrderValue);
-            appDispatch({ type: "REMOVE_CART_ITEMS", payload: initOrderValue })
+            // console.log(initOrderValue);
+            appDispatch({ type: "REMOVE_CART_ITEMS", payload: initOrderValue });
             setState({ orderLists: initOrderValue });
             toast.success("Checkout successfully ");
           });
@@ -82,9 +85,6 @@ const Checkout = () => {
       console.log("error checkout");
     }
   }
-  useEffect(() => {
-    console.log('sjfgkushk');
-  }, [orderLists]);
 
   const [loading, setLoading] = useState(false);
   const button = useRef();
@@ -133,7 +133,7 @@ const Checkout = () => {
             <div className="col-5">
               {orderLists?.length == 0 ?
                 <div className="d-flex justify-content-center fw-lighter">
-                  <p>Không Có Sản Phẩm Nào Trong Giỏ Hàng Của Bạn</p>
+                  <p>There are no products in the cart</p>
                 </div> :
                 <>
                   {(
@@ -188,7 +188,7 @@ export const CartItem = (props) => {
             >
               {order.quantity}
             </span>
-            <img className="img-fluid" src={watch} alt="product" />
+            <img className="img-fluid" src={order.product.avatar} alt="product" />
           </div>
           <div>
             <h5 className="total-price">{currencyFormat(order.product.price)}</h5>

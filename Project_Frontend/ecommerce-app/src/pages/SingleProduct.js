@@ -9,8 +9,14 @@ import watch from "../images/watch.jpg";
 import { ProductService } from "../Services/Product/ProductService";
 import { currencyFormat } from "../components/Utils/Utils";
 import AppContext from "../contexts/AppContext";
-const SingleProduct = () => {
+import Slider from "react-slick";
+import { useRef } from "react";
+import '../pages/SliderCss.css';
+import { Button } from "@mui/material";
+const SingleProduct = ({ initialSlide = 0 }) => {
     const [appState, appDispatch] = useContext(AppContext);
+    const [hasSetPosition, setHasSetPosition] = useState(false);
+    const slider = useRef();
     const { id } = useParams();
     const [state, setState] = useState({
         product: {},
@@ -22,18 +28,26 @@ const SingleProduct = () => {
             setState({ ...state });
             async function fetchProductById() {
                 let resProduct = await ProductService.getProductById(id);
-                // console.log(resProduct.data.urlImages);
+                // console.log(resProduct);
+                resProduct.data.images.unshift(resProduct.data.avatar);
+                
                 setState({
                     ...state,
                     product: resProduct.data,
                 });
+                setImage(resProduct.data.avatar)
             }
             fetchProductById();
         } catch (error) {
             setState({ ...state, errorMessage: error.message });
         }
     }
-
+    useEffect(() => {
+        if (slider.current && !hasSetPosition) {
+            slider.current.slickGoTo(initialSlide);
+            setHasSetPosition(true);
+        }
+    })
 
     useEffect(function ProductList() {
         productApiById(id);
@@ -47,10 +61,11 @@ const SingleProduct = () => {
         if (!initOrderValue) {
             initOrderValue = [];
             initOrderValue.push({ product: product, quantity: 1 });
-            appDispatch({type: "SET_CART_ITEMS", payload: initOrderValue})
+            appDispatch({ type: "SET_CART_ITEMS", payload: initOrderValue })
         } else {
             for (let i = 0; i < initOrderValue.length; i++) {
                 const element = initOrderValue[i];
+                
                 if (element.product.id == id) {
                     check = true;
                     currentIndex = i;
@@ -59,10 +74,10 @@ const SingleProduct = () => {
                     check = false;
                 }
             }
-            if(check){
+            if (check) {
                 initOrderValue[currentIndex].quantity++;
                 console.log(initOrderValue[currentIndex]);
-                appDispatch({type: "SET_CART_ITEMS", payload: initOrderValue})
+                appDispatch({ type: "SET_CART_ITEMS", payload: initOrderValue })
             } else {
                 initOrderValue.push({ product: product, quantity: 1 });
                 localStorage.setItem('orders', JSON.stringify(initOrderValue));
@@ -70,7 +85,19 @@ const SingleProduct = () => {
         }
         navigate("/cart")
     }
+    var settings = {
+        dots: true,
+        infinite: true,
+        speed: 200,
+        slidesToShow: 3,
+        slidesToScroll: 1,
+        initialSlide
+    };
 
+    const [image,setImage]= useState('null');
+    const imageChange = (img) =>{
+        setImage(img)
+    }
 
     return (
         <>
@@ -82,15 +109,22 @@ const SingleProduct = () => {
                         <div className="col-6">
                             <div className="main-product-image">
                                 <div>
-                                    <img src="https://www.bhphotovideo.com/images/images2500x2500/apple_m02x3ll_a_watch_series_6_gps_1595000.jpg?cs=srgb&dl=pexels-fernando-arcos-190819.jpg&fm=jpg" />
+                                    <ReactImageZoom 
+                                    img={image}
+                                    width= {594}
+                                    height= {600}
+                                    zoomWidth= {600}
+                                    />
                                 </div>
                             </div>
-                            <div className="other-product-images d-flex flex-wrap gap-15">
-                                {product.urlImages?.map((img, index) => (
-                                    <div key={index}>
-                                        <img key={index} src={img} alt={`Image ${index}`} className="img-fluid" />
-                                    </div>
-                                ))}
+                            <div className="other-product-images d-flex flex-wrap gap-30">
+                                <Slider {...settings}>
+                                    {product.images?.map((img, index) => (
+                                        <Button key={index} type="button" onClick={()=>{imageChange(img)}}>
+                                            <img src={img} alt={`Image ${index}`} className="img-fluids" />
+                                        </Button>
+                                    ))}
+                                </Slider>
                             </div>
                         </div>
                         <div className="col-6">
@@ -103,27 +137,19 @@ const SingleProduct = () => {
                                 <div className="border-bottom py-3">
                                     <p className="price">
 
-                                    {product.price ? currencyFormat(product.price) : ""}
-                                    
-                                    
+                                        {product.price ? currencyFormat(product.price) : ""}
+
+
                                     </p>
                                 </div>
                                 <div className=" py-3">
                                     <div className="d-flex gap-10 align-items-center my-2">
-                                        <h3 className="product-heading">Type :</h3>
-                                        <p className="product-data">Watch</p>
-                                    </div>
-                                    <div className="d-flex gap-10 align-items-center my-2">
                                         <h3 className="product-heading">Brand :</h3>
-                                        <p className="product-data">{product.price}</p>
+                                        <p className="product-data">{product.nameBrand}</p>
                                     </div>
                                     <div className="d-flex gap-10 align-items-center my-2">
                                         <h3 className="product-heading">Category :</h3>
-                                        <p className="product-data">{product.price}</p>
-                                    </div>
-                                    <div className="d-flex gap-10 align-items-center my-2">
-                                        <h3 className="product-heading">Tags :</h3>
-                                        <p className="product-data">Watch</p>
+                                        <p className="product-data">{product.nameCategory}</p>
                                     </div>
                                     <div className="d-flex gap-10 align-items-center my-2">
                                         <h3 className="product-heading">Availablity :</h3>
@@ -194,13 +220,6 @@ const SingleProduct = () => {
                                             <p className="mb-0">Based on 2 Reviews</p>
                                         </div>
                                     </div>
-                                    {/* {orderedProduct && (
-                                        <div>
-                                            <a className="text-dark text-decoration-underline" href="">
-                                                Write a Review
-                                            </a>
-                                        </div>
-                                    )} */}
                                 </div>
                                 <div className="review-form py-4">
                                     <h4>Write a Review</h4>

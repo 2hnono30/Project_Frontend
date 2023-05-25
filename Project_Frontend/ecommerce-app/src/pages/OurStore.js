@@ -3,7 +3,7 @@ import BreadCrumb from '../components/BreadCrumb';
 import Meta from '../components/Meta';
 import ReactStars from 'react-rating-stars-component';
 import ProductCard from "../components/ProductCard";
-import { Form, Link, useLocation, useNavigate, useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import gr from "../images/gr.svg";
 import gr2 from "../images/gr2.svg";
 import gr3 from "../images/gr3.svg";
@@ -11,12 +11,23 @@ import gr4 from "../images/gr4.svg";
 import Categories from "../components/Categories";
 import { ProductService } from "../Services/Product/ProductService";
 import Pagging from './../components/Pagging';
+import { Slider } from "@mui/material";
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+import Stack from '@mui/material/Stack';
+import Button from '@mui/material/Button';
+import Brands from "../components/Brands";
+
+
 const OurStore = () => {
 
   const { id } = useParams();
   const PAGE = 4;
 
   const [grid, setGrid] = useState(4);
+
+
 
   const [sort, setSort] = useState("name,asc");
 
@@ -37,6 +48,10 @@ const OurStore = () => {
     pageSize: 9,
     page: 1,
     sort: '',
+    price: [0, 100000],
+    stock: false,
+    outstock: false,
+    brand: ''
   });
   const [totalPages, setTotalPages] = useState(0);
 
@@ -52,7 +67,7 @@ const OurStore = () => {
           products: resTotalPage.data.content,
         });
         setTotalPages(resTotalPage.data.totalPages);
-        setState({...state,totalProduct:resTotalPage.data.totalElements})
+        setState({ ...state, totalProduct: resTotalPage.data.totalElements })
       }
       fetchAllProducts();
     } catch (error) {
@@ -82,8 +97,7 @@ const OurStore = () => {
 
   useEffect(function ProductList() {
     if (search) {
-      getProductWithTotalPage(paginationModel,search);
-      console.log(search);
+      getProductWithTotalPage(paginationModel, search);
     }
     else {
       if (location.pathname == "/product" || location.pathname.includes("category")) {
@@ -94,7 +108,21 @@ const OurStore = () => {
     }
   }, [id, sort, search, paginationModel])
 
+  const handleChange = (event, newValue) => {
 
+    setPaginationModel({ ...paginationModel, price: newValue })
+
+  };
+
+  function valuetext(value) {
+    return `$${value}`;
+  }
+
+
+
+  const handleClearFilter = () => {
+    setPaginationModel({ ...paginationModel, brand: '', price: [0, 100000], outstock: false, stock: false })
+  }
   const { products, errorMessage } = product;
   const { totalProduct } = state;
   return (
@@ -111,82 +139,43 @@ const OurStore = () => {
               </div>
               <div className='filter-card mb-3'>
                 <h3 className='filter-title'>Filter By</h3>
+                <div className="filter_brand">
+
+                  <Brands setPaginationModel={setPaginationModel} paginationModel={paginationModel} />
+                </div>
                 <div>
                   <h5 className='sub-title'> Availablity</h5>
-                  <div className='form-check'>
-                    <input className='form-check-input'
-                      type="checkbox"
-                      value=""
-                      id="" />
-                    <label className='form-check-label' htmlFor="">
-                      In Stock (1)
-                    </label>
+                  <FormGroup>
+                    <FormControlLabel control={<Checkbox checked={paginationModel.stock} onClick={() => { setPaginationModel({ ...paginationModel, stock: !paginationModel.stock }) }} />} label="In Stock" />
+
+                  </FormGroup>
+
+
+                  <FormGroup>
+                    <FormControlLabel control={<Checkbox checked={paginationModel.outstock} onClick={() => { setPaginationModel({ ...paginationModel, outstock: !paginationModel.outstock }) }} />} label="Out Stock" />
+
+                  </FormGroup>
+
+                  <div className="filter_price">
+                    <h5 className='sub-title'> Price</h5>
+                    <div className={"price"}>${paginationModel.price[0]} - ${paginationModel.price[1]}</div>
+
+                    <Slider getAriaLabel={() => 'Range'}
+                      value={paginationModel.price}
+                      onChange={handleChange}
+                      valueLabelDisplay="auto"
+                      getAriaValueText={valuetext}
+                      min={0}
+                      max={10000}
+                    />
                   </div>
-                  <div className='form-check'>
-                    <input className='form-check-input'
-                      type="checkbox"
-                      value=""
-                      id="" />
-                    <label className='form-check-label' htmlFor="">
-                      Out of Stock (0)
-                    </label>
-                  </div>
-                  <h5 className='sub-title'> Price</h5>
-                  <div className='d-flex align-items-center gap-10'>
-                    <div className="form-floating">
-                      <input
-                        type="email"
-                        className="form-control"
-                        id="floatingInput"
-                        placeholder="From" />
-                      <label htmlFor="floatingInput">From</label>
-                    </div>
-                    <div className="form-floating">
-                      <input type="email"
-                        className="form-control"
-                        id="floatingInput"
-                        placeholder="To" />
-                      <label htmlFor="floatingInput1">To</label>
-                    </div>
-                  </div>
-                  <h5 className='sub-title'> Colors</h5>
-                  <div>
-                    <div>
-                      <ul className='colors ps-0'>
-                        <li></li>
-                        <li></li>
-                        <li></li>
-                        <li></li>
-                        <li></li>
-                        <li></li>
-                        <li></li>
-                        <li></li>
-                        <li></li>
-                        <li></li>
-                      </ul>
-                    </div>
-                  </div>
-                  <h5 className='sub-title'> Size</h5>
-                  <div>
-                    <div className='form-check'>
-                      <input className='form-check-input'
-                        type="checkbox"
-                        value=""
-                        id="color-1" />
-                      <label className='form-check-label' htmlFor="color-1">
-                        S (2)
-                      </label>
-                    </div>
-                    <div className='form-check'>
-                      <input className='form-check-input'
-                        type="checkbox"
-                        value=""
-                        id="color-2" />
-                      <label className='form-check-label' htmlFor="color-2">
-                        M (2)
-                      </label>
-                    </div>
-                  </div>
+                  <Stack className="justify-content-center" direction="row">
+                    <Button variant="contained" onClick={handleClearFilter}>Clear Filter</Button>
+
+                  </Stack>
+
+
+
                 </div>
               </div>
               <div className='filter-card mb-3'>

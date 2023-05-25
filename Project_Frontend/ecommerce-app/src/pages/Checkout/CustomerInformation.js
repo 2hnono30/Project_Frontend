@@ -8,17 +8,25 @@ import SelectCustom from "../../components/CustomField/SelectCustom";
 import { Link } from "react-router-dom";
 import { BiArrowBack } from "react-icons/bi";
 import { districtCallAPI, provinceCallAPI, wardCallAPI } from "../../Services/Address/AddressService";
-import { toast } from "react-toastify";
 import AutoCompleteCustom from '../../components/CustomField/AutoCompleteCustom';
+
+
 
 
 
 function CustomerInformation(props) {
     const { customer, onSubmit, refFrom, buttonHide } = props;
+
+    // const phoneRegExp = /^(0?)(3[2-9]|5[6|8|9]|7[0|6-9]|8[0-6|8|9]|9[0-4|6-9])[0-9]{7}$/;
+    const emailRegexp = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
     const validationSchema = Yup.object().shape({
         fullName: Yup.string().required('This field is required.'),
-        email: Yup.string().email().required('This field is required.'),
-        phoneNumber: Yup.number()
+        email: Yup.string().email().matches(emailRegexp, 'Email invalidate').required('This field is required.'),
+        phoneNumber: Yup.string()
+            .min(12, 'Phone Number must have 10 characters')
+            .max(12, 'Phone Number up to 10 characters')
+            .test('len', 'phone number must start with 03 / 09 or 07', val => ['03', '07', '09'].includes(val?.slice(0, 2)))
+            // .matches(phoneRegExp, 'phone number must start with 03 / 09 or 07')
             .required('This field is required.'),
         province: Yup.string()
             .required('This field is required.'),
@@ -48,7 +56,6 @@ function CustomerInformation(props) {
     }
 
     const fetchDistrictData = () => {
-
         districtCallAPI().then(e => {
             if (provinceId) {
                 districtCallAPI(provinceId).then(e => {
@@ -100,11 +107,18 @@ function CustomerInformation(props) {
                 wardId: values.ward,
                 wardName: wards.find(e => e.id === values.ward)?.name,
                 address: values.address,
-            }
+            },
+            phoneNumber: values.phoneNumber.replaceAll(' ', '')
         }
         onSubmit(customer);
     }
-
+    const phoneNumberFormat = (value) => {
+        if (!value) return value;
+        const phoneNumber = value.replace(/\D/g, '')
+        if (phoneNumber.length < 4) return phoneNumber;
+        if (phoneNumber.length < 7) return `${phoneNumber.slice(0, 3)}-${phoneNumber.slice(3)}`;
+        return `${phoneNumber.slice(0, 3)}-${phoneNumber.slice(3, 6)}-${phoneNumber.slice(6, 10)}`
+    };
     return (
         <Formik onSubmit={(values) => onSubmitForm(values)}
             validationSchema={validationSchema}
@@ -112,10 +126,10 @@ function CustomerInformation(props) {
             innerRef={refFrom}
         >
             {formikProps => {
-                // do something here ...
                 const { values, errors, touched } = formikProps;
 
                 // console.log({ values, errors, touched });
+
                 return (
                     <>
                         <h4 className="mb-3">Customer Contact Information</h4>
@@ -139,13 +153,16 @@ function CustomerInformation(props) {
                                 />
                             </div>
                             <div className='bg-white' style={{ marginTop: 10 }}>
-                                <FastField
-                                    name="phoneNumber"
-                                    component={InputCustom}
-                                    fullWidth
-                                    label="Phone Number"
-                                    placeholder="Eg: Wow nature ..."
-                                />
+                                <div className="flex-grow-1 bg-white" style={{ marginTop: 10 }}>
+                                    <FastField
+                                        name="phoneNumber"
+                                        component={InputCustom}
+                                        fullWidth
+                                        label="Phone Number"
+                                        placeholder="Eg: Wow nature ..."
+                                        handleChangeCustom={phoneNumberFormat}
+                                    />
+                                </div>
                             </div>
                             <div className='d-flex gap-10'>
                                 <div className="flex-grow-1 bg-white" style={{ marginTop: 10 }}>

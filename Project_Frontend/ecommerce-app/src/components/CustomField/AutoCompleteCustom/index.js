@@ -44,10 +44,9 @@ export default function AutoCompleteCustom(props) {
     console.log(props);
     const hasError = touched[name] && !!errors[name];
     const handleChange = (newValue) => {
-        console.log('handlerChange')
-        const idSelected = options.find(e => e.label === newValue).id;
+        const idSelected = newValue?.id;
         if (newValue) {
-            handleChangeCustom && handleChangeCustom(newValue);
+            handleChangeCustom && handleChangeCustom(idSelected);
         }
         const changeEvent = {
             target: {
@@ -59,10 +58,10 @@ export default function AutoCompleteCustom(props) {
     }
     return (
         <Autocomplete
-            onInputChange={(event, newInputValue) => {
+            onChange={(event, newInputValue) => {
                 handleChange(newInputValue);
             }}
-            disablePortal
+            getOptionLabel={(option) => option.label}
             options={options}
             renderInput={(params) => <TextField
                 {...params}

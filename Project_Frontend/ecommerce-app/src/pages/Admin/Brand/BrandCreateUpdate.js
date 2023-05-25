@@ -4,18 +4,17 @@ import Modal from 'react-bootstrap/Modal';
 import { FastField, Form, Formik } from 'formik';
 import InputCustom from "../../../components/CustomField/InputCustom";
 import * as Yup from "yup";
-import SelectCustom from "../../../components/CustomField/SelectCustom";
-import { Stack } from "react-bootstrap";
 import NoAvatar from "../../../images/noAvatar.jpg";
 import { createBrandAvatar } from './BrandAvatarService';
-import axios from 'axios';
+
 function BrandCreateUpdate(props) {
+
     const { show, onHide, brand, brands, onSubmit } = props;
     const validationSchema = Yup.object().shape({
         name: Yup.string()
-        .required('This field is required.')
-        .min(2,'Brand Name with at least 2 characters')
-        .max(8,'Brand Name has at most 8 characters'),
+            .required('This field is required.')
+            .min(2, 'Brand Name with at least 2 characters')
+            .max(8, 'Brand Name has at most 8 characters'),
         id: Yup.number()
             .required('This field is required.')
             .nullable(),
@@ -34,9 +33,6 @@ function BrandCreateUpdate(props) {
 
     }
     const handleUpload = (image) => {
-        // preview image in js => display image 
-        // add id of file into object values when on submit 
-        // setAvatar({ ...avatar, uploading: true })
         try {
             async function uploadAvatar() {
                 let result = await createBrandAvatar(image);
@@ -51,6 +47,7 @@ function BrandCreateUpdate(props) {
         setUrl(brand.fileUrl)
     }, [show])
     const submit = (values) => {
+        console.log(values);
         values.image = image;
         onSubmit(values);
     }
@@ -62,9 +59,10 @@ function BrandCreateUpdate(props) {
                 initialValues={brand}
             >
                 {formikProps => {
-                    // do something here ...
                     const { values, errors, touched } = formikProps;
-                    console.log({ values, errors, touched });
+                    console.log( values, errors, touched);
+                    // do something here ...
+
                     return (
                         <Form>
                             <Modal.Header closeButton>

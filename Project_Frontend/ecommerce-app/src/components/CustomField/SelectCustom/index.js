@@ -25,10 +25,36 @@ SelectCustom.defaultProps = {
 }
 
 function SelectCustom(props) {
-    const { field, form, options, label, placeholder, fullWidth, handleChangeCustom } = props;
+    const { field, options, label, placeholder, fullWidth, locationType, form, handleChangeCustom } = props;
     const { name, value } = field;
 
+    let optionKey = ''
+    let optionName = ''
+
+    switch(locationType) {
+        case 'province': 
+            optionKey = 'province_id';
+            optionName = 'province_name';
+        break;
+
+        case 'district': 
+            optionKey = 'district_id';
+            optionName = 'district_name';
+        break;
+
+        case 'ward': 
+            optionKey = 'ward_id';
+            optionName = 'ward_name';
+        break;
+
+        default: 
+            optionKey = 'id';
+            optionName = 'name';
+    }
+
+
     const { errors, touched } = form;
+
 
     const handleSelectedOptionChange = (selectedOption) => {
         if (selectedOption.target.value) {
@@ -36,7 +62,6 @@ function SelectCustom(props) {
         }
 
         const changeEvent = {
-
             target: {
                 name: name,
                 value: selectedOption.target.value
@@ -45,7 +70,6 @@ function SelectCustom(props) {
         field.onChange(changeEvent);
     }
     const hasError = touched[name] && !!errors[name];
-    // console.log(touched[name], errors[name], name);
 
     return (
         <FormControl fullWidth={fullWidth} error={hasError}>
@@ -59,7 +83,8 @@ function SelectCustom(props) {
                 onChange={handleSelectedOptionChange}
                 placeholder={placeholder}
             >
-                {options.map(option => <MenuItem key={option.id} value={option.id}>{option.name}</MenuItem>)}
+                {options.map(option => <MenuItem key={option.id} value={option[optionKey]}>{option[optionName]}</MenuItem>)}
+                
             </Select>
             {hasError && <FormHelperText>{errors[name]}</FormHelperText>}
         </FormControl>

@@ -21,15 +21,18 @@ const ProductByCate = () => {
         Categories: [],
         CateErrorMessage: ''
     });
+    const [loading, setLoading] = useState(false);
     const PAGE = 4;
     const callCateApi = () => {
         try {
+            setLoading(true);
             async function fetchCategories(event) {
                 let resCate = await CategoryService.getCategories();
                 setCategory({
                     ...category,
                     Categories: resCate.data.content,
                 })
+                setLoading(false);
                 setFlag(true);
             }
             fetchCategories();
@@ -94,6 +97,7 @@ const ProductByCate = () => {
                                                 <img
                                                     src={item.avatar || NoProduct}
                                                     //  src={watch}
+                                                    style={{height : '100%'}}
                                                     className="img-fluid"
                                                     alt="product image" />
                                                 <img

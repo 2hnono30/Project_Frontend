@@ -12,23 +12,26 @@ import NoProduct from "../images/NoProduct.jpg";
 import { currencyFormat } from "../components/Utils/Utils";
 import prodcompare from "../images/prodcompare.svg";
 import ProductByCate from "../components/ProductByCate";
+import Brand from "../components/Brand";
 
 const Home = () => {
     const [product, setProduct] = useState({
         products: [],
         errorMessage: ''
     });
+    const [loading, setLoading] = useState(false);
     const PAGE = 4;
     const callApi = (cate, sort, page) => {
         try {
-            setProduct({ ...product });
+            setLoading(true);
             async function fetchAllProducts() {
                 let resProduct = await ProductService.getProductListBySort(cate, sort, page);
-                console.log(resProduct);
+                // console.log(resProduct);
                 setProduct({
                     ...product,
                     products: resProduct.data.content,
                 });
+                setLoading(false);
             }
             fetchAllProducts();
         } catch (error) {
@@ -128,17 +131,6 @@ const Home = () => {
                     <div className="row">
                         <div className="col-12">
                             <div className="services d-flex align-items-center justify-content-between">
-                                {/* {services?.map((i, j) => {
-                                    return (
-                                        <div className="d-flex align-items-center gap-15" key={j}>
-                                            <img src={i.image} alt="services" />
-                                            <div>
-                                                <h6>{i.title}</h6>
-                                                <p className="mb-0">{i.tagline}</p>
-                                            </div>
-                                        </div>
-                                    );
-                                })} */}
                                 <div className="d-flex align-items-center gap-15">
                                     <img src="images/service.png" alt="services" />
                                     <div>
@@ -183,7 +175,9 @@ const Home = () => {
                 <div className="container-xxl">
                     <div className="row">
                         <div className="col-12">
-                            <Categories />
+                            <div className="card-wrapper">
+                                <Categories />
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -305,32 +299,7 @@ const Home = () => {
                     <div className="row">
                         <div className="col-12">
                             <div className="marque-inner-wrapper card-wrapper">
-                                <Marquee className="d-flex">
-                                    <div className="mx-4 ww-25">
-                                        <img src="images/brand-01.png" alt="brand" />
-                                    </div>
-                                    <div className="mx-4 ww-25">
-                                        <img src="images/brand-02.png" alt="brand" />
-                                    </div>
-                                    <div className="mx-4 ww-25">
-                                        <img src="images/brand-03.png" alt="brand" />
-                                    </div>
-                                    <div className="mx-4 ww-25">
-                                        <img src="images/brand-04.png" alt="brand" />
-                                    </div>
-                                    <div className="mx-4 ww-25">
-                                        <img src="images/brand-05.png" alt="brand" />
-                                    </div>
-                                    <div className="mx-4 ww-25">
-                                        <img src="images/brand-06.png" alt="brand" />
-                                    </div>
-                                    <div className="mx-4 ww-25">
-                                        <img src="images/brand-07.png" alt="brand" />
-                                    </div>
-                                    <div className="mx-4 ww-25">
-                                        <img src="images/brand-08.png" alt="brand" />
-                                    </div>
-                                </Marquee>
+                                <Brand />
                             </div>
                         </div>
                     </div>

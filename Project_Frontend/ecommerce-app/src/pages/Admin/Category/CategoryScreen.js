@@ -1,27 +1,28 @@
-import React, {useEffect, useState} from "react";
-import {createCategory, deleteCategory, getAllCategory, updateCategory} from "./CategoryService";
+import React, { useEffect, useState } from "react";
+import { createCategory, deleteCategory, getAllCategory, updateCategory } from "./CategoryService";
 import CategoryCreateUpdate from "./CategoryCreateUpdate";
 import Button from "react-bootstrap/Button";
-import {Container, Paper} from "@mui/material";
+import { Container, Paper } from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import {DataGrid} from "@mui/x-data-grid";
-import {Stack} from "react-bootstrap";
-import {toast} from "react-toastify";
+import { DataGrid } from "@mui/x-data-grid";
+import { Stack } from "react-bootstrap";
+import { toast } from "react-toastify";
 import { useConfirm } from "material-ui-confirm";
 
 
-const CategoryScreen = ({closeMenu}) => {
+const CategoryScreen = () => {
 
     const [categories, setCategories] = useState([])
     const [paginationModel, setPaginationModel] = useState({
         pageSize: 10,
         page: 1,
         sort: '',
+        deleted: false,
     })
     const [isShow, setIsShow] = useState(false);
     const [totalPages, setTotalPages] = useState(0);
-    const [category, setCategory] = useState({name: '', id: null});
+    const [category, setCategory] = useState({ name: '', id: null, avatar: '', imageId: '' });
     const [loading, setLoading] = useState(false)
     const confirm = useConfirm();
     const fetchData = () => {
@@ -32,12 +33,29 @@ const CategoryScreen = ({closeMenu}) => {
             setLoading(false)
         })
     }
+
+    const findIndex = (id) => {
+        for (let i = 0; i < categories.length; i++) {
+            if (id === categories[i].id) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
     const columns = [
         {
-            field: 'id', headerName: 'ID', width: 70
+            field: 'id', headerName: 'ID', width: 70, height: 70, renderCell: (index) => {
+                return (<span>{findIndex(index.row.id) + 1}</span>)
+            },
         },
         {
-            field: 'name', headerName: 'Name', width: 500
+            field: 'name', headerName: 'Name', width: 300
+        },
+        {
+            field: 'fileUrl', headerName: 'Avatar', width: 250, height: 150, renderCell: (params) => {
+                return (<img src={params.row.fileUrl} className="image-table" style={{ height: '20vh' }} alt="avatar" />)
+            }
         },
         {
             field: 'actions', headerName: 'Actions', width: 140, renderCell: (params) => {
@@ -47,13 +65,13 @@ const CategoryScreen = ({closeMenu}) => {
                             onClick={(e) => onEdit(params.row)}
                             variant="contained"
                         >
-                            <EditIcon/>
+                            <EditIcon />
                         </Button>
                         <Button
                             onClick={(e) => onDelete(params.row)}
                             variant="contained"
                         >
-                            <DeleteIcon/>
+                            <DeleteIcon />
                         </Button>
                     </Stack>
                 );
@@ -100,29 +118,29 @@ const CategoryScreen = ({closeMenu}) => {
     }, [paginationModel])
 
 
-    return <Paper className={'container'} style={{height: '100vh', padding: '2rem 4rem'}}>
+    return <Paper className={'container'} style={{ height: '100vh', padding: '2rem 4rem' }}>
         <h3>Category</h3>
         <CategoryCreateUpdate show={isShow}
-                              onHide={() => setIsShow(false)}
-                              category={category} categories={categories}
-                              onSubmit={onSubmit}/>
-        <Button style={{marginTop: 25, marginBottom: 25}} onClick={() => onCreate()}>Create Category</Button>
+            onHide={() => setIsShow(false)}
+            category={category} categories={categories}
+            onSubmit={onSubmit} />
+        <Button style={{ marginTop: 25, marginBottom: 25 }} onClick={() => onCreate()}>Create Category</Button>
         <div>
-                <DataGrid
-                    style={{height: '70vh'}}
-                    rows={categories}
-                    rowCount={totalPages}
-                    loading={loading}
-                    pagination
-                    page={paginationModel.page - 1}
-                    pageSize={paginationModel.pageSize}
-                    paginationMode="server"
-                    onPageChange={(newPage) => {
-                        setPaginationModel(old => ({...old, page: newPage + 1}))
-                    }}
-                    onPageSizeChange={(newPageSize) => setPaginationModel(old => ({...old, pageSize: newPageSize}))}
-                    columns={columns}
-                />
+            <DataGrid
+                style={{ height: '70vh' }}
+                rows={categories}
+                rowCount={totalPages}
+                loading={loading}
+                pagination
+                page={paginationModel.page - 1}
+                pageSize={paginationModel.pageSize}
+                paginationMode="server"
+                onPageChange={(newPage) => {
+                    setPaginationModel(old => ({ ...old, page: newPage + 1 }))
+                }}
+                onPageSizeChange={(newPageSize) => setPaginationModel(old => ({ ...old, pageSize: newPageSize }))}
+                columns={columns}
+            />
         </div>
     </Paper>;
 }

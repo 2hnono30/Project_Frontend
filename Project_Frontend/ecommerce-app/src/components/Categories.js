@@ -12,7 +12,8 @@ const Categories = () => {
         categories: [],
         errorMessage: ''
     });
-    
+    const [loading, setLoading] = useState(false);
+
     var settings = {
         dots: true,
         infinite: true,
@@ -20,9 +21,11 @@ const Categories = () => {
         slidesToShow: 5,
         slidesToScroll: 1
     };
+
+
     useEffect(function () {
         try {
-            setState({ ...state });
+            setLoading(true);
             async function fetchAllCategories() {
                 let resCategories = await CategoryService.getCategories();
 
@@ -30,6 +33,7 @@ const Categories = () => {
                     ...state,
                     categories: resCategories.data.content,
                 })
+                setLoading(false);
             }
             fetchAllCategories();
         } catch (error) {
@@ -64,22 +68,20 @@ const Categories = () => {
         return (
             <>
                 {/* <Slider {...settings}> */}
-                    <Marquee className="d-flex">
-                        {(
-                            categories.map(category => {
-                                return (
-                                    <div key={category.id} >
-                                        <Link to={`/product/category/${category.id}`} className="d-flex gap align-items-center test gap-100">
-                                            <div>
-                                                <h6>{category.name}</h6>
-                                            </div>
-                                            <img src="images/camera.jpg" alt="camera" />
-                                        </Link>
-                                    </div>
-                                )
-                            })
-                        )}
-                    </Marquee>
+                <Marquee className="d-flex">
+                    {(
+                        categories.map(category => {
+                            console.log(category);
+                            return (
+                                <div key={category.id} className="mx-4 ww-25">
+                                    <Link to={`/product/category/${category.id}`} className="d-flex gap align-items-center mx-4 ww-25">
+                                        <img style={{height:165}} src={category.fileUrl} alt={category.name}/>
+                                    </Link>
+                                </div>
+                            )
+                        })
+                    )}
+                </Marquee>
                 {/* </Slider> */}
             </>
         );

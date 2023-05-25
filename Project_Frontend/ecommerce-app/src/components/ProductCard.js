@@ -2,8 +2,6 @@ import React, { useState, useEffect } from "react";
 import ReactStars from "react-rating-stars-component";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import prodcompare from "../images/prodcompare.svg";
-// import watch from "../images/watch.jpg";
-// import watch2 from "../images/watch-1.avif";
 import addcart from "../images/add-cart.svg";
 import view from "../images/view.svg";
 import NoProduct from "../images/NoProduct.jpg";
@@ -11,6 +9,7 @@ import { ProductService } from "../Services/Product/ProductService";
 import { currencyFormat } from "./Utils/Utils";
 import { CategoryService } from "./../Services/Categories/CategoryService";
 import Pagging from './../components/Pagging';
+import '../pages/SliderCss.css';
 
 const ProductCard = (props) => {
 
@@ -43,6 +42,7 @@ const ProductCard = (props) => {
                       <img
                         src={product.avatar || NoProduct}
                         //  src={watch}
+                        style={{height : '100%'}}
                         className="img-fluid"
                         alt="product image" />
                       <img
@@ -120,6 +120,7 @@ const ProductCard = (props) => {
                         <img
                           src={product.avatar || NoProduct}
                           //  src={watch}
+                          style={{height : '100%'}}
                           className="img-fluid"
                           alt="product image" />
                         <img
