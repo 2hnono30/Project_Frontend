@@ -5,8 +5,8 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import FormHelperText from '@mui/material/FormHelperText';
-
-SelectCustom.propTypes = {
+import { Autocomplete, TextField } from '@mui/material';
+AutocompleteCustom.propTypes = {
     field: PropTypes.object.isRequired,
     form: PropTypes.object.isRequired,
 
@@ -17,50 +17,22 @@ SelectCustom.propTypes = {
     handleChangeCustom: PropTypes.func
 };
 
-SelectCustom.defaultProps = {
+AutocompleteCustom.defaultProps = {
     label: '',
     placeholder: '',
     disabled: false,
     options: [],
 }
 
-function SelectCustom(props) {
+function AutocompleteCustom(props) {
     const { field, options, label, placeholder, fullWidth, locationType, form, handleChangeCustom } = props;
     const { name, value } = field;
-
-    let optionKey = ''
-    let optionName = ''
-
-    switch(locationType) {
-        case 'province': 
-            optionKey = 'province_id';
-            optionName = 'province_name';
-        break;
-
-        case 'district': 
-            optionKey = 'district_id';
-            optionName = 'district_name';
-        break;
-
-        case 'ward': 
-            optionKey = 'ward_id';
-            optionName = 'ward_name';
-        break;
-
-        default: 
-            optionKey = 'id';
-            optionName = 'name';
-    }
-
-
     const { errors, touched } = form;
-
 
     const handleSelectedOptionChange = (selectedOption) => {
         if (selectedOption.target.value) {
             handleChangeCustom && handleChangeCustom(selectedOption.target.value);
         }
-
         const changeEvent = {
             target: {
                 name: name,
@@ -74,21 +46,22 @@ function SelectCustom(props) {
     return (
         <FormControl fullWidth={fullWidth} error={hasError}>
             <InputLabel id={name}>{label}</InputLabel>
-            <Select
+            <Autocomplete
                 label={label}
                 id={name}
                 {...field}
-                defaultValue=""
                 value={value}
-                onChange={handleSelectedOptionChange}
                 placeholder={placeholder}
-            >
-                {options.map(option => <MenuItem key={option.id} value={option[optionKey]}>{option[optionName]}</MenuItem>)}
-                
-            </Select>
+                onChange={handleSelectedOptionChange}
+                options={options.sort((a, b) => -b.firstLetter.localeCompare(a.firstLetter))}
+                groupBy={(option) => option.firstLetter}
+                getOptionLabel={(option) => option.title}
+                sx={{ width: 300 }}
+                renderInput={(params) => <TextField {...params} label="Product" />}
+            />
             {hasError && <FormHelperText>{errors[name]}</FormHelperText>}
         </FormControl>
     );
 }
 
-export default SelectCustom;
+export default AutocompleteCustom;

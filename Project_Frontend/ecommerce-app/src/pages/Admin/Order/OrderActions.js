@@ -7,7 +7,7 @@ import { updateOrderStatus } from './OrderService';
 import { toast } from 'react-toastify';
 import EditNoteIcon from '@mui/icons-material/EditNote';
 
-const OrderActions = ({ params, rowId, setRowId }) => {
+const OrderActions = ({ params, rowId, setRowId,setIsShow, onHide, setOrder, orders }) => {
 
   const { dispatch } = useContext(AppContext);
   const [loading, setLoading] = useState(false);
@@ -28,6 +28,10 @@ const OrderActions = ({ params, rowId, setRowId }) => {
       }, 2000)
     }, 2000)
   };
+  const onEdit = (values) => {
+    setIsShow(true);
+    setOrder(values)
+  }
 
   // useEffect(() => {
   //   if (rowId === params.id && success) setSuccess(false);
@@ -60,7 +64,7 @@ const OrderActions = ({ params, rowId, setRowId }) => {
               height: 40,
             }}
             // disabled={params.id !== rowId || loading}
-            onClick={null}
+            onClick={(e) => onEdit(params.row)}
           >
             <EditNoteIcon />
           </Fab>
@@ -85,7 +89,7 @@ const OrderActions = ({ params, rowId, setRowId }) => {
               height: 40,
             }}
             // disabled={params.id !== rowId || loading}
-            onClick={null}
+            onClick={(e) => onEdit(params.row)}
           >
             <EditNoteIcon />
           </Fab>

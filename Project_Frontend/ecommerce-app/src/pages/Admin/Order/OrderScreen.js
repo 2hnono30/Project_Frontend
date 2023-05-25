@@ -6,13 +6,13 @@ import EditIcon from '@mui/icons-material/Edit';
 import { DataGrid, useGridApiRef, gridClasses } from "@mui/x-data-grid";
 import { Stack } from "react-bootstrap";
 import { grey, green } from '@mui/material/colors';
-
-
+import { toast } from "react-toastify";
 import { InputGroup } from "react-bootstrap";
 import { Form } from "react-bootstrap";
 import CustomToolbar from "../../../components/CustomToolbar";
 import Button from "react-bootstrap/Button";
 import OrderActions from './OrderActions';
+import OrderCreateUpdate from './OrderCreateUpdate';
 
 const OrderScreen = () => {
   const slots = useMemo(
@@ -46,7 +46,14 @@ const OrderScreen = () => {
   const [search, setSearch] = useState('');
   const [totalPages, setTotalPages] = useState(0);
   const [rowId, setRowId] = useState(null);
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
+  const [isShow, setIsShow] = useState(false);
+  const [order, setOrder] = useState({
+    name: '',
+    id: null,
+    avatar: '',
+    imageId: ''
+  });
 
   const fetchData = () => {
     setLoading(true);
@@ -127,7 +134,7 @@ const OrderScreen = () => {
           >
             {params.value}
           </div >
-        } else{
+        } else {
           return <div
             className='d-flex justify-content-center'
             style={{
@@ -145,10 +152,34 @@ const OrderScreen = () => {
     },
     {
       field: 'actions', headerName: 'actions', type: 'actions', renderCell: params => {
-        return <OrderActions params={params} rowId={rowId} setRowId={setRowId} />
+        return <OrderActions
+          params={params}
+          rowId={rowId}
+          setRowId={setRowId}
+          setIsShow={setIsShow}
+          onHide={() => setIsShow(false)}
+          setOrder={setOrder} orders={orders}
+        />
       }
     },
   ]
+
+  const onSubmit = (values) => {
+    // if (!values.id) {
+    // createBrand(values).then(e => {
+    //     toast.success('Created');
+    //     fetchData();
+    //     setIsShow(false);
+    // })
+    // } else {
+    // updateBrand(values).then(e => {
+    //     toast.success('Updated');
+    //     fetchData();
+    //     setIsShow(false);
+    // })
+    // }
+  }
+
 
 
   useEffect(() => {
@@ -175,7 +206,10 @@ const OrderScreen = () => {
         </Button>
       </InputGroup>
     </div>
-
+    <OrderCreateUpdate show={isShow}
+      onHide={() => setIsShow(false)}
+      order={order} orders={orders}
+      onSubmit={onSubmit} />
     <div>
       <DataGrid
         apiRef={apiRef}
