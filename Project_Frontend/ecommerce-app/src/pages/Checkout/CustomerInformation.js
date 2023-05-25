@@ -9,12 +9,12 @@ import { Link } from "react-router-dom";
 import { BiArrowBack } from "react-icons/bi";
 import { districtCallAPI, provinceCallAPI, wardCallAPI } from "../../Services/Address/AddressService";
 import { toast } from "react-toastify";
+import AutoCompleteCustom from '../../components/CustomField/AutoCompleteCustom';
 
 
 
 function CustomerInformation(props) {
     const { customer, onSubmit, refFrom, buttonHide } = props;
-
     const validationSchema = Yup.object().shape({
         fullName: Yup.string().required('This field is required.'),
         email: Yup.string().email().required('This field is required.'),
@@ -41,13 +41,14 @@ function CustomerInformation(props) {
             setProvinces(e.data.results.map(e => {
                 return {
                     id: e.province_id,
-                    name: e.province_name
+                    label: e.province_name
                 }
             }));
         })
     }
 
     const fetchDistrictData = () => {
+
         districtCallAPI().then(e => {
             if (provinceId) {
                 districtCallAPI(provinceId).then(e => {
@@ -150,7 +151,7 @@ function CustomerInformation(props) {
                                 <div className="flex-grow-1 bg-white" style={{ marginTop: 10 }}>
                                     <Field
                                         name="province"
-                                        component={SelectCustom}
+                                        component={AutoCompleteCustom}
                                         fullWidth
                                         label="Province"
                                         options={provinces}
