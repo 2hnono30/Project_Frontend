@@ -97,19 +97,21 @@ function CustomerInformation(props) {
     }, [provinceId]);
 
     const onSubmitForm = (values) => {
+        console.log(provinces);
         const customer = {
             ...values,
             locationRegion: {
                 provinceId: values.province,
-                provinceName: provinces.find(e => e.id === values.province)?.name,
+                provinceName: provinces.find(e => e.id == values.province)?.label,
                 districtId: values.district,
-                districtName: districts.find(e => e.id === values.district)?.name,
+                districtName: districts.find(e => e.id == values.district)?.name,
                 wardId: values.ward,
-                wardName: wards.find(e => e.id === values.ward)?.name,
+                wardName: wards.find(e => e.id == values.ward)?.name,
                 address: values.address,
             },
             phoneNumber: values.phoneNumber.replaceAll(' ', '')
         }
+        
         onSubmit(customer);
     }
     const phoneNumberFormat = (value) => {

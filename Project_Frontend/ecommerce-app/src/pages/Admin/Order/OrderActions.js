@@ -6,8 +6,9 @@ import AppContext from '../../../contexts/AppContext';
 import { updateOrderStatus } from './OrderService';
 import { toast } from 'react-toastify';
 import EditNoteIcon from '@mui/icons-material/EditNote';
+import { districtCallAPI, provinceCallAPI, wardCallAPI } from '../../../Services/Address/AddressService';
 
-const OrderActions = ({ params, rowId, setRowId,setIsShow, onHide, setOrder, orders }) => {
+const OrderActions = ({ params, rowId, setRowId, setIsShow, onHide, setOrder, order,onEdit }) => {
 
   const { dispatch } = useContext(AppContext);
   const [loading, setLoading] = useState(false);
@@ -15,6 +16,7 @@ const OrderActions = ({ params, rowId, setRowId,setIsShow, onHide, setOrder, ord
   const handleSubmit = async () => {
     setLoading(true);
     const { status, id } = params.row;
+    console.log(params);
     const result = await updateOrderStatus(status, id);
     setTimeout(() => {
       if (result) {
@@ -28,15 +30,7 @@ const OrderActions = ({ params, rowId, setRowId,setIsShow, onHide, setOrder, ord
       }, 2000)
     }, 2000)
   };
-  const onEdit = (values) => {
-    setIsShow(true);
-    setOrder(values)
-  }
-
-  // useEffect(() => {
-  //   if (rowId === params.id && success) setSuccess(false);
-  // }, [rowId]);
-
+  
   return (
     <Box
       sx={{

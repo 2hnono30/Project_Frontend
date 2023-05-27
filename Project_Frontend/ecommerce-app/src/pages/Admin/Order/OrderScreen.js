@@ -49,11 +49,26 @@ const OrderScreen = () => {
   const [loading, setLoading] = useState(false);
   const [isShow, setIsShow] = useState(false);
   const [order, setOrder] = useState({
-    name: '',
     id: null,
-    avatar: '',
-    imageId: ''
+    customerName: '',
+    phone: '',
+    status: '',
+    provinceId: '',
+    provinceName: '',
+    districtId: '',
+    districtName: '',
+    wardId: '',
+    wardName: '',
+    totalAmount: '',
+    orderItems: [{
+      id:'',
+      quantity:'',
+      amount:'',
+      productId:'',
+      orderId:''
+    }],
   });
+
 
   const fetchData = () => {
     setLoading(true);
@@ -73,6 +88,9 @@ const OrderScreen = () => {
     },
     {
       field: 'phone', headerName: 'Phone', width: 100
+    },
+    {
+      field: 'email', headerName: 'email', width: 200
     },
     {
       field: 'totalAmount', headerName: 'Price', width: 150
@@ -158,11 +176,17 @@ const OrderScreen = () => {
           setRowId={setRowId}
           setIsShow={setIsShow}
           onHide={() => setIsShow(false)}
-          setOrder={setOrder} orders={orders}
+          setOrder={setOrder} order={order}
+          onEdit={onEdit}
         />
       }
     },
   ]
+  const onEdit = (values) => {
+    setIsShow(true);
+    console.log(values);    
+    setOrder(values)
+  }
 
   const onSubmit = (values) => {
     // if (!values.id) {
@@ -202,7 +226,7 @@ const OrderScreen = () => {
           onChange={(e) => setSearch(e.target.value)}
         />
         <Button id="button-addon2" onClick={() => onSearch()}>
-          Button
+          Search
         </Button>
       </InputGroup>
     </div>

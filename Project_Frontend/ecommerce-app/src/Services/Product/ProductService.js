@@ -4,7 +4,7 @@ import axios from "axios";
 export class ProductService {
 
     static getAllProducts() {
-        return axios.get(`${CommonService.PRODUCTS_API}`);
+        return axios.get(`${CommonService.PRODUCTS_API + '?minPrice=' + 0 + '&maxPrice=' + 10000000 + '&'} `);
     }
 
     static getProductListBySort(sort, cate, page) {
