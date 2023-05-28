@@ -2,7 +2,7 @@ import axios from "axios";
 import { BASE_URL } from "../../../constant/AppConstant";
 
 export const getAllProduct = (page) => {
-    return axios.get(`${BASE_URL}/products?page=${page.page - 1}&size=${page.pageSize}&sort=${page.sort}&search=${page.search}&minPrice=${0}&maxPrince=${10000000}`)
+    return axios.get(`${BASE_URL}/products?page=${page.page - 1}&size=${page.pageSize}&sort=${page.sort}&search=${page.search}&minPrice=${0}&maxPrice=${10000000}`)
 }
 
 export const createProduct = (product) => {
