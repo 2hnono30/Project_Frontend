@@ -62,7 +62,6 @@ function SelectCustom(props) {
         }
 
         const changeEvent = {
-
             target: {
                 name: name,
                 value: selectedOption.target.value

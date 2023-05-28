@@ -4,12 +4,15 @@ import axios from "axios";
 export class ProductService {
 
     static getAllProducts() {
-        return axios.get(`${CommonService.PRODUCTS_API}`);
+        return axios.get(`${CommonService.PRODUCTS_API + '?minPrice=' + 0 + '&maxPrice=' + 10000000 + '&'} `);
     }
 
     static getProductListBySort(sort, cate, page) {
         let url = CommonService.PRODUCTS_API + '?minPrice=' + 0 + '&maxPrice=' + 10000000 + '&';
 
+        if (cate) {
+            url += 'categoryId=' + cate + '&';
+        }
         if (page) {
             url += 'size=' + page;
         }

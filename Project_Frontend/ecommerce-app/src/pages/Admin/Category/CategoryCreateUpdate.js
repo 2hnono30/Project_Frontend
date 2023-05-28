@@ -13,8 +13,7 @@ function CategoryCreateUpdate(props) {
     const validationSchema = Yup.object().shape({
         name: Yup.string()
             .required('This field is required.')
-            .min(2, 'Brand Name with at least 2 characters')
-            .max(8, 'Brand Name has at most 8 characters'),
+            .min(2, 'Category Name with at least 2 characters'),
         id: Yup.number()
             .required('This field is required.')
             .nullable(),

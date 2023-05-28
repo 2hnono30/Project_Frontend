@@ -2,15 +2,15 @@ import React, { useEffect, useRef, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { FastField, Form, Formik, Field, useFormikContext } from 'formik';
-import { InputMask } from 'react-input-mask';
 import InputCustom from "../../components/CustomField/InputCustom";
 import * as Yup from "yup";
 import SelectCustom from "../../components/CustomField/SelectCustom";
 import { Link } from "react-router-dom";
 import { BiArrowBack } from "react-icons/bi";
 import { districtCallAPI, provinceCallAPI, wardCallAPI } from "../../Services/Address/AddressService";
-import { toast } from "react-toastify";
-import TextMaskCustom from '../../components/CustomField/InputMask';
+import AutoCompleteCustom from '../../components/CustomField/AutoCompleteCustom';
+
+
 
 
 
@@ -19,14 +19,13 @@ function CustomerInformation(props) {
 
     // const phoneRegExp = /^(0?)(3[2-9]|5[6|8|9]|7[0|6-9]|8[0-6|8|9]|9[0-4|6-9])[0-9]{7}$/;
     const emailRegexp = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
-
     const validationSchema = Yup.object().shape({
         fullName: Yup.string().required('This field is required.'),
         email: Yup.string().email().matches(emailRegexp, 'Email invalidate').required('This field is required.'),
         phoneNumber: Yup.string()
             .min(12, 'Phone Number must have 10 characters')
             .max(12, 'Phone Number up to 10 characters')
-            .test('len', 'phone number must start with 03 / 09 or 07', val => ['03', '07', '09'].includes(val?.slice(0,2)))
+            .test('len', 'phone number must start with 03 / 09 or 07', val => ['03', '07', '09'].includes(val?.slice(0, 2)))
             // .matches(phoneRegExp, 'phone number must start with 03 / 09 or 07')
             .required('This field is required.'),
         province: Yup.string()
@@ -50,7 +49,7 @@ function CustomerInformation(props) {
             setProvinces(e.data.results.map(e => {
                 return {
                     id: e.province_id,
-                    name: e.province_name
+                    label: e.province_name
                 }
             }));
         })
@@ -98,27 +97,29 @@ function CustomerInformation(props) {
     }, [provinceId]);
 
     const onSubmitForm = (values) => {
+        console.log(provinces);
         const customer = {
             ...values,
             locationRegion: {
                 provinceId: values.province,
-                provinceName: provinces.find(e => e.id === values.province)?.name,
+                provinceName: provinces.find(e => e.id == values.province)?.label,
                 districtId: values.district,
-                districtName: districts.find(e => e.id === values.district)?.name,
+                districtName: districts.find(e => e.id == values.district)?.name,
                 wardId: values.ward,
-                wardName: wards.find(e => e.id === values.ward)?.name,
+                wardName: wards.find(e => e.id == values.ward)?.name,
                 address: values.address,
             },
             phoneNumber: values.phoneNumber.replaceAll(' ', '')
         }
+        
         onSubmit(customer);
     }
     const phoneNumberFormat = (value) => {
-        if(!value) return value;
+        if (!value) return value;
         const phoneNumber = value.replace(/\D/g, '')
-        if(phoneNumber.length < 4) return phoneNumber;
-        if(phoneNumber.length < 7) return `${phoneNumber.slice(0,3)}-${phoneNumber.slice(3)}`;
-        return `${phoneNumber.slice(0,3)}-${phoneNumber.slice(3,6)}-${phoneNumber.slice(6, 10)}`
+        if (phoneNumber.length < 4) return phoneNumber;
+        if (phoneNumber.length < 7) return `${phoneNumber.slice(0, 3)}-${phoneNumber.slice(3)}`;
+        return `${phoneNumber.slice(0, 3)}-${phoneNumber.slice(3, 6)}-${phoneNumber.slice(6, 10)}`
     };
     return (
         <Formik onSubmit={(values) => onSubmitForm(values)}
@@ -169,7 +170,7 @@ function CustomerInformation(props) {
                                 <div className="flex-grow-1 bg-white" style={{ marginTop: 10 }}>
                                     <Field
                                         name="province"
-                                        component={SelectCustom}
+                                        component={AutoCompleteCustom}
                                         fullWidth
                                         label="Province"
                                         options={provinces}

@@ -1,16 +1,18 @@
 import React, { useEffect, useState, useMemo } from 'react'
 import { getAllOrder } from './OrderService';
-import { Paper } from "@mui/material";
+import { Paper, Fab } from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import { DataGrid, useGridApiRef } from "@mui/x-data-grid";
+import { DataGrid, useGridApiRef, gridClasses } from "@mui/x-data-grid";
 import { Stack } from "react-bootstrap";
-
-
+import { grey, green } from '@mui/material/colors';
+import { toast } from "react-toastify";
 import { InputGroup } from "react-bootstrap";
 import { Form } from "react-bootstrap";
 import CustomToolbar from "../../../components/CustomToolbar";
 import Button from "react-bootstrap/Button";
+import OrderActions from './OrderActions';
+import OrderCreateUpdate from './OrderCreateUpdate';
 
 const OrderScreen = () => {
   const slots = useMemo(
@@ -26,7 +28,7 @@ const OrderScreen = () => {
           alignItems="center"
           justifyContent="center"
         >
-          Không tìm thấy kết quả
+          No results were found
         </Stack>
       ),
     }),
@@ -43,15 +45,33 @@ const OrderScreen = () => {
   })
   const [search, setSearch] = useState('');
   const [totalPages, setTotalPages] = useState(0);
+  const [rowId, setRowId] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [isShow, setIsShow] = useState(false);
+  const [order, setOrder] = useState({
+    id: null,
+    customerName: '',
+    phone: '',
+    status: '',
+    provinceId: '',
+    provinceName: '',
+    districtId: '',
+    districtName: '',
+    wardId: '',
+    wardName: '',
+    totalAmount: '',
+    orderItems: [{
+      id:'',
+      quantity:'',
+      amount:'',
+      productId:'',
+      orderId:''
+    }],
+  });
 
-  // const [categories, setCategories] = useState();
-  // const [brands, setBrands] = useState();
-  const [loading, setLoading] = useState(false)
 
   const fetchData = () => {
     setLoading(true);
-    // findCategory().then(data => setCategories(data.data.content))
-    // findBrand().then(data => setBrands(data.data.content))
     getAllOrder(paginationModel).then(data => {
       setOrders(data.data.content);
       setTotalPages(data.data.totalElements);
@@ -61,13 +81,16 @@ const OrderScreen = () => {
 
   const columns = [
     {
-      field: 'id', headerName: 'ID', width: 200
+      field: 'id', headerName: 'ID', width: 50
     },
     {
       field: 'customerName', headerName: 'Name', width: 200
     },
     {
       field: 'phone', headerName: 'Phone', width: 100
+    },
+    {
+      field: 'email', headerName: 'email', width: 200
     },
     {
       field: 'totalAmount', headerName: 'Price', width: 150
@@ -85,15 +108,101 @@ const OrderScreen = () => {
       field: 'address', headerName: 'Address', width: 100
     },
     {
-      field: 'status', headerName: 'Status', width: 150
+      field: 'status', headerName: 'Status', width: 150,
+      type: 'singleSelect',
+      valueOptions: ['PENDING', 'PAID', 'SHIPPED', 'CANCELLED'],
+      editable: true,
+      renderCell: params => {
+        if (params.value == "PENDING") {
+          return <div
+            className='d-flex justify-content-center'
+            style={{
+              width: 100,
+              height: 20,
+              color: '#ffea00',
+              borderRadius: 20,
+              border: "1px solid",
+            }}
+          >
+            {params.value}
+          </div >
+        } else if (params.value == "PAID") {
+          return <div
+            className='d-flex justify-content-center'
+            style={{
+              width: 100,
+              height: 20,
+              color: '#00e676',
+              borderRadius: 20,
+              border: "1px solid",
+            }}
+          >
+            {params.value}
+          </div >
+        } else if (params.value == "SHIPPED") {
+          return <div
+            className='d-flex justify-content-center'
+            style={{
+              width: 100,
+              height: 20,
+              color: '#448aff',
+              borderRadius: 20,
+              border: "1px solid",
+            }}
+          >
+            {params.value}
+          </div >
+        } else {
+          return <div
+            className='d-flex justify-content-center'
+            style={{
+              width: 100,
+              height: 20,
+              color: '#ff8a80',
+              borderRadius: 20,
+              border: "1px solid",
+            }}
+          >
+            {params.value}
+          </div >
+        }
+      }
     },
-
-
-
-
-
+    {
+      field: 'actions', headerName: 'actions', type: 'actions', renderCell: params => {
+        return <OrderActions
+          params={params}
+          rowId={rowId}
+          setRowId={setRowId}
+          setIsShow={setIsShow}
+          onHide={() => setIsShow(false)}
+          setOrder={setOrder} order={order}
+          onEdit={onEdit}
+        />
+      }
+    },
   ]
+  const onEdit = (values) => {
+    setIsShow(true);
+    console.log(values);    
+    setOrder(values)
+  }
 
+  const onSubmit = (values) => {
+    // if (!values.id) {
+    // createBrand(values).then(e => {
+    //     toast.success('Created');
+    //     fetchData();
+    //     setIsShow(false);
+    // })
+    // } else {
+    // updateBrand(values).then(e => {
+    //     toast.success('Updated');
+    //     fetchData();
+    //     setIsShow(false);
+    // })
+    // }
+  }
 
 
 
@@ -106,14 +215,9 @@ const OrderScreen = () => {
     setPaginationModel({ ...paginationModel, search })
   }
 
-
-
   return <Paper className={'container'} style={{ height: '100vh', padding: '2rem 4rem' }}>
     <h3>Order</h3>
-
     <div>
-
-
       <InputGroup className="mb-3">
         <Form.Control
           placeholder="Recipient's username"
@@ -121,17 +225,19 @@ const OrderScreen = () => {
           aria-describedby="basic-addon2"
           onChange={(e) => setSearch(e.target.value)}
         />
-        <Button variant="outline-secondary" id="button-addon2" onClick={() => onSearch()}>
-          Button
+        <Button id="button-addon2" onClick={() => onSearch()}>
+          Search
         </Button>
       </InputGroup>
     </div>
-
+    <OrderCreateUpdate show={isShow}
+      onHide={() => setIsShow(false)}
+      order={order} orders={orders}
+      onSubmit={onSubmit} />
     <div>
       <DataGrid
         apiRef={apiRef}
         slots={slots}
-        rowHeight={150}
         style={{ height: '70vh' }}
         rows={orders}
         rowCount={totalPages}
@@ -145,6 +251,7 @@ const OrderScreen = () => {
         }}
         onPageSizeChange={(newPageSize) => setPaginationModel(old => ({ ...old, pageSize: newPageSize }))}
         columns={columns}
+        onCellEditCommit={(params) => setRowId(params.id)}
       />
     </div>
   </Paper>;

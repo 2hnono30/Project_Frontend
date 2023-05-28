@@ -65,7 +65,8 @@ const SingleProduct = ({ initialSlide = 0 }) => {
         } else {
             for (let i = 0; i < initOrderValue.length; i++) {
                 const element = initOrderValue[i];
-                if (element.product.id === id) {
+                
+                if (element.product.id == id) {
                     check = true;
                     currentIndex = i;
                     break;

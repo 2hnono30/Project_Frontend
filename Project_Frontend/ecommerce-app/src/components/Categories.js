@@ -71,13 +71,11 @@ const Categories = () => {
                 <Marquee className="d-flex">
                     {(
                         categories.map(category => {
+                            console.log(category);
                             return (
                                 <div key={category.id} className="mx-4 ww-25">
                                     <Link to={`/product/category/${category.id}`} className="d-flex gap align-items-center mx-4 ww-25">
-                                        {/* <div>
-                                                <h6>{category.name}</h6>
-                                            </div> */}
-                                        <img src="images/camera.jpg" alt="camera" />
+                                        <img style={{height:165}} src={category.fileUrl} alt={category.name}/>
                                     </Link>
                                 </div>
                             )
