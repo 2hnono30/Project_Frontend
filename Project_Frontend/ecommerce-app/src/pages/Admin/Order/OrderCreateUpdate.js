@@ -29,9 +29,9 @@ function OrderCreateUpdate(props) {
 
 
     const [provinces, setProvinces] = useState([]);
-    const [provinceId, setProvinceId] = useState(null);
+    const [provinceId, setProvinceId] = useState(order.provinceId);
     const [districts, setDistricts] = useState([]);
-    const [districtId, setDistrictId] = useState(null);
+    const [districtId, setDistrictId] = useState(order.districtId);
     const [wards, setWards] = useState([]);
 
     const fetchProvinceData = () => {
@@ -74,7 +74,6 @@ function OrderCreateUpdate(props) {
         })
     }
 
-
     useEffect(() => {
         fetchProvinceData();
     }, [])
@@ -110,7 +109,7 @@ function OrderCreateUpdate(props) {
 
     const fetchProductsData = () => {
         ProductService.getAllProducts().then(e => {
-            setProducts(e.data.content.map(e => {
+            setProducts(e.data.content?.map(e => {
                 return {
                     id: e.id,
                     label: e.name
@@ -150,7 +149,6 @@ function OrderCreateUpdate(props) {
                             </Modal.Header>
 
                             <Modal.Body>
-
                                 <div className=''>
                                     <h5>Customer Information</h5>
                                     <div className='d-flex justify-content-center '>

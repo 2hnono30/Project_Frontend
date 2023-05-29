@@ -1,7 +1,7 @@
-import React from 'react'
+import React, {useState} from 'react'
 import PropTypes from 'prop-types';
-import { TextField, Autocomplete } from '@mui/material';
-import { useEffect } from 'react';
+import {TextField, Autocomplete} from '@mui/material';
+import {useEffect} from 'react';
 
 AutoCompleteCustom.propTypes = {
     field: PropTypes.object.isRequired,
@@ -23,23 +23,26 @@ AutoCompleteCustom.defaultProps = {
 }
 
 export default function AutoCompleteCustom(props) {
-    const { field, form, options, label, placeholder , fullWidth, handleChangeCustom, disabled, type } = props;
-    const { name, value } = field;
-    
-    const { errors, touched } = form;
+    let {field, form, options, label, placeholder, fullWidth, handleChangeCustom, disabled, type} = props;
+    const {name, value} = field;
+    const [defaultValue, setDefaultValue] = useState();
+    const {errors, touched} = form;
 
-    const defaultValue = options.find(e => value == e.id);
+
     useEffect(() => {
-        console.log(defaultValue);
-        if (defaultValue) {
-            handleChangeCustom && handleChangeCustom(defaultValue.id);
+        const defaultValueNew = options.find(e => value === e.id)
+        if (defaultValueNew) {
+            setDefaultValue(defaultValueNew);
+            handleChangeCustom && handleChangeCustom(defaultValueNew.id);
         }
-    }, [])
-    
+
+    }, [options])
+    if(options.length === 0){
+        options = [{id: null, label: 'Empty'}]
+    }
 
     const hasError = touched[name] && !!errors[name];
     const handleChange = (newValue) => {
-        console.log(newValue);
         const idSelected = newValue?.id;
         if (newValue) {
             handleChangeCustom && handleChangeCustom(idSelected);
@@ -53,28 +56,32 @@ export default function AutoCompleteCustom(props) {
         field.onChange(changeEvent);
     }
     return (
-        <Autocomplete
-            onChange={(event, newInputValue) => {
-                handleChange(newInputValue);
-            }}
-            defaultValue={defaultValue}
-            getOptionLabel={(option) => option.label}
-            options={options}
-            renderInput={(params) => {
-            return <TextField
-                {...params}
-                {...field}
-                id={name}
-                label={label}
-                onChange={handleChange}
-                type={type}
-                disabled={disabled}
-                placeholder={placeholder}
-                fullWidth={fullWidth}
-                error={hasError}
-                helperText={touched[name] && errors[name]}
-            />}}
-        />
+        <>{defaultValue &&
+            <Autocomplete
+                onChange={(event, newInputValue) => {
+                    handleChange(newInputValue);
+                }}
+                defaultValue={defaultValue}
+                getOptionLabel={(option) => option.label}
+                options={options}
+                renderInput={(params) => {
+                    return <TextField
+                        {...params}
+                        {...field}
+                        id={name}
+                        label={label}
+                        onChange={handleChange}
+                        type={type}
+                        disabled={disabled}
+                        placeholder={placeholder}
+                        fullWidth={fullWidth}
+                        error={hasError}
+                        helperText={touched[name] && errors[name]}
+                    />
+                }}
+            />
+        }
 
+    </>
     )
 }

@@ -10,11 +10,10 @@ import { useState } from 'react';
 import { ToastContainer } from "react-toastify";
 import { ConfirmProvider } from "material-ui-confirm";
 import BrandScreen from './Brand/BrandScreen';
+import Dashboard from './Dashboard/Dashboard';
 
 function AdminScreen() {
-    const divStyle = {
-        margin: '0px 240px',
-    }
+
     const [closeMenu, setCloseMenu] = useState(false);
     return (
         <>
@@ -23,6 +22,7 @@ function AdminScreen() {
                 <Sidebar closeMenu={closeMenu} setCloseMenu={setCloseMenu} />
                 <div style={{ paddingLeft: 250 }}>
                     <Routes>
+                        <Route path={'/'} element={<Dashboard />} />
                         <Route path={'categories'} element={<CategoryScreen closeMenu={closeMenu} />} />
                         <Route path={'customers'} element={CustomerScreen()} />
                         <Route path={'products'} element={ProductScreen()} />
