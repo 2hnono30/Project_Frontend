@@ -191,7 +191,7 @@ const ProductScreen = () => {
       <DataGrid
         apiRef={apiRef}
         slots={slots}
-        rowHeight={150}
+        // rowHeight={150}
         style={{ height: '70vh' }}
         rows={products}
         rowCount={totalPages}

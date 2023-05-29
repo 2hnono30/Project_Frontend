@@ -9,7 +9,8 @@ import AutocompleteCustom from './../../../components/CustomField/AutoCompleteCu
 import { ProductService } from './../../../Services/Product/ProductService';
 import { districtCallAPI, provinceCallAPI, wardCallAPI } from '../../../Services/Address/AddressService';
 import SelectCustom from '../../../components/CustomField/SelectCustom';
-
+import CustomerInformation from './../../Checkout/CustomerInformation';
+import { currencyFormat } from '../../../components/Utils/Utils';
 function OrderCreateUpdate(props) {
 
     const { show, onHide, order, orders, onSubmit } = props;
@@ -149,39 +150,11 @@ function OrderCreateUpdate(props) {
                             </Modal.Header>
 
                             <Modal.Body>
-                                <div className='col-4'>
-                                    {(
-                                        order.orderItems.map((orderItem, index) => {
-                                            return (
-                                                <div key={index} className='d-flex justify-content-center' style={{ marginTop: 10 }}>
-                                                    <div className='col-9'>
-                                                        <Field
-                                                            name={`orderItems[${index}].productId`}
-                                                            component={AutocompleteCustom}
-                                                            fullWidth
-                                                            label="Product"
-                                                            options={products}
-                                                            placeholder="Eg: Province ..."
-                                                        // handleChangeCustom={setProvinceId}
-                                                        />
-                                                    </div>
-                                                    <div className='bg-white col-3' style={{ marginLeft: 10 }}>
-                                                        <FastField
-                                                            name={`orderItems[${index}].quantity`}
-                                                            component={InputCustom}
-                                                            fullWidth
-                                                            label="Quantity"
-                                                            placeholder="Eg: Quantity ..."
-                                                        />
-                                                    </div>
-                                                </div>
-                                            )
-                                        })
-                                    )}
-                                </div>
+
                                 <div className=''>
+                                    <h5>Customer Information</h5>
                                     <div className='d-flex justify-content-center '>
-                                        <div className='bg-white col-3' style={{ marginTop: 10 }}>
+                                        <div className='bg-white col' style={{ marginTop: 10 }}>
                                             <FastField
                                                 name="customerName"
                                                 component={InputCustom}
@@ -190,7 +163,7 @@ function OrderCreateUpdate(props) {
                                                 placeholder="Eg: Quantity ..."
                                             />
                                         </div>
-                                        <div className='bg-white col-3' style={{ marginTop: 10, marginLeft: 10 }}>
+                                        <div className='bg-white col' style={{ marginTop: 10, marginLeft: 10 }}>
                                             <FastField
                                                 name="email"
                                                 component={InputCustom}
@@ -199,7 +172,7 @@ function OrderCreateUpdate(props) {
                                                 placeholder="Eg: Quantity ..."
                                             />
                                         </div>
-                                        <div className='bg-white col-3' style={{ marginTop: 10, marginLeft: 10 }}>
+                                        <div className='bg-white' style={{ marginTop: 10, marginLeft: 10 }}>
                                             <FastField
                                                 name="phone"
                                                 component={InputCustom}
@@ -210,7 +183,7 @@ function OrderCreateUpdate(props) {
                                         </div>
                                     </div>
                                     <div className='d-flex justify-content-center '>
-                                        <div className="flex-grow-1 bg-white" style={{ marginTop: 10,marginLeft: 10 }}>
+                                        <div className="flex-grow-1 bg-white" style={{ marginTop: 10 }}>
                                             <Field
                                                 name="provinceId"
                                                 component={AutocompleteCustom}
@@ -221,7 +194,7 @@ function OrderCreateUpdate(props) {
                                                 handleChangeCustom={setProvinceId}
                                             />
                                         </div>
-                                        <div className="flex-grow-1 bg-white" style={{ marginTop: 10,marginLeft: 10 }}>
+                                        <div className="flex-grow-1 bg-white" style={{ marginTop: 10, marginLeft: 10 }}>
                                             <Field
                                                 name="districtId"
                                                 component={AutocompleteCustom}
@@ -232,7 +205,7 @@ function OrderCreateUpdate(props) {
                                                 handleChangeCustom={setDistrictId}
                                             />
                                         </div>
-                                        <div className="flex-grow-1 bg-white" style={{ marginTop: 10,marginLeft: 10 }}>
+                                        <div className="flex-grow-1 bg-white" style={{ marginTop: 10, marginLeft: 10 }}>
                                             <Field
                                                 name="wardId"
                                                 component={AutocompleteCustom}
@@ -242,7 +215,7 @@ function OrderCreateUpdate(props) {
                                                 placeholder="Eg: Ward ..."
                                             />
                                         </div>
-                                        <div className='bg-white col-3' style={{ marginLeft: 10,marginTop: 10  }}>
+                                        <div className='bg-white col-3' style={{ marginLeft: 10, marginTop: 10 }}>
                                             <FastField
                                                 name="address"
                                                 component={InputCustom}
@@ -252,6 +225,61 @@ function OrderCreateUpdate(props) {
                                             />
                                         </div>
                                     </div>
+                                </div>
+                                <hr />
+                                <div>
+                                    <h5>Product Information</h5>
+                                    {(
+                                        order.orderItems.map((orderItem, index) => {
+                                            return (
+                                                <div key={index} className='d-flex justify-content-center' style={{ marginTop: 10, marginLeft: 10 }}>
+                                                    <div className='col'>
+                                                        <Field
+                                                            name={`orderItems[${index}].productId`}
+                                                            component={AutocompleteCustom}
+                                                            fullWidth
+                                                            label="Product"
+                                                            options={products}
+                                                            placeholder="Eg: Province ..."
+                                                        />
+                                                    </div>
+                                                    <div className='bg-white col' style={{ marginLeft: 10 }}>
+                                                        <FastField
+                                                            name={`orderItems[${index}].quantity`}
+                                                            component={InputCustom}
+                                                            fullWidth
+                                                            label="Quantity"
+                                                            placeholder="Eg: Quantity ..."
+                                                        />
+                                                    </div>
+                                                    <div className='bg-white col' style={{ marginLeft: 10 }}>
+                                                        <FastField
+                                                            name={`orderItems[${index}].price`}
+                                                            component={InputCustom}
+                                                            placeholder="Eg: Price ..."
+                                                            fullWidth
+                                                            label="Price"
+                                                            disabled={ true }
+                                                            currFormat="$"
+                                                            handleChangeCustom
+                                                        />
+                                                    </div>
+                                                    <div className='bg-white col' style={{ marginLeft: 10 }}>
+                                                        <FastField
+                                                            name={`orderItems[${index}].amount`}
+                                                            component={InputCustom}
+                                                            placeholder="Eg: Amount ..."
+                                                            fullWidth
+                                                            label="Amount"
+                                                            disabled={ true }
+                                                            currFormat="$"
+                                                        />
+                                                    </div>
+                                                </div>
+                                            )
+                                        })
+                                    )}
+                                    <Button  style={{ marginLeft: 10,marginTop: 10  }} >Add Product</Button>
                                 </div>
                             </Modal.Body>
 

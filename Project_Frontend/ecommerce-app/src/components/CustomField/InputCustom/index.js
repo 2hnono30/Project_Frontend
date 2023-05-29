@@ -2,6 +2,7 @@ import React from 'react';
 
 import PropTypes from 'prop-types';
 import { TextField } from "@mui/material";
+import InputAdornment from '@mui/material/InputAdornment';
 
 InputCustom.propTypes = {
     field: PropTypes.object.isRequired,
@@ -25,16 +26,17 @@ InputCustom.defaultProps = {
 function InputCustom(props) {
     const {
         field, form,
-        type, label, placeholder, disabled, fullWidth ,handleChangeCustom
+        type, label, placeholder, disabled, fullWidth ,handleChangeCustom,currFormat
     } = props;
 
     const handleInputCustomChange = (InputCustom) => {
         let value;
+    
         // console.log(handleChangeCustom);
         if (InputCustom.target.value && handleChangeCustom) {
 
             value = handleChangeCustom(InputCustom.target.value);
-            // console.log(value, 'input')
+            console.log(value, 'input')
         }
         const changeEvent = {
 
@@ -45,6 +47,7 @@ function InputCustom(props) {
         };
         field.onChange(changeEvent);
     }
+    
     const { name } = field;
     const { errors, touched } = form;
 
@@ -62,6 +65,9 @@ function InputCustom(props) {
             // fullWidth={fullWidth}
             // error={!!errors[name]}
             // helperText={errors[name]}
+            InputProps={{
+                startAdornment: <InputAdornment position="start">{currFormat  }</InputAdornment>,
+              }}
 
         fullWidth={fullWidth}
         error={touched[name] && !!errors[name]}
