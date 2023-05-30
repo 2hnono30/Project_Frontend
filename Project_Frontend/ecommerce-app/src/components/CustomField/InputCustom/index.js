@@ -26,8 +26,10 @@ InputCustom.defaultProps = {
 function InputCustom(props) {
     const {
         field, form,
-        type, label, placeholder, disabled, fullWidth ,handleChangeCustom,currFormat
+        type, label, placeholder, disabled, fullWidth ,handleChangeCustom,currFormat,handChangeValue
     } = props;
+
+    
 
     const handleInputCustomChange = (InputCustom) => {
         let value;
@@ -36,7 +38,10 @@ function InputCustom(props) {
         if (InputCustom.target.value && handleChangeCustom) {
 
             value = handleChangeCustom(InputCustom.target.value);
-            console.log(value, 'input')
+            // console.log(value, 'input')
+        }
+        if (InputCustom.target.value && handChangeValue) {
+            handChangeValue()
         }
         const changeEvent = {
 

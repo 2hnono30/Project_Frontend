@@ -125,7 +125,7 @@ function OrderCreateUpdate(props) {
     }, [show])
     const submit = (values) => {
         console.log(values);
-        values.image = image;
+        // values.image = image;
         onSubmit(values);
     }
 
@@ -137,7 +137,7 @@ function OrderCreateUpdate(props) {
                 initialValues={order}
             >
                 {formikProps => {
-                    const { values, errors, touched } = formikProps;
+                    const { values, errors, touched, setFieldValue } = formikProps;
                     console.log(values, errors, touched);
 
                     // do something here ...
@@ -188,6 +188,7 @@ function OrderCreateUpdate(props) {
                                                 fullWidth
                                                 label="Province Name"
                                                 options={provinces}
+                                                isEdit={values.id !== null}
                                                 placeholder="Eg: Province ..."
                                                 handleChangeCustom={setProvinceId}
                                             />
@@ -199,6 +200,7 @@ function OrderCreateUpdate(props) {
                                                 fullWidth
                                                 label="District Name"
                                                 options={districts}
+                                                isEdit={values.id !== null}
                                                 placeholder="Eg: District ..."
                                                 handleChangeCustom={setDistrictId}
                                             />
@@ -210,6 +212,7 @@ function OrderCreateUpdate(props) {
                                                 fullWidth
                                                 label="Ward Name"
                                                 options={wards}
+                                                isEdit={values.id !== null}
                                                 placeholder="Eg: Ward ..."
                                             />
                                         </div>
@@ -228,56 +231,73 @@ function OrderCreateUpdate(props) {
                                 <div>
                                     <h5>Product Information</h5>
                                     {(
-                                        order.orderItems.map((orderItem, index) => {
+                                        values.orderItems.map((orderItem, index) => {
                                             return (
-                                                <div key={index} className='d-flex justify-content-center' style={{ marginTop: 10, marginLeft: 10 }}>
-                                                    <div className='col'>
-                                                        <Field
-                                                            name={`orderItems[${index}].productId`}
-                                                            component={AutocompleteCustom}
-                                                            fullWidth
-                                                            label="Product"
-                                                            options={products}
-                                                            placeholder="Eg: Province ..."
-                                                        />
+                                                <>
+                                                    <div key={index} className='d-flex justify-content-center' style={{ marginTop: 10, marginLeft: 10 }}>
+                                                        <div className='col'>
+                                                            <Field
+                                                                name={`orderItems[${index}].productId`}
+                                                                component={AutocompleteCustom}
+                                                                fullWidth
+                                                                label="Product"
+                                                                isEdit={orderItem.productId !== null}
+                                                                options={products}
+                                                                handleChangeValue={orderItem.productId}
+                                                                placeholder="Eg: Province ..."
+                                                            />
+                                                        </div>
+                                                        <div className='bg-white col' style={{ marginLeft: 10 }}>
+                                                            <FastField
+                                                                name={`orderItems[${index}].quantity`}
+                                                                component={InputCustom}
+                                                                fullWidth
+                                                                label="Quantity"
+                                                                placeholder="Eg: Quantity ..."
+
+                                                            />
+                                                        </div>
+                                                        <div className='bg-white col' style={{ marginLeft: 10 }}>
+                                                            <FastField
+                                                                name={`orderItems[${index}].price`}
+                                                                component={InputCustom}
+                                                                placeholder="Eg: Price ..."
+                                                                fullWidth
+                                                                label="Price"
+                                                                disabled={true}
+                                                                currFormat="$"
+                                                            />
+                                                        </div>
+                                                        <div className='bg-white col' style={{ marginLeft: 10 }}>
+                                                            <FastField
+                                                                name={`orderItems[${index}].amount`}
+                                                                component={InputCustom}
+                                                                placeholder="Eg: Amount ..."
+                                                                fullWidth
+                                                                label="Amount"
+                                                                disabled={true}
+                                                                currFormat="$"
+                                                            />
+                                                        </div>
                                                     </div>
-                                                    <div className='bg-white col' style={{ marginLeft: 10 }}>
-                                                        <FastField
-                                                            name={`orderItems[${index}].quantity`}
-                                                            component={InputCustom}
-                                                            fullWidth
-                                                            label="Quantity"
-                                                            placeholder="Eg: Quantity ..."
-                                                        />
-                                                    </div>
-                                                    <div className='bg-white col' style={{ marginLeft: 10 }}>
-                                                        <FastField
-                                                            name={`orderItems[${index}].price`}
-                                                            component={InputCustom}
-                                                            placeholder="Eg: Price ..."
-                                                            fullWidth
-                                                            label="Price"
-                                                            disabled={ true }
-                                                            currFormat="$"
-                                                            handleChangeCustom
-                                                        />
-                                                    </div>
-                                                    <div className='bg-white col' style={{ marginLeft: 10 }}>
-                                                        <FastField
-                                                            name={`orderItems[${index}].amount`}
-                                                            component={InputCustom}
-                                                            placeholder="Eg: Amount ..."
-                                                            fullWidth
-                                                            label="Amount"
-                                                            disabled={ true }
-                                                            currFormat="$"
-                                                        />
-                                                    </div>
-                                                </div>
+                                                    <div className=''></div>
+                                                </>
                                             )
                                         })
                                     )}
-                                    <Button  style={{ marginLeft: 10,marginTop: 10  }} >Add Product</Button>
+                                    <Button style={{ marginLeft: 10, marginTop: 10 }}
+                                        onClick={() => {
+                                            setFieldValue("orderItems", [
+                                                ...values.orderItems,
+                                                {
+                                                    productId: null,
+                                                    quantity: null,
+                                                    price: 0,
+                                                    amount: 0,
+                                                }
+                                            ]);
+                                        }}
+                                    >Add Product</Button>
                                 </div>
                             </Modal.Body>
 
