@@ -11,18 +11,40 @@ import { districtCallAPI, provinceCallAPI, wardCallAPI } from '../../../Services
 import SelectCustom from '../../../components/CustomField/SelectCustom';
 import CustomerInformation from './../../Checkout/CustomerInformation';
 import { currencyFormat } from '../../../components/Utils/Utils';
+import { InputAdornment, TextField } from '@mui/material';
+import { number } from 'prop-types';
+
 function OrderCreateUpdate(props) {
 
     const { show, onHide, order, orders, onSubmit } = props;
+    const emailRegexp = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
     const validationSchema = Yup.object().shape({
-        name: Yup.string()
+        customerName: Yup.string().required('This field is required.'),
+        email: Yup.string().email().matches(emailRegexp, 'Email invalidate').required('This field is required.'),
+        phone: Yup.string()
+            .min(12, 'Phone Number must have 10 characters')
+            .max(12, 'Phone Number up to 10 characters')
+            .test('len', 'phone number must start with 03 / 09 or 07', val => ['03', '07', '09'].includes(val?.slice(0, 2)))
+            // .matches(phoneRegExp, 'phone number must start with 03 / 09 or 07')
+            .required('This field is required.'),
+        provinceId: Yup.string()
+            .required('This field is required.'),
+        districtId: Yup.string()
+            .required('This field is required.'),
+        wardId: Yup.string()
+            .required('This field is required.'),
+        // productId: Yup.array()
+        //     .of(
+        //         Yup.object()
+        //             .shape({
+        //                 productId: Yup.string.required('This field is required.'),
+        //             })
+        //             .required(),
+        //     ),
+        address: Yup.string()
             .required('This field is required.')
-            .min(2, 'Brand Name with at least 2 characters')
-            .max(8, 'Brand Name has at most 8 characters'),
-        id: Yup.number()
-            .required('This field is required.')
-            .nullable(),
     });
+
     const [image, setImage] = useState(0);
     const [url, setUrl] = useState()
     const [products, setProducts] = useState([]);
@@ -112,7 +134,8 @@ function OrderCreateUpdate(props) {
             setProducts(e.data.content?.map(e => {
                 return {
                     id: e.id,
-                    label: e.name
+                    label: e.name,
+                    price: e.price
                 }
             }));
         })
@@ -125,7 +148,10 @@ function OrderCreateUpdate(props) {
     }, [show])
     const submit = (values) => {
         console.log(values);
-        // values.image = image;
+        values.provinceName = provinces.find(e => e.id == values.provinceId)?.label;
+        values.districtName = districts.find(e => e.id == values.districtId)?.label;
+        values.wardName = wards.find(e => e.id == values.wardId)?.label;
+        console.log('update', values)
         onSubmit(values);
     }
 
@@ -138,10 +164,16 @@ function OrderCreateUpdate(props) {
             >
                 {formikProps => {
                     const { values, errors, touched, setFieldValue } = formikProps;
-                    console.log(values, errors, touched);
-
+                    // console.log(values, errors, touched);
+                    const handleChangeProduct = (productId, index) => {
+                        const product = products.find(e => e.id === productId);
+                        setFieldValue(`orderItems[${index}].price`, product?.price);
+                    }
+                    let subTotal = 0;
+                    values.orderItems.forEach(element => {
+                        subTotal += (element.price * element.quantity);
+                    });
                     // do something here ...
-
                     return (
                         <Form>
                             <Modal.Header closeButton>
@@ -158,7 +190,7 @@ function OrderCreateUpdate(props) {
                                                 component={InputCustom}
                                                 fullWidth
                                                 label="Customer Name"
-                                                placeholder="Eg: Quantity ..."
+                                                placeholder="Eg: Customer Name ..."
                                             />
                                         </div>
                                         <div className='bg-white col' style={{ marginTop: 10, marginLeft: 10 }}>
@@ -167,7 +199,7 @@ function OrderCreateUpdate(props) {
                                                 component={InputCustom}
                                                 fullWidth
                                                 label="Email"
-                                                placeholder="Eg: Quantity ..."
+                                                placeholder="Eg: Email ..."
                                             />
                                         </div>
                                         <div className='bg-white' style={{ marginTop: 10, marginLeft: 10 }}>
@@ -176,7 +208,7 @@ function OrderCreateUpdate(props) {
                                                 component={InputCustom}
                                                 fullWidth
                                                 label="Phone Number"
-                                                placeholder="Eg: Quantity ..."
+                                                placeholder="Eg: Phone Number ..."
                                             />
                                         </div>
                                     </div>
@@ -189,7 +221,7 @@ function OrderCreateUpdate(props) {
                                                 label="Province Name"
                                                 options={provinces}
                                                 isEdit={values.id !== null}
-                                                placeholder="Eg: Province ..."
+                                                placeholder="Eg: Province Name ..."
                                                 handleChangeCustom={setProvinceId}
                                             />
                                         </div>
@@ -201,7 +233,7 @@ function OrderCreateUpdate(props) {
                                                 label="District Name"
                                                 options={districts}
                                                 isEdit={values.id !== null}
-                                                placeholder="Eg: District ..."
+                                                placeholder="Eg: District Name ..."
                                                 handleChangeCustom={setDistrictId}
                                             />
                                         </div>
@@ -213,7 +245,7 @@ function OrderCreateUpdate(props) {
                                                 label="Ward Name"
                                                 options={wards}
                                                 isEdit={values.id !== null}
-                                                placeholder="Eg: Ward ..."
+                                                placeholder="Eg: Ward Name ..."
                                             />
                                         </div>
                                         <div className='bg-white col-3' style={{ marginLeft: 10, marginTop: 10 }}>
@@ -232,72 +264,75 @@ function OrderCreateUpdate(props) {
                                     <h5>Product Information</h5>
                                     {(
                                         values.orderItems.map((orderItem, index) => {
-                                            return (
-                                                <>
-                                                    <div key={index} className='d-flex justify-content-center' style={{ marginTop: 10, marginLeft: 10 }}>
-                                                        <div className='col'>
-                                                            <Field
-                                                                name={`orderItems[${index}].productId`}
-                                                                component={AutocompleteCustom}
-                                                                fullWidth
-                                                                label="Product"
-                                                                isEdit={orderItem.productId !== null}
-                                                                options={products}
-                                                                handleChangeValue={orderItem.productId}
-                                                                placeholder="Eg: Province ..."
-                                                            />
-                                                        </div>
-                                                        <div className='bg-white col' style={{ marginLeft: 10 }}>
-                                                            <FastField
-                                                                name={`orderItems[${index}].quantity`}
-                                                                component={InputCustom}
-                                                                fullWidth
-                                                                label="Quantity"
-                                                                placeholder="Eg: Quantity ..."
 
-                                                            />
-                                                        </div>
-                                                        <div className='bg-white col' style={{ marginLeft: 10 }}>
-                                                            <FastField
-                                                                name={`orderItems[${index}].price`}
-                                                                component={InputCustom}
-                                                                placeholder="Eg: Price ..."
-                                                                fullWidth
-                                                                label="Price"
-                                                                disabled={true}
-                                                                currFormat="$"
-                                                            />
-                                                        </div>
-                                                        <div className='bg-white col' style={{ marginLeft: 10 }}>
-                                                            <FastField
-                                                                name={`orderItems[${index}].amount`}
-                                                                component={InputCustom}
-                                                                placeholder="Eg: Amount ..."
-                                                                fullWidth
-                                                                label="Amount"
-                                                                disabled={true}
-                                                                currFormat="$"
-                                                            />
-                                                        </div>
+                                            return (
+                                                <div key={index + 'orderUpdate'} className='d-flex justify-content-center' style={{ marginTop: 10, marginLeft: 10 }}>
+                                                    <div className='col'>
+                                                        <Field
+                                                            name={`orderItems[${index}].productId`}
+                                                            component={AutocompleteCustom}
+                                                            fullWidth
+                                                            label="Product"
+                                                            isEdit={orderItem.id !== null}
+                                                            options={products}
+                                                            handleChangeValue={handleChangeProduct}
+                                                            index={index}
+                                                            placeholder="Eg: Province ..."
+                                                        />
                                                     </div>
-                                                    <div className=''></div>
-                                                </>
+                                                    <div className='bg-white col' style={{ marginLeft: 10 }}>
+                                                        <FastField
+                                                            name={`orderItems[${index}].quantity`}
+                                                            component={InputCustom}
+                                                            fullWidth
+                                                            label="Quantity"
+                                                            placeholder="Eg: Quantity ..."
+                                                            type="number"
+
+                                                        />
+                                                    </div>
+                                                    <div className='bg-white col' style={{ marginLeft: 10 }}>
+                                                        <FastField
+                                                            name={`orderItems[${index}].price`}
+                                                            component={InputCustom}
+                                                            placeholder="Eg: Price ..."
+                                                            fullWidth
+                                                            label="Price"
+                                                            disabled={true}
+                                                            currFormat="$"
+                                                        />
+                                                    </div>
+                                                    <div className='bg-white col' style={{ marginLeft: 10 }}>
+                                                        <TextField value={orderItem.quantity * orderItem.price || 0} label="Amount"
+                                                            placeholder="Eg: Amount ..."
+                                                            disabled={true}
+                                                            InputProps={{
+                                                                startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                                                            }}
+                                                        />
+                                                    </div>
+                                                </div>
+
                                             )
                                         })
                                     )}
-                                    <Button style={{ marginLeft: 10, marginTop: 10 }}
-                                        onClick={() => {
-                                            setFieldValue("orderItems", [
-                                                ...values.orderItems,
-                                                {
-                                                    productId: null,
-                                                    quantity: null,
-                                                    price: 0,
-                                                    amount: 0,
-                                                }
-                                            ]);
-                                        }}
-                                    >Add Product</Button>
+                                    <div className='d-flex justify-content-between'>
+                                        <Button style={{ marginLeft: 10, marginTop: 10 }}
+                                            onClick={() => {
+                                                setFieldValue("orderItems", [
+                                                    ...values.orderItems,
+                                                    {
+                                                        id: null,
+                                                        productId: null,
+                                                        quantity: 0,
+                                                        price: 0,
+                                                        amount: 0,
+                                                    }
+                                                ]);
+                                            }}
+                                        >Add Product</Button>
+                                        <div style={{ marginLeft: 10, marginTop: 10 }}>TotalAmount With Shipping Fee ($10) : {"$" + `${subTotal + 10}` || ("$" + 0)}</div>
+                                    </div>
                                 </div>
                             </Modal.Body>
 

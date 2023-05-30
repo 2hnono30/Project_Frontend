@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo } from 'react'
-import { getAllOrder } from './OrderService';
+import { checkOut, getAllOrder, updateOrder } from './OrderService';
 import { Paper, Fab } from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
@@ -13,6 +13,30 @@ import CustomToolbar from "../../../components/CustomToolbar";
 import Button from "react-bootstrap/Button";
 import OrderActions from './OrderActions';
 import OrderCreateUpdate from './OrderCreateUpdate';
+
+const INITIAL_ORDER_VALUE = {
+  id: null,
+  customerName: '',
+  email:'',
+  status: '',
+  phone: '',
+  provinceId: '',
+  provinceName: '',
+  districtId: '',
+  districtName: '',
+  wardId: '',
+  wardName: '',
+  address:'',
+  totalAmount: 0,
+  orderItems: [{
+    id: null,
+    quantity: 0,
+    price: 0,
+    amount: 0,
+    productId: null,
+    orderId: null
+  }],
+}
 
 const OrderScreen = () => {
   const slots = useMemo(
@@ -48,26 +72,8 @@ const OrderScreen = () => {
   const [rowId, setRowId] = useState(null);
   const [loading, setLoading] = useState(false);
   const [isShow, setIsShow] = useState(false);
-  const [order, setOrder] = useState({
-    id: null,
-    customerName: '',
-    phone: '',
-    status: '',
-    provinceId: '',
-    provinceName: '',
-    districtId: '',
-    districtName: '',
-    wardId: '',
-    wardName: '',
-    totalAmount: '',
-    orderItems: [{
-      id:'',
-      quantity:'',
-      amount:'',
-      productId:'',
-      orderId:''
-    }],
-  });
+  const [order, setOrder] = useState(INITIAL_ORDER_VALUE);
+
 
 
   const fetchData = () => {
@@ -182,26 +188,51 @@ const OrderScreen = () => {
       }
     },
   ]
+
+  const onCreate = () => {
+    setOrder(INITIAL_ORDER_VALUE)
+    setIsShow(true)
+  }
+
   const onEdit = (values) => {
     setIsShow(true);
-    console.log(values);    
+    console.log(values);
     setOrder(values)
   }
 
   const onSubmit = (values) => {
-    // if (!values.id) {
-    // createBrand(values).then(e => {
-    //     toast.success('Created');
-    //     fetchData();
-    //     setIsShow(false);
-    // })
-    // } else {
-    // updateBrand(values).then(e => {
-    //     toast.success('Updated');
-    //     fetchData();
-    //     setIsShow(false);
-    // })
-    // }
+    const data = {
+      id: values.id,
+      customer: {
+        fullName: values.customerName,
+        phoneNumber: values.phone,
+        email: values.email,
+        locationRegion: {
+          provinceId: values.provinceId,
+          provinceName: values.provinceName,
+          districtId: values.districtId,
+          districtName: values.districtName,
+          wardId: values.wardId,
+          wardName: values.wardName,
+          address: values.address
+        }
+      },
+      orderItems: values.orderItems
+    }
+    console.log(data);
+    if (!values.id) {
+      checkOut(data).then(e => {
+        toast.success('Created');
+        fetchData();
+        setIsShow(false);
+      })
+    } else {
+      updateOrder(data).then(e => {
+        toast.success('Updated');
+        fetchData();
+        setIsShow(false);
+      })
+    }
   }
 
 
@@ -234,6 +265,7 @@ const OrderScreen = () => {
       onHide={() => setIsShow(false)}
       order={order} orders={orders}
       onSubmit={onSubmit} />
+    <Button style={{ marginTop: 25, marginBottom: 25 }} onClick={() => onCreate()}>Create Order</Button>
     <div>
       <DataGrid
         apiRef={apiRef}
