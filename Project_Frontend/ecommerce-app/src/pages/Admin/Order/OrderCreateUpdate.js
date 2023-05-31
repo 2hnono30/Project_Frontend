@@ -33,16 +33,14 @@ function OrderCreateUpdate(props) {
             .required('This field is required.'),
         wardId: Yup.string()
             .required('This field is required.'),
-        // productId: Yup.array()
-        //     .of(
-        //         Yup.object()
-        //             .shape({
-        //                 productId: Yup.string.required('This field is required.'),
-        //             })
-        //             .required(),
-        //     ),
         address: Yup.string()
-            .required('This field is required.')
+            .required('This field is required.'),
+        orderItems: Yup.array().of(
+            Yup.object().shape({
+                productId: Yup.number().integer().required('This field is required'),
+                quantity: Yup.number().integer().min(1, 'quantity must be greater than or equal to 1').required('This field is required.')
+            })
+        )
     });
 
     const [image, setImage] = useState(0);
@@ -107,27 +105,6 @@ function OrderCreateUpdate(props) {
         provinceId && fetchDistrictData();
     }, [provinceId]);
 
-    const changeAvatar = (e) => {
-        order.fileUrl = e.target.files[0];
-        let reader = new FileReader();
-        reader.readAsDataURL(order.fileUrl);
-        reader.onloadend = function (e) {
-            setUrl(reader.result);
-        }.bind(this);
-        handleUpload(order.fileUrl);
-
-    }
-    const handleUpload = (image) => {
-        try {
-            async function uploadAvatar() {
-                // let result = await createBrandAvatar(image);
-                // setImage(result.data[0]);
-            }
-            uploadAvatar();
-        } catch {
-
-        }
-    }
 
     const fetchProductsData = () => {
         ProductService.getAllProducts().then(e => {

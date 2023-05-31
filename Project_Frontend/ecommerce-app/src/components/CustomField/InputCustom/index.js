@@ -3,6 +3,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { TextField } from "@mui/material";
 import InputAdornment from '@mui/material/InputAdornment';
+import { useEffect } from 'react';
+import { getErrorsMessageOfFormik, getKeysFromString, hasIndex } from '../../Utils/Utils';
+import { useState } from 'react';
 
 InputCustom.propTypes = {
     field: PropTypes.object.isRequired,
@@ -26,14 +29,16 @@ InputCustom.defaultProps = {
 function InputCustom(props) {
     const {
         field, form,
-        type, label, placeholder, disabled, fullWidth ,handleChangeCustom,currFormat,handChangeValue
+        type, label, placeholder, disabled, fullWidth, handleChangeCustom, currFormat, handChangeValue
     } = props;
 
-    
+    const { name } = field;
+    const { errors, touched } = form;
+    const [errorMessage, setErrorMessage] = useState('');
 
     const handleInputCustomChange = (InputCustom) => {
         let value;
-    
+
         // console.log(handleChangeCustom);
         if (InputCustom.target.value && handleChangeCustom) {
 
@@ -47,15 +52,17 @@ function InputCustom(props) {
 
             target: {
                 name: name,
-                value: value !== undefined ? value :  InputCustom.target.value
+                value: value !== undefined ? value : InputCustom.target.value
             }
         };
         field.onChange(changeEvent);
     }
-    
-    const { name } = field;
-    const { errors, touched } = form;
 
+
+
+    useEffect(() => {
+        setErrorMessage(getErrorsMessageOfFormik(name, errors, touched))
+    }, [form])
     // const { errors, touched } = form;
     return (
         <TextField
@@ -71,12 +78,12 @@ function InputCustom(props) {
             // error={!!errors[name]}
             // helperText={errors[name]}
             InputProps={{
-                startAdornment: <InputAdornment position="start">{currFormat  }</InputAdornment>,
-              }}
+                startAdornment: <InputAdornment position="start">{currFormat}</InputAdornment>,
+            }}
 
-        fullWidth={fullWidth}
-        error={touched[name] && !!errors[name]}
-        helperText={touched[name] && errors[name]}
+            fullWidth={fullWidth}
+            error={errorMessage !== ''}
+            helperText={errorMessage}
 
         />
     );
